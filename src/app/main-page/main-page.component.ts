@@ -42,7 +42,7 @@ export class MainPageComponent {
 
     createFormConversion(): void {
         this.formConversion = this.formBuilder.group({
-            amount: [0, Validators.required],
+            amount: [null, Validators.required],
             currencyFirst: [undefined, Validators.required],
             currencySecond: [undefined, Validators.required],
         });
@@ -68,13 +68,13 @@ export class MainPageComponent {
                 conversionData.currencyFirst.value) *
             conversionData.amount
         } ${conversionData.currencySecond.name}`;
-        const rateCurrencyFirst = `0.00 ${
+        const rateCurrencyFirst = `1.00 ${
             conversionData.currencyFirst.code
         } = ${
             conversionData.currencySecond.value /
             conversionData.currencyFirst.value
         } ${conversionData.currencySecond.code}`;
-        const rateCurrencySecond = `0.00 ${
+        const rateCurrencySecond = `1.00 ${
             conversionData.currencySecond.code
         } = ${
             conversionData.currencyFirst.value /
