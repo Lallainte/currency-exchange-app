@@ -1,0 +1,1846 @@
+<div
+    class="flex align-items-center justify-content-between"
+    *ngIf="isNeedHeader"
+>
+    <div class="p-inputgroup" (click)="showDialog()">
+        <input
+            [disabled]="disabled"
+            id="employee"
+            type="text"
+            placeholder="{{ 'select' | translate }} {{
+                'employee' | translate
+            }}"
+            pInputText
+            readonly
+            [placeholder]="placeholder"
+            [(ngModel)]="selectedEmployee"
+        />
+        <span class="p-inputgroup-addon employee-select">
+            <i class="fas fa-search"></i>
+        </span>
+    </div>
+    <div class="ml-4" *ngIf="!disabled">
+        <button
+            [disabled]="disabled"
+            pButton
+            pRipple
+            icon="fas fa-ellipsis-v"
+            class="h-full btn-select-employee__show-dialog"
+            (click)="showDialog()"
+        ></button>
+    </div>
+</div>
+
+<ng-container *ngIf="isSingle && isNeedHeader">
+    <div
+        class="mt-2 w-full"
+        *ngIf="
+            isImage && (selectedEmployee !== '' || value) && isShowDescription
+        "
+    >
+        <div
+            class="border-1 flex justify-content-between relative"
+            style="
+                gap: 1.142857142857143rem;
+                border-radius: 4px;
+                border-color: #eee;
+            "
+        >
+            <div
+                class="w-full flex align-items-center"
+                style="
+                    gap: 1.142857142857143rem;
+                    padding: 0.8571428571428571rem 1.142857142857143rem;
+                "
+            >
+                <img
+                    *ngIf="!src"
+                    src="assets/no-profile-picture.svg"
+                    alt=""
+                    class="w-3rem h-3rem border-circle"
+                />
+
+                <img
+                    *ngIf="src"
+                    [src]="src"
+                    alt=""
+                    class="w-3rem h-3rem border-circle"
+                />
+
+                <div>
+                    <div
+                        style="
+                            font-size: 11px;
+                            font-weight: 600;
+                            color: #9f9f9f;
+                        "
+                    >
+                        {{ dataEmployee?.nik }}
+                    </div>
+                    <div
+                        class="mt-1"
+                        style="
+                            font-size: 12px;
+                            font-weight: 700;
+                            color: #656565;
+                        "
+                    >
+                        {{ dataEmployee?.fullName }}
+                    </div>
+                    <div
+                        class="flex align-items-center"
+                        style="font-size: 12px; font-weight: 400; gap: 6px"
+                    >
+                        <span style="color: #656565">{{
+                            dataEmployee?.jobTitleName
+                        }}</span>
+                        <span
+                            style="
+                                width: 3px;
+                                height: 3px;
+                                border-radius: 50%;
+                                background-color: #9f9f9f;
+                            "
+                        ></span>
+                        <span style="color: #656565">{{
+                            dataEmployee?.jobPositionName
+                        }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="text-right absolute"
+                style="top: 6px; right: 6px"
+                *ngIf="!disabled"
+            >
+                <p-button
+                    icon="fas fa-times"
+                    (click)="onRemoveEmpData()"
+                    styleClass="p-button-rounded p-button-primary p-button-text x-close"
+                ></p-button>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div
+        class="mt-2 w-full"
+        *ngIf="isImage && (selectedEmployee !== '' || value)"
+    >
+        <div
+            class="border-1 flex justify-content-between"
+            style="
+                gap: 1.142857142857143rem;
+                border-radius: 4px;
+                border-color: #eee;
+            "
+        >
+            <div
+                class="col-10 flex align-items-center"
+                style="
+                    gap: 1.142857142857143rem;
+                    padding: 0.8571428571428571rem 1.142857142857143rem;
+                "
+            >
+                <img
+                    *ngIf="!src"
+                    src="assets/no-profile-picture.svg"
+                    alt=""
+                    class="w-3rem h-3rem border-circle"
+                />
+
+                <img
+                    *ngIf="src"
+                    [src]="src"
+                    alt=""
+                    class="w-3rem h-3rem border-circle"
+                />
+
+                <div>
+                    <div
+                        style="
+                            font-size: 11px;
+                            font-weight: 600;
+                            color: #9f9f9f;
+                        "
+                    >
+                        {{ dataEmployee?.nik }}
+                    </div>
+                    <div
+                        class="mt-1"
+                        style="
+                            font-size: 12px;
+                            font-weight: 700;
+                            color: #656565;
+                        "
+                    >
+                        <ng-container
+                            *ngIf="dataEmployee?.fullName; else editEmployee"
+                        >
+                            {{ dataEmployee?.fullName }}
+                        </ng-container>
+                        <ng-template #editEmployee>
+                            {{ selectedEmployee }}
+                        </ng-template>
+                    </div>
+
+                    <ng-container
+                        *ngIf="dataEmployee?.fullName; else editEmployeeJob"
+                    >
+                        <div
+                            class="flex align-items-center"
+                            style="font-size: 12px; font-weight: 400; gap: 6px"
+                        >
+                            <span style="color: #656565">
+                                {{ dataEmployee?.jobTitleName }}
+                            </span>
+                            <span
+                                style="
+                                    width: 3px;
+                                    height: 3px;
+                                    border-radius: 50%;
+                                    background-color: #9f9f9f;
+                                "
+                            ></span>
+                            <span style="color: #656565">
+                                {{ dataEmployee?.jobTitleName }}
+                            </span>
+                        </div>
+                    </ng-container>
+                    <ng-template #editEmployeeJob>
+                        {{ digitalSignature }}
+                    </ng-template>
+                </div>
+            </div>
+
+            <div
+                class="flex justify-content-baseline relative"
+                *ngIf="!disabled"
+            >
+                <div class="text-right absolute top-0 right-0">
+                    <p-button
+                        icon="fas fa-times"
+                        (click)="onRemoveEmpData()"
+                        styleClass="p-button-rounded p-button-primary p-button-text"
+                    ></p-button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <div
+        class="mt-2 w-full"
+        *ngIf="
+            !isImage && (selectedEmployee !== '' || value) && isShowDescription
+        "
+    >
+        <div
+            class="border-1 flex justify-content-between"
+            style="
+                height: 39.6px;
+                gap: 1.142857142857143rem;
+                border-radius: 4px;
+                border-color: #eee;
+            "
+        >
+            <div
+                class="col-10 flex align-items-center"
+                style="
+                    gap: 1.142857142857143rem;
+                    padding: 0.8571428571428571rem 1.142857142857143rem;
+                "
+            >
+                <div>
+                    <div
+                        style="
+                            font-size: 0.8571428571428571rem;
+                            font-weight: 400;
+                            color: #656565;
+                        "
+                    >
+                        {{ dataEmployee?.nik }}
+                        <span
+                            class="mx-2"
+                            style="color: #656565; font-weight: 600"
+                        >
+                            {{ dataEmployee?.fullName }}
+                        </span>
+
+                        <span
+                            style="
+                                font-size: 0.8571428571428571rem;
+                                font-weight: 400;
+                                color: #656565;
+                            "
+                        >
+                            {{ dataEmployee?.jobTitleName }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-content-center relative" *ngIf="!disabled">
+                <div class="text-right absolute top-0 right-0 pr-1 pb-0">
+                    <p-button
+                        icon="fas fa-times"
+                        (click)="onRemoveEmpData()"
+                        styleClass="p-button-rounded p-button-primary p-button-text pb-2"
+                        style="padding-bottom: 14px"
+                    ></p-button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="!isSingle && isNeedHeader">
+    <div
+        class="mt-2 flex flex-column align-items-start w-full p-0"
+        style="gap: 0.5rem"
+        *ngIf="isImage && selectedData.length"
+    >
+        <div
+            class="border-1 flex justify-content-between w-full"
+            style="
+                gap: 1.142857142857143rem;
+                border-radius: 4px;
+                border-color: #eee;
+            "
+            *ngFor="let d_ of selectedData; let idx = index"
+        >
+            <div
+                class="col-10 flex align-items-center"
+                style="
+                    gap: 1.142857142857143rem;
+                    padding: 0.8571428571428571rem 1.142857142857143rem;
+                "
+            >
+                <img
+                    src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
+                    alt=""
+                    class="w-3rem h-3rem border-circle"
+                />
+                <div>
+                    <div
+                        style="
+                            font-size: 0.9571428571428571rem;
+                            font-weight: 400;
+                            color: #7b7b7b;
+                        "
+                    >
+                        {{ d_?.nik }}
+                    </div>
+                    <div class="mt-1" style="color: #656565; font-weight: 700">
+                        {{ d_?.fullName }}
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="flex justify-content-baseline relative"
+                *ngIf="!disabled"
+            >
+                <div class="text-right absolute top-0 right-0">
+                    <p-button
+                        icon="fas fa-times"
+                        (click)="onRemoveEmpDatas(idx)"
+                        styleClass="p-button-rounded p-button-primary p-button-text"
+                    ></p-button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div
+        class="mt-2 flex flex-column align-items-start w-full p-0"
+        style="gap: 0.5rem"
+        *ngIf="!isImage && selectedData.length"
+    >
+        <div
+            class="border-1 flex justify-content-between w-full"
+            style="
+                height: 39.6px;
+                gap: 1.142857142857143rem;
+                border-radius: 4px;
+                border-color: #eee;
+            "
+            *ngFor="let d_ of selectedData; let idx = index"
+        >
+            <div
+                class="col-10 flex align-items-center"
+                style="
+                    gap: 1.142857142857143rem;
+                    padding: 0.8571428571428571rem 1.142857142857143rem;
+                "
+            >
+                <div>
+                    <div
+                        style="
+                            font-size: 0.8571428571428571rem;
+                            font-weight: 400;
+                            color: #656565;
+                        "
+                    >
+                        {{ d_?.nik }}
+                        <span
+                            class="mx-2"
+                            style="color: #656565; font-weight: 600"
+                        >
+                            {{ d_?.fullName }}
+                        </span>
+
+                        <span
+                            style="
+                                font-size: 0.8571428571428571rem;
+                                font-weight: 400;
+                                color: #656565;
+                            "
+                        >
+                            {{ d_?.jobTitleName }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-content-center relative">
+                <div class="text-right absolute top-0 right-0 pr-1 pb-0">
+                    <p-button
+                        icon="fas fa-times"
+                        (click)="onRemoveEmpDatas(idx)"
+                        styleClass="p-button-rounded p-button-primary p-button-text"
+                    ></p-button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+<button
+    *ngIf="btnOnly"
+    pButton
+    pRipple
+    icon="fas fa-plus"
+    class="btn-add-small"
+    (click)="showDialog()"
+></button>
+
+<button
+    *ngIf="btnAddOnly"
+    pButton
+    pRipple
+    icon="fas fa-plus"
+    class="btn-add mb-2 ml-2"
+    label="{{ 'add' | translate }}"
+    (click)="showDialog()"
+></button>
+
+<p-dialog
+    [(visible)]="visible"
+    [modal]="true"
+    [style]="{ width: '85vw', overflow: 'hidden' }"
+    [contentStyle]="{ padding: '0 1.5rem' }"
+    (onHide)="onCancel()"
+    [draggable]="false"
+    [resizable]="false"
+    [appendTo]="appendTo"
+    styleClass="dialog-employee-select custom-gutter"
+    contentStyleClass="relative overflow-y-auto"
+>
+    <ng-container [ngClass]="isShowAdvancedSearch"></ng-container>
+    <ng-template pTemplate="header">
+        <span class="text-xl font-bold" style="color: #656565">{{
+            isShowAdvancedSearch
+                ? ("advancedSearch" | translate)
+                : ("add" | translate) + " " + ("employee" | translate)
+        }}</span>
+    </ng-template>
+    <div class="relative p-0">
+        <div
+            class="grid mt-0 pt-3 pb-4"
+            *ngIf="visible"
+            [ngClass]="
+                isShowAdvancedSearch
+                    ? 'hide__main-select-employee'
+                    : 'show__main-select-employee'
+            "
+        >
+            <div class="col-12 lg:col-9 text-start py-0">
+                <div
+                    class="grid p-fluid text-start align-items-center"
+                    [formGroup]="formSearch"
+                >
+                    <div class="col-6 lg:col-3">
+                        <span class="p-input-icon-left">
+                            <i
+                                class="fas fa-search font-bold text-xl"
+                                style="color: #9f9f9f"
+                            ></i>
+                            <input
+                                placeholder="{{
+                                    'searchEmployeeName' | translate
+                                }}..."
+                                type="text"
+                                name="name"
+                                formControlName="name"
+                                (keyup.enter)="onSearchDialog()"
+                                pInputText
+                                class="input-search w-full"
+                            />
+                        </span>
+                    </div>
+                    <div class="col-6 lg:col-3">
+                        <span class="p-input-icon-left">
+                            <i
+                                class="fas fa-search font-bold text-xl"
+                                style="color: #9f9f9f"
+                            ></i>
+                            <input
+                                placeholder="{{
+                                    'searchEmployeeID' | translate
+                                }}, {{ 'etc' | translate }}"
+                                type="text"
+                                name="inquiry"
+                                formControlName="inquiry"
+                                (keyup.enter)="onSearchDialog()"
+                                pInputText
+                                class="input-search w-full"
+                            />
+                        </span>
+                    </div>
+                    <div class="col-6 lg:col-3">
+                        <!-- <app-lov-company
+                            [isMulti]="true"
+                            filter="true"
+                            (selected)="selectCompanyMulti($event)"
+                        ></app-lov-company> -->
+                        <app-lov-company
+                            *ngIf="!needCompany"
+                            [value]="companyIds"
+                            [disabled]="true"
+                        ></app-lov-company>
+                        <app-lov-company
+                            *ngIf="needCompany"
+                            [value]="companyIds"
+                            [getFirstValue]="true"
+                            (selected)="selectCompany($event)"
+                        ></app-lov-company>
+                    </div>
+                    <div class="col-2 lg:col-1">
+                        <button
+                            class="btn-refresh"
+                            style="width: 100% !important"
+                            type="button"
+                            (click)="onRefresh()"
+                            pButton
+                            pRipple
+                            icon="fas fa-sync-alt"
+                        ></button>
+                    </div>
+                    <div class="col-10 lg:col-2">
+                        <button
+                            class="btn-search-advanced"
+                            type="button"
+                            [disabled]="!companyIds"
+                            pButton
+                            pRipple
+                            (click)="onShowAdvancedSearch()"
+                        >
+                            <i class="fas fa-search"></i>
+                            <span>{{ "advancedSearch" | translate }}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="col-12 lg:col-3 flex align-items-center lg:justify-content-end justify-content-start py-0"
+            >
+                <btn-cancel
+                    (onClick)="onCancel()"
+                    [isNeedConfirmation]="false"
+                ></btn-cancel>
+                <button
+                    type="button"
+                    pButton
+                    [disabled]="!selectedData.length"
+                    pRipple
+                    *ngIf="!isSingle"
+                    class="btn-save mb-2 ml-2"
+                    label="{{ 'choose' | translate }} ({{
+                        selectedData.length
+                    }})"
+                    (click)="onChoose()"
+                ></button>
+            </div>
+            <div class="col-12">
+                <p-table
+                    selectionPageOnly="false"
+                    dataKey="id"
+                    pageLinks="3"
+                    styleClass="p-datatable-gridlines"
+                    responsiveLayout="scroll"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                    [scrollable]="true"
+                    scrollHeight="300px"
+                    [lazy]="true"
+                    [rows]="rowsPerPage"
+                    [value]="list"
+                    [loading]="loading"
+                    [paginator]="paginator"
+                    [totalRecords]="count"
+                    [rowsPerPageOptions]="rowsPerPageOptions"
+                    [showCurrentPageReport]="true"
+                    [(first)]="first"
+                    [(selection)]="selectedData"
+                    (onLazyLoad)="onTableLazyLoad($event)"
+                    (selectionChange)="selectionChange($event)"
+                >
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th
+                                style="width: 3rem"
+                                *ngIf="isSelectable && !isSingle"
+                            >
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th>
+                                <div class="text-center">No</div>
+                            </th>
+
+                            <ng-container *ngFor="let column of columMap">
+                                <th
+                                    [ngStyle]="{
+                                        'text-align':
+                                            column.isCenter && 'center',
+                                        width:
+                                            column.isUpdatedSections && '264px'
+                                    }"
+                                >
+                                    {{ column.label }}
+                                </th>
+                            </ng-container>
+
+                            <th style="width: 8rem" *ngIf="isStatus">
+                                <div class="text-center">Status</div>
+                            </th>
+                            <th style="width: 8rem" *ngIf="isFile">
+                                <div class="text-center">File</div>
+                            </th>
+                            <th style="width: 3rem" *ngIf="isKebab"></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template
+                        class="cursor-pointer"
+                        pTemplate="body"
+                        let-data
+                        let-rowIndex="rowIndex"
+                    >
+                        <tr [pSelectableRow]="data">
+                            <td *ngIf="isSelectable && !isSingle">
+                                <p-tableCheckbox
+                                    [value]="data"
+                                ></p-tableCheckbox>
+                            </td>
+                            <td class="text-center" style="width: 3rem">
+                                {{ rowIndex + 1 }}
+                            </td>
+                            <ng-container
+                                class="cursor-pointer"
+                                *ngFor="let itemData of columMap"
+                            >
+                                <td
+                                    [style]="
+                                        itemData.isCenter
+                                            ? 'text-align:center'
+                                            : ''
+                                    "
+                                    (click)="isSingle ? onSelect(data) : null"
+                                >
+                                    <span
+                                        class="cursor-pointer"
+                                        *ngIf="
+                                            !itemData.isDate &&
+                                            !itemData.isDateTimezone &&
+                                            !itemData.isCheckmark &&
+                                            !itemData.isUpdatedSections
+                                        "
+                                        >{{ data[itemData.key] }}</span
+                                    >
+
+                                    <div
+                                        *ngIf="itemData.isUpdatedSections"
+                                        class="col-updated-sections"
+                                    >
+                                        <span
+                                            *ngFor="
+                                                let el of data[itemData.key]
+                                            "
+                                            >{{ el }}</span
+                                        >
+                                    </div>
+
+                                    <span *ngIf="itemData.isDate">{{
+                                        data[itemData.key] | formatDate
+                                    }}</span>
+                                    <span *ngIf="itemData.isDateTimezone">{{
+                                        data[itemData.key]
+                                            | formatDateTimeZone : true
+                                    }}</span>
+                                    <span *ngIf="itemData.isCheckmark">
+                                        <i
+                                            [ngClass]="[
+                                                data[itemData.key]
+                                                    ? 'fas fa-check-circle'
+                                                    : 'fas fa-times-circle'
+                                            ]"
+                                            [style]="
+                                                data[itemData.key]
+                                                    ? 'color: #54B486; font-size: 20px'
+                                                    : 'color: #D85454; font-size: 20px'
+                                            "
+                                        ></i>
+                                    </span>
+                                </td>
+                            </ng-container>
+                            <td *ngIf="isStatus" class="text-center">
+                                <span
+                                    class="mb-2"
+                                    [ngClass]="getStatusClass(data)"
+                                >
+                                    {{ statusLabel || "-" | titleCase }}
+                                </span>
+                            </td>
+                            <td
+                                *ngIf="isFile"
+                                class="flex align-self-center justify-content-center"
+                                style="color: #0e8ec5; cursor: pointer"
+                            >
+                                <span class="mb-2">
+                                    <i class="fas fa-eye mr-1"></i>
+                                    <span style="text-decoration: underline"
+                                        >View</span
+                                    >
+                                </span>
+                            </td>
+                            <td *ngIf="isKebab">
+                                <p-overlayPanel styleClass="action-overlay" #op>
+                                    <ul class="action-menu">
+                                        <li
+                                            class="action-menu__item"
+                                            *ngIf="kebabOption.isDetail"
+                                            (click)="
+                                                onKebab(
+                                                    'detail',
+                                                    data,
+                                                    op,
+                                                    rowIndex
+                                                )
+                                            "
+                                        >
+                                            <i class="fas fa-eye"></i
+                                            ><span>{{ labelKebabDetail }}</span>
+                                        </li>
+                                        <li
+                                            class="action-menu__item"
+                                            *ngIf="kebabOption.isEdit"
+                                            (click)="
+                                                onKebab(
+                                                    'edit',
+                                                    data,
+                                                    op,
+                                                    rowIndex
+                                                )
+                                            "
+                                        >
+                                            <i class="fas fa-edit"></i
+                                            ><span>Edit</span>
+                                        </li>
+                                        <li
+                                            class="action-menu__item"
+                                            *ngIf="kebabOption.isDelete"
+                                            (click)="
+                                                onKebab(
+                                                    'delete',
+                                                    data,
+                                                    op,
+                                                    rowIndex
+                                                )
+                                            "
+                                        >
+                                            <i class="fas fa-trash delete"></i>
+                                            <span>Delete</span>
+                                        </li>
+                                        <li
+                                            class="action-menu__item"
+                                            *ngIf="kebabOption.isExport"
+                                            (click)="
+                                                onKebab(
+                                                    'export',
+                                                    data,
+                                                    op,
+                                                    rowIndex
+                                                )
+                                            "
+                                        >
+                                            <i class="fas fa-print"></i
+                                            ><span>Print</span>
+                                        </li>
+                                    </ul>
+                                </p-overlayPanel>
+                                <p-button
+                                    icon="fas fa-ellipsis-v"
+                                    styleClass="p-button-rounded p-button-secondary p-button-text"
+                                    (click)="op.toggle($event)"
+                                ></p-button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td class="text-center" colspan="9">
+                                <span
+                                    *ngIf="!useCustomEmptyMessage"
+                                    class="font-italic"
+                                    style="color: #9f9f9f"
+                                    >{{ emptyMessage }}</span
+                                >
+                                <ng-content
+                                    *ngIf="useCustomEmptyMessage"
+                                    select="[emptyMessage]"
+                                ></ng-content>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="loadingbody">
+                        <tr>
+                            <td class="text-center" colspan="9">
+                                Loading data. Please wait.
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+        <ng-container>
+            <div
+                [ngClass]="
+                    isShowAdvancedSearch
+                        ? 'show-advanced-search'
+                        : 'hide-advanced-search'
+                "
+                class="grid dialog-employee-select__content relative"
+                [formGroup]="formSearch"
+            >
+                <div class="col-12 lg:col-6">
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="organizationIds">{{
+                                "organization" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="listLovUri.organizationIds"
+                                label="{{ 'select' | translate }} {{
+                                    'organization' | translate
+                                }}"
+                                filter="true"
+                                [useChip]="true"
+                                isMulti="true"
+                                (selected)="
+                                    selectedMulti($event, 'organizationIds')
+                                "
+                                [isValueLabel]="true"
+                            ></app-lov>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="jobPositionIds">{{
+                                "jobPosition" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="listLovUri.jobPositionIds"
+                                filter="true"
+                                label="{{ 'select' | translate }} {{
+                                    'jobPosition' | translate
+                                }}"
+                                [useChip]="true"
+                                isMulti="true"
+                                (selected)="
+                                    selectedMulti($event, 'jobPositionIds')
+                                "
+                                [isValueLabel]="true"
+                            ></app-lov>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="jobTitleIds">{{
+                                "jobTitle" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="listLovUri.jobTitleIds"
+                                filter="true"
+                                label="{{ 'select' | translate }} {{
+                                    'jobTitle' | translate
+                                }}"
+                                [useChip]="true"
+                                isMulti="true"
+                                (selected)="
+                                    selectedMulti($event, 'jobTitleIds')
+                                "
+                                [isValueLabel]="true"
+                            ></app-lov>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="jobLevelIds">{{
+                                "jobLevel" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="listLovUri.jobLevelIds"
+                                filter="true"
+                                label="{{ 'select' | translate }} {{
+                                    'jobLevel' | translate
+                                }}"
+                                [useChip]="true"
+                                isMulti="true"
+                                (selected)="
+                                    selectedMulti($event, 'jobLevelIds')
+                                "
+                            ></app-lov>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="workLocationId">{{
+                                "workLocation" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="listLovUri.workLocationId"
+                                filter="true"
+                                label="{{ 'select' | translate }} {{
+                                    'workLocation' | translate
+                                }}"
+                                (selected)="
+                                    selectDropdown($event, 'workLocationId')
+                                "
+                            ></app-lov>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="employeeTypeCategoryId">{{
+                                "employeeTypeCategory" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="listLovUri.employeeTypeCategoryId"
+                                filter="true"
+                                label="{{ 'select' | translate }} {{
+                                    'employeeTypeCategory' | translate
+                                }}"
+                                (selected)="
+                                    selectDropdown(
+                                        $event,
+                                        'employeeTypeCategoryId'
+                                    )
+                                "
+                            ></app-lov>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="employeeTypeGroupId">{{
+                                "employeeTypeGroup" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="listLovUri.employeeTypeGroupId"
+                                filter="true"
+                                label="{{ 'select' | translate }} {{
+                                    'employeeTypeGroup' | translate
+                                }}"
+                                (selected)="
+                                    selectDropdown(
+                                        $event,
+                                        'employeeTypeGroupId'
+                                    )
+                                "
+                            ></app-lov>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 lg:col-6">
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="employeeTypeId">{{
+                                "employeeType" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="listLovUri.employeeTypeId"
+                                filter="true"
+                                label="{{ 'select' | translate }} {{
+                                    'employeeType' | translate
+                                }}"
+                                (selected)="
+                                    selectDropdown($event, 'employeeTypeId')
+                                "
+                            ></app-lov>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="costCenterId">{{
+                                "costCenter" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="listLovUri.costCenterId"
+                                filter="true"
+                                label="{{ 'select' | translate }} {{
+                                    'costCenter' | translate
+                                }}"
+                                (selected)="
+                                    selectDropdown($event, 'costCenterId')
+                                "
+                            ></app-lov>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="genderId">{{
+                                "gender" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="listLovUri.genderId"
+                                filter="true"
+                                label="{{ 'select' | translate }} {{
+                                    'gender' | translate
+                                }}"
+                                (selected)="selectDropdown($event, 'genderId')"
+                            ></app-lov>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="religionId">{{
+                                "religion" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="listLovUri.religionId"
+                                filter="true"
+                                label="{{ 'select' | translate }} {{
+                                    'religion' | translate
+                                }}"
+                                (selected)="
+                                    selectDropdown($event, 'religionId')
+                                "
+                            ></app-lov>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="activePeriodRange">{{
+                                "activePeriodRange" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <div class="grid no-pad" style="column-gap: 10px">
+                                <div class="col p-0">
+                                    <label for="fromActivePeriodRange">{{
+                                        "fromActivePeriodRange" | translate
+                                    }}</label>
+                                    <p-calendar
+                                        id="fromActivePeriodRange"
+                                        dateFormat="dd M yy"
+                                        appendTo="body"
+                                        [showIcon]="true"
+                                        placeholder="dd-mm-yyyy"
+                                        class="custom-calendar"
+                                        formControlName="servicePeriodStartDate"
+                                        icon="fas fa-calendar-alt"
+                                    >
+                                    </p-calendar>
+                                </div>
+                                <div class="col p-0">
+                                    <label for="toActivePeriodRange">{{
+                                        "toActivePeriodRange" | translate
+                                    }}</label>
+                                    <p-calendar
+                                        id="toActivePeriodRange"
+                                        dateFormat="dd M yy"
+                                        appendTo="body"
+                                        [showIcon]="true"
+                                        placeholder="dd-mm-yyyy"
+                                        class="custom-calendar"
+                                        formControlName="servicePeriodEndDate"
+                                        icon="fas fa-calendar-alt"
+                                    >
+                                    </p-calendar>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <ng-template pTemplate="footer">
+        <div
+            style="gap: 14px"
+            *ngIf="isShowAdvancedSearch"
+            class="flex justify-content-end align-items-center"
+        >
+            <button
+                class="btn-cancel justify-content-center align-items-center"
+                style="gap: 10px"
+                type="button"
+                (click)="onCancelAdvancedSearch()"
+                pButton
+                pRipple
+            >
+                <i class="fa-solid fa-xmark"></i>
+                <span class="font-bold">{{ "cancel" | translate }}</span>
+            </button>
+            <button
+                type="button"
+                pButton
+                pRipple
+                style="min-width: max-content; gap: 10px"
+                class="btn-save justify-content-center align-items-center"
+                (click)="onSearchDialog()"
+            >
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span class="font-bold" style="min-width: max-content">{{
+                    "applySearch" | translate
+                }}</span>
+            </button>
+            <button
+                class="btn-refresh"
+                type="button"
+                (click)="onRefreshSearch()"
+                pButton
+                pRipple
+                icon="fas fa-sync-alt"
+            ></button>
+        </div>
+    </ng-template>
+</p-dialog>
+
+<!-- withJobAttribute -->
+<p-dialog
+    *ngIf="withJobAttribute"
+    [(visible)]="visible"
+    [modal]="true"
+    [style]="{ width: '85vw' }"
+    [contentStyle]="{ padding: '0 1.5rem' }"
+    (onHide)="onCancel()"
+    [draggable]="false"
+    [resizable]="false"
+    styleClass="dialog-employee-select custom-gutter"
+    contentStyleClass="relative"
+>
+    <ng-container [ngClass]="isShowAdvancedSearch"></ng-container>
+    <ng-template pTemplate="header">
+        <span class="text-xl font-bold" style="color: #656565">{{
+            isShowAdvancedSearch
+                ? ("advancedSearch" | translate)
+                : ("add" | translate) + " " + ("employee" | translate)
+        }}</span>
+    </ng-template>
+    <div class="relative p-0">
+        <div
+            class="grid mt-0 pt-3 pb-4"
+            *ngIf="visible"
+            [ngClass]="
+                isShowAdvancedSearch
+                    ? 'hide__main-select-employee'
+                    : 'show__main-select-employee'
+            "
+        >
+            <div
+                class="col-12 lg:col-12 flex align-items-center lg:justify-content-end justify-content-start py-0"
+            >
+                <btn-cancel
+                    (onClick)="onCancel()"
+                    [isNeedConfirmation]="false"
+                ></btn-cancel>
+                <button
+                    type="button"
+                    pButton
+                    [disabled]="!selectedData.length"
+                    pRipple
+                    *ngIf="!isSingle"
+                    class="btn-save mb-2 ml-2"
+                    label="{{ 'choose' | translate }} ({{
+                        selectedData.length
+                    }})"
+                    (click)="onChoose()"
+                ></button>
+            </div>
+            <div class="col-12 lg:col-12 text-start py-0 mt-4">
+                <div
+                    class="grid p-fluid text-start align-items-center"
+                    [formGroup]="formSearch"
+                >
+                    <div class="col-6 lg:col-3">
+                        <span class="p-input-icon-left">
+                            <i
+                                class="fas fa-search font-bold text-xl"
+                                style="color: #9f9f9f"
+                            ></i>
+                            <input
+                                placeholder="{{
+                                    'searchEmployeeName' | translate
+                                }}..."
+                                type="text"
+                                name="name"
+                                formControlName="name"
+                                (keyup.enter)="onSearchDialog()"
+                                pInputText
+                                class="input-search w-full"
+                            />
+                        </span>
+                    </div>
+                    <div
+                        class="col-6 lg:col-3"
+                        style="padding-left: 0; padding-right: 0"
+                    >
+                        <span class="p-input-icon-left">
+                            <i
+                                class="fas fa-search font-bold text-xl"
+                                style="color: #9f9f9f"
+                            ></i>
+                            <input
+                                placeholder="{{
+                                    'searchEmployeeID' | translate
+                                }}, {{ 'etc' | translate }}"
+                                type="text"
+                                name="inquiry"
+                                formControlName="inquiry"
+                                (keyup.enter)="onSearchDialog()"
+                                pInputText
+                                class="input-search w-full"
+                            />
+                        </span>
+                    </div>
+                    <div class="col-6 lg:col-3">
+                        <!-- <app-lov-company
+                            [isMulti]="true"
+                            filter="true"
+                            (selected)="selectCompanyMulti($event)"
+                        ></app-lov-company> -->
+                        <app-lov-company
+                            *ngIf="!needCompany"
+                            [value]="companyIds"
+                            [disabled]="true"
+                        ></app-lov-company>
+                        <app-lov-company
+                            *ngIf="needCompany"
+                            [value]="companyIds"
+                            [getFirstValue]="true"
+                            (selected)="selectCompany($event)"
+                        ></app-lov-company>
+                    </div>
+                    <div
+                        class="col-10 lg:col-2"
+                        style="padding-left: 0; padding-right: 0"
+                    >
+                        <button
+                            class="btn-search-advanced"
+                            type="button"
+                            [disabled]="!companyIds"
+                            pButton
+                            pRipple
+                            (click)="onShowAdvancedSearchJobAttribute()"
+                        >
+                            <i class="fas fa-search"></i>
+                            <span>{{ "advancedSearch" | translate }}</span>
+                        </button>
+                    </div>
+                    <div class="col-2 lg:col-1">
+                        <button
+                            class="btn-refresh"
+                            style="width: 100% !important"
+                            type="button"
+                            (click)="onRefresh()"
+                            pButton
+                            pRipple
+                            icon="fas fa-sync-alt"
+                        ></button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12" style="padding-top: 0">
+                <p-table
+                    selectionPageOnly="false"
+                    dataKey="id"
+                    pageLinks="3"
+                    styleClass="p-datatable-gridlines"
+                    responsiveLayout="scroll"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                    [scrollable]="true"
+                    scrollHeight="300px"
+                    [lazy]="true"
+                    [rows]="rowsPerPage"
+                    [value]="list"
+                    [loading]="loading"
+                    [paginator]="paginator"
+                    [totalRecords]="count"
+                    [rowsPerPageOptions]="rowsPerPageOptions"
+                    [showCurrentPageReport]="true"
+                    [(first)]="first"
+                    [(selection)]="selectedData"
+                    (onLazyLoad)="onTableLazyLoad($event)"
+                    (selectionChange)="selectionChange($event)"
+                >
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th
+                                style="width: 3rem"
+                                *ngIf="isSelectable && !isSingle"
+                            >
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th>
+                                <div class="text-center">No</div>
+                            </th>
+
+                            <ng-container *ngFor="let column of columMap">
+                                <th
+                                    [ngStyle]="{
+                                        'text-align':
+                                            column.isCenter && 'center',
+                                        width:
+                                            column.isUpdatedSections && '264px'
+                                    }"
+                                >
+                                    {{ column.label }}
+                                </th>
+                            </ng-container>
+
+                            <th style="width: 8rem" *ngIf="isStatus">
+                                <div class="text-center">Status</div>
+                            </th>
+                            <th style="width: 8rem" *ngIf="isFile">
+                                <div class="text-center">File</div>
+                            </th>
+                            <th style="width: 3rem" *ngIf="isKebab"></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template
+                        class="cursor-pointer"
+                        pTemplate="body"
+                        let-data
+                        let-rowIndex="rowIndex"
+                    >
+                        <tr [pSelectableRow]="data">
+                            <td *ngIf="isSelectable && !isSingle">
+                                <p-tableCheckbox
+                                    [value]="data"
+                                ></p-tableCheckbox>
+                            </td>
+                            <td class="text-center" style="width: 3rem">
+                                {{ rowIndex + 1 }}
+                            </td>
+                            <ng-container
+                                class="cursor-pointer"
+                                *ngFor="let itemData of columMap"
+                            >
+                                <td
+                                    [style]="
+                                        itemData.isCenter
+                                            ? 'text-align:center'
+                                            : ''
+                                    "
+                                    (click)="isSingle ? onSelect(data) : null"
+                                >
+                                    <span
+                                        class="cursor-pointer"
+                                        *ngIf="
+                                            !itemData.isDate &&
+                                            !itemData.isDateTimezone &&
+                                            !itemData.isCheckmark &&
+                                            !itemData.isUpdatedSections
+                                        "
+                                        >{{ data[itemData.key] }}</span
+                                    >
+
+                                    <div
+                                        *ngIf="itemData.isUpdatedSections"
+                                        class="col-updated-sections"
+                                    >
+                                        <span
+                                            *ngFor="
+                                                let el of data[itemData.key]
+                                            "
+                                            >{{ el }}</span
+                                        >
+                                    </div>
+
+                                    <span *ngIf="itemData.isDate">{{
+                                        data[itemData.key] | formatDate
+                                    }}</span>
+                                    <span *ngIf="itemData.isDateTimezone">{{
+                                        data[itemData.key]
+                                            | formatDateTimeZone : true
+                                    }}</span>
+                                    <span *ngIf="itemData.isCheckmark">
+                                        <i
+                                            [ngClass]="[
+                                                data[itemData.key]
+                                                    ? 'fas fa-check-circle'
+                                                    : 'fas fa-times-circle'
+                                            ]"
+                                            [style]="
+                                                data[itemData.key]
+                                                    ? 'color: #54B486; font-size: 20px'
+                                                    : 'color: #D85454; font-size: 20px'
+                                            "
+                                        ></i>
+                                    </span>
+                                </td>
+                            </ng-container>
+                            <td *ngIf="isStatus" class="text-center">
+                                <span
+                                    class="mb-2"
+                                    [ngClass]="getStatusClass(data)"
+                                >
+                                    {{ statusLabel || "-" | titleCase }}
+                                </span>
+                            </td>
+                            <td
+                                *ngIf="isFile"
+                                class="flex align-self-center justify-content-center"
+                                style="color: #0e8ec5; cursor: pointer"
+                            >
+                                <span class="mb-2">
+                                    <i class="fas fa-eye mr-1"></i>
+                                    <span style="text-decoration: underline"
+                                        >View</span
+                                    >
+                                </span>
+                            </td>
+                            <td *ngIf="isKebab">
+                                <p-overlayPanel styleClass="action-overlay" #op>
+                                    <ul class="action-menu">
+                                        <li
+                                            class="action-menu__item"
+                                            *ngIf="kebabOption.isDetail"
+                                            (click)="
+                                                onKebab(
+                                                    'detail',
+                                                    data,
+                                                    op,
+                                                    rowIndex
+                                                )
+                                            "
+                                        >
+                                            <i class="fas fa-eye"></i
+                                            ><span>{{ labelKebabDetail }}</span>
+                                        </li>
+                                        <li
+                                            class="action-menu__item"
+                                            *ngIf="kebabOption.isEdit"
+                                            (click)="
+                                                onKebab(
+                                                    'edit',
+                                                    data,
+                                                    op,
+                                                    rowIndex
+                                                )
+                                            "
+                                        >
+                                            <i class="fas fa-edit"></i
+                                            ><span>Edit</span>
+                                        </li>
+                                        <li
+                                            class="action-menu__item"
+                                            *ngIf="kebabOption.isDelete"
+                                            (click)="
+                                                onKebab(
+                                                    'delete',
+                                                    data,
+                                                    op,
+                                                    rowIndex
+                                                )
+                                            "
+                                        >
+                                            <i class="fas fa-trash delete"></i>
+                                            <span>Delete</span>
+                                        </li>
+                                        <li
+                                            class="action-menu__item"
+                                            *ngIf="kebabOption.isExport"
+                                            (click)="
+                                                onKebab(
+                                                    'export',
+                                                    data,
+                                                    op,
+                                                    rowIndex
+                                                )
+                                            "
+                                        >
+                                            <i class="fas fa-print"></i
+                                            ><span>Print</span>
+                                        </li>
+                                    </ul>
+                                </p-overlayPanel>
+                                <p-button
+                                    icon="fas fa-ellipsis-v"
+                                    styleClass="p-button-rounded p-button-secondary p-button-text"
+                                    (click)="op.toggle($event)"
+                                ></p-button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td class="text-center" colspan="9">
+                                <span
+                                    *ngIf="!useCustomEmptyMessage"
+                                    class="font-italic"
+                                    style="color: #9f9f9f"
+                                    >{{ emptyMessage }}</span
+                                >
+                                <ng-content
+                                    *ngIf="useCustomEmptyMessage"
+                                    select="[emptyMessage]"
+                                ></ng-content>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="loadingbody">
+                        <tr>
+                            <td class="text-center" colspan="9">
+                                Loading data. Please wait.
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+        <ng-container>
+            <div
+                [ngClass]="
+                    isShowAdvancedSearch
+                        ? 'show-advanced-search'
+                        : 'hide-advanced-search'
+                "
+                class="grid dialog-employee-select__content relative"
+                [formGroup]="formSearch"
+            >
+                <div class="col-12 lg:col-6">
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="jobPositionIds">{{
+                                "jobPosition" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="listLovUriJobAttribute.jobPositionIds"
+                                filter="true"
+                                label="{{ 'select' | translate }} {{
+                                    'jobPosition' | translate
+                                }}"
+                                [useChip]="true"
+                                isMulti="true"
+                                (selected)="
+                                    selectedMulti($event, 'jobPositionIds')
+                                "
+                                [isValueLabel]="true"
+                            ></app-lov>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="organizationIds">{{
+                                "organization" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="listLovUriJobAttribute.organizationIds"
+                                label="{{ 'select' | translate }} {{
+                                    'organization' | translate
+                                }}"
+                                filter="true"
+                                [useChip]="true"
+                                isMulti="true"
+                                (selected)="
+                                    selectedMulti($event, 'organizationIds')
+                                "
+                                [isValueLabel]="true"
+                            ></app-lov>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="jobTitleIds">{{
+                                "jobTitle" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="listLovUriJobAttribute.jobTitleIds"
+                                filter="true"
+                                label="{{ 'select' | translate }} {{
+                                    'jobTitle' | translate
+                                }}"
+                                [useChip]="true"
+                                isMulti="true"
+                                (selected)="
+                                    selectedMulti($event, 'jobTitleIds')
+                                "
+                                [isValueLabel]="true"
+                            ></app-lov>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="jobLevelIds">{{
+                                "jobLevel" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="listLovUriJobAttribute.jobLevelIds"
+                                filter="true"
+                                label="{{ 'select' | translate }} {{
+                                    'jobLevel' | translate
+                                }}"
+                                [useChip]="true"
+                                isMulti="true"
+                                (selected)="
+                                    selectedMulti($event, 'jobLevelIds')
+                                "
+                            ></app-lov>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 lg:col-6">
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="workLocationId">{{
+                                "workLocation" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="listLovUriJobAttribute.workLocationId"
+                                filter="true"
+                                label="{{ 'select' | translate }} {{
+                                    'workLocation' | translate
+                                }}"
+                                (selected)="
+                                    selectDropdown($event, 'workLocationId')
+                                "
+                            ></app-lov>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="employeeTypeCategoryId">{{
+                                "employeeTypeCategory" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="
+                                    listLovUriJobAttribute.employeeTypeCategoryId
+                                "
+                                filter="true"
+                                label="{{ 'select' | translate }} {{
+                                    'employeeTypeCategory' | translate
+                                }}"
+                                (selected)="
+                                    selectDropdown(
+                                        $event,
+                                        'employeeTypeCategoryId'
+                                    )
+                                "
+                            ></app-lov>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="employeeTypeGroupId">{{
+                                "employeeTypeGroup" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="
+                                    listLovUriJobAttribute.employeeTypeGroupId
+                                "
+                                filter="true"
+                                label="{{ 'select' | translate }} {{
+                                    'employeeTypeGroup' | translate
+                                }}"
+                                (selected)="
+                                    selectDropdown(
+                                        $event,
+                                        'employeeTypeGroupId'
+                                    )
+                                "
+                            ></app-lov>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-3 center-label">
+                            <label for="employeeTypeId">{{
+                                "employeeType" | translate
+                            }}</label>
+                        </div>
+                        <div class="col-9">
+                            <app-lov
+                                ngClass="w-full flex"
+                                styleClass="w-full"
+                                #lovs
+                                [chaining]="true"
+                                [uri]="listLovUriJobAttribute.employeeTypeId"
+                                filter="true"
+                                label="{{ 'select' | translate }} {{
+                                    'employeeType' | translate
+                                }}"
+                                (selected)="
+                                    selectDropdown($event, 'employeeTypeId')
+                                "
+                            ></app-lov>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <ng-template pTemplate="footer">
+        <div
+            style="gap: 14px"
+            *ngIf="isShowAdvancedSearch"
+            class="flex justify-content-end align-items-center"
+        >
+            <button
+                class="btn-cancel justify-content-center align-items-center"
+                style="gap: 10px"
+                type="button"
+                (click)="onCancelAdvancedSearch()"
+                pButton
+                pRipple
+            >
+                <i class="fa-solid fa-xmark"></i>
+                <span class="font-bold">{{ "cancel" | translate }}</span>
+            </button>
+            <button
+                type="button"
+                pButton
+                pRipple
+                style="min-width: max-content; gap: 10px"
+                class="btn-save justify-content-center align-items-center"
+                (click)="onSearchDialog()"
+            >
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span class="font-bold" style="min-width: max-content">{{
+                    "applySearch" | translate
+                }}</span>
+            </button>
+            <button
+                class="btn-refresh"
+                type="button"
+                (click)="onRefreshSearch()"
+                pButton
+                pRipple
+                icon="fas fa-sync-alt"
+            ></button>
+        </div>
+    </ng-template>
+</p-dialog>

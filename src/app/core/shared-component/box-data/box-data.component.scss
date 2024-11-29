@@ -1,0 +1,12 @@
+.box-data {
+    color: var(--placeholder-grey);
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 0.829rem 0.8571428571428571rem;
+    line-height: 1.215;
+    user-select: none;
+
+    &.italic {
+        font-style: italic;
+    }
+}

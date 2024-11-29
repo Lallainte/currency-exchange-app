@@ -1,0 +1,196 @@
+<div class="card">
+    <div class="grid field">
+        <div class="col-6 mt-2">
+            <h5>Perusahaan - Daftar</h5>
+        </div>
+        <div class="col-6">
+            <div class="field text-right hide-mobile">
+                <btn-kembali routeUrl="util/company"></btn-kembali>
+                <btn-save (onClick)="onSave()"></btn-save>
+            </div>
+            <div class="field text-right hide-desktop">
+                <btn-save (onClick)="onSave()"></btn-save>
+            </div>
+        </div>
+    </div>
+    <ng-container [formGroup]="formControl">
+        <div class="grid p-fluid">
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label for="name" class="required">Nama Perusahaan</label>
+                    <div>
+                        <input id="name" type="text" formControlName="name" placeholder="Isi Nama Perusahaan" pInputText
+                            [ngClass]="{'ng-dirty ng-invalid' : (formControl.get('name').touched || formControl.get('name').dirty ) &&
+                        !formControl.get('name').valid}">
+                        <app-error-field-helper [formControlKey]="formControl.get('name')"></app-error-field-helper>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="jenis-usaha" class="required">Jenis Usaha</label>
+                    <div>
+                        <app-lov uri="lov/company-types" label="Pilih Tipe Perusahaan" (selected)="selectCT($event)"
+                            [ngClass]="{'ng-dirty ng-invalid' : (formControl.get('companyType').touched || formControl.get('companyType').dirty ) &&
+                        !formControl.get('companyType').valid}"></app-lov>
+                        <app-error-field-helper [formControlKey]="formControl.get('companyType')">
+                        </app-error-field-helper>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="scale" class="required">Jumlah Karyawan</label>
+                    <div>
+                        <app-lov uri="lov/company-scales" label="Pilih Jumlah Karyawan" (selected)="selectScale($event)"
+                            [ngClass]="{'ng-dirty ng-invalid' : (formControl.get('scale').touched || formControl.get('scale').dirty ) &&
+                        !formControl.get('scale').valid}"></app-lov>
+                        <app-error-field-helper [formControlKey]="formControl.get('scale')">
+                        </app-error-field-helper>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="address">Alamat Perusahaan</label>
+                    <div>
+                        <textarea id="address" class="custom-input" formControlName="address"
+                            placeholder="Isi Alamat Perusahaan" rows="4" cols="33" pInputTextarea
+                            autoResize="autoResize" [ngClass]="{'ng-dirty ng-invalid' : (formControl.get('address').touched || formControl.get('address').dirty ) &&
+                        !formControl.get('address').valid}"></textarea>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="npwp">NPWP</label>
+                    <div>
+                        <p-inputSwitch name="npwp" [(ngModel)]="isNpwp" [ngModelOptions]="{standalone: true}">
+                        </p-inputSwitch>
+                    </div>
+                </div>
+
+                <div class="field" *ngIf="isNpwp">
+                    <label for="companyTaxNumber">No. NPWP</label>
+                    <div>
+                        <p-inputMask styleClass="label-custom-form custom-input" formControlName="companyTaxNumber"
+                            unmask="true" mask="99.999.999.9-999-999"
+                            [ngClass]="{'ng-dirty ng-invalid' : (formControl.get('companyTaxNumber').touched || formControl.get('companyTaxNumber').dirty ) && !formControl.get('companyTaxNumber').valid}">
+                        </p-inputMask>
+                        <app-error-field-helper [formControlKey]="formControl.get('companyTaxNumber')">
+                        </app-error-field-helper>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+
+                <div class="field">
+                    <label for="phone">Telpon</label>
+                    <div>
+                        <input id="phone" type="text" placeholder="Isi No Telpon" numberOnly formControlName="phone"
+                            pInputText [ngClass]="{'ng-dirty ng-invalid' : (formControl.get('phone').touched || formControl.get('phone').dirty ) &&
+                        !formControl.get('phone').valid}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="fax">Fax</label>
+                    <div>
+                        <input id="fax" type="text" numberOnly placeholder="Isi No Fax" formControlName="fax" pInputText
+                            [ngClass]="{'ng-dirty ng-invalid' : (formControl.get('fax').touched || formControl.get('fax').dirty ) &&
+                        !formControl.get('fax').valid}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="email" class="required">Email</label>
+                    <div>
+                        <input id="email" type="email" formControlName="email" placeholder="Isi Email Perusahaan"
+                            pInputText [ngClass]="{'ng-dirty ng-invalid' : (formControl.get('email').touched || formControl.get('email').dirty ) &&
+                        !formControl.get('email').valid}">
+                        <app-error-field-helper [formControlKey]="formControl.get('email')"></app-error-field-helper>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="logo">Logo</label>
+                    <div>
+                        <app-linov-upload [isImage]="true" (onChange)="onFileChange($event)"></app-linov-upload>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid field">
+            <div class="col-12 border-bottom-1 mt-2">
+                <h6>{{ isNpwp === true ? 'Detil Admin' : 'Detil Pemilik'}} </h6>
+            </div>
+        </div>
+        <div class="grid p-fluid">
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label for="numberId" class="required">No. KTP</label>
+                    <div>
+                        <input id="numberId" numberOnly type="text" placeholder="Isi No KTP"
+                            formControlName="ownerNumberId" pInputText [ngClass]="{'ng-dirty ng-invalid' : (formControl.get('ownerNumberId').touched || formControl.get('ownerNumberId').dirty ) &&
+                        !formControl.get('ownerNumberId').valid}">
+                        <app-error-field-helper [formControlKey]="formControl.get('ownerNumberId')">
+                        </app-error-field-helper>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="own-name" class="required">Nama</label>
+                    <div>
+                        <input id="own-name" type="text" formControlName="ownerName" placeholder="Isi Nama Pemilik"
+                            pInputText [ngClass]="{'ng-dirty ng-invalid' : (formControl.get('ownerName').touched || formControl.get('ownerName').dirty ) &&
+                        !formControl.get('ownerName').valid}">
+                        <app-error-field-helper [formControlKey]="formControl.get('ownerName')">
+                        </app-error-field-helper>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="birthDate" class="required">Tanggal Lahir</label>
+                    <div>
+
+                        <p-calendar id="birthDate" dateFormat="dd-mm-yy" appendTo="body" [ngClass]="{'ng-dirty ng-invalid' : (formControl.get('ownerBirth').touched || formControl.get('ownerBirth').dirty ) &&
+                        !formControl.get('ownerBirth').valid}" formControlName="ownerBirth" [showIcon]="true">
+                        </p-calendar>
+                        <app-error-field-helper [formControlKey]="formControl.get('ownerBirth')">
+                        </app-error-field-helper>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="own-address">Alamat</label>
+                    <div>
+                        <textarea id="own-address" class="custom-input" formControlName="ownerAddress"
+                            placeholder="Isi Alamat Pemilik" rows="4" cols="33" pInputTextarea
+                            autoResize="autoResize"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label for="gender" class="required">Jenis Kelamin</label>
+                    <div>
+                        <app-lov uri="lov/genders" label="Pilih Jenis Kelamin" (selected)="selectGender($event)"
+                            [ngClass]="{'ng-dirty ng-invalid' : (formControl.get('ownerGender').touched || formControl.get('ownerGender').dirty ) &&
+                        !formControl.get('ownerGender').valid}"></app-lov>
+                        <app-error-field-helper [formControlKey]="formControl.get('ownerGender')">
+                        </app-error-field-helper>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="ownerReligion" class="required">Agama</label>
+                    <div>
+                        <app-lov uri="lov/religions" label="Pilih Agama" (selected)="selectReligion($event)" [ngClass]="{'ng-dirty ng-invalid' : (formControl.get('ownerReligion').touched || formControl.get('ownerReligion').dirty ) &&
+                        !formControl.get('ownerReligion').valid}"></app-lov>
+                        <app-error-field-helper [formControlKey]="formControl.get('ownerReligion')">
+                        </app-error-field-helper>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="own-email">Email</label>
+                    <div>
+                        <input id="own-email" type="email" formControlName="ownerEmail" pInputText
+                            placeholder="Isi Email Pemilik">
+                        <app-error-field-helper [formControlKey]="formControl.get('ownerEmail')">
+                        </app-error-field-helper>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>

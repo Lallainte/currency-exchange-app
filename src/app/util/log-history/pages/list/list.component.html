@@ -1,0 +1,451 @@
+<div class="grid custom-gutter">
+    <div class="col-4">
+        <div class="card">
+            <div class="grid">
+                <div class="col-12">
+                    <span class="font-card-title">Filter</span>
+                </div>
+                <div class="col-12" style="margin-top: 18px" *ngIf="!isAdmin">
+                    <app-lov-company
+                        [value]="formFilter.getRawValue().company"
+                        [filter]="true"
+                        [chaining]="true"
+                        styleClass="w-full"
+                        label="{{ 'allCompany' | translate }}"
+                        (selected)="selectFilter($event, 'company')"
+                    >
+                    </app-lov-company>
+                </div>
+                <div class="col-12">
+                    <app-lov
+                        [value]="formFilter.getRawValue().module"
+                        [filter]="true"
+                        [chaining]="true"
+                        styleClass="w-full"
+                        label="{{ 'allModule' | translate }}"
+                        (selected)="selectFilter($event, 'module')"
+                        [customOption]="helpLog.lovModule"
+                    ></app-lov>
+                </div>
+                <div class="col-12">
+                    <app-lov
+                        [value]="formFilter.getRawValue().menu"
+                        [filter]="true"
+                        [chaining]="true"
+                        styleClass="w-full"
+                        label="{{ 'allMenu' | translate }}"
+                        (selected)="selectFilter($event, 'menu')"
+                    ></app-lov>
+                </div>
+                <div class="col-12">
+                    <!-- <app-user-select
+                        (selected)="selectFilter($event, 'user')"
+                    ></app-user-select> -->
+                    <div
+                        class="p-inputgroup cursor-pointer"
+                        (click)="showDialogEmpSelect()"
+                    >
+                        <input
+                            id="employee"
+                            [(ngModel)]="selectedEmployee"
+                            type="text"
+                            placeholder="{{ 'all' | translate }} Users"
+                            pInputText
+                            readonly
+                        />
+                        <button
+                            type="button"
+                            (click)="showDialogEmpSelect()"
+                            class="p-inputgroup-addon user-select cursor-pointer"
+                        >
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div
+                        *ngIf="selectedEmployee !== ''"
+                        class="flex mt-3 border-1 border-300 border-round py-2 px-3"
+                        style="gap: 12px"
+                    >
+                        <img
+                            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
+                            alt=""
+                            class="w-3rem h-3rem border-circle"
+                        />
+                        <div
+                            class="flex flex-column p-0 justify-content-center"
+                            style="gap: 2px"
+                        >
+                            <span
+                                style="
+                                    color: #656565;
+                                    font-family: SF Pro Text;
+                                    font-size: 12px;
+                                    font-style: normal;
+                                    font-weight: 700;
+                                    line-height: normal;
+                                "
+                                >{{ selectedDataEmployee.nik }}</span
+                            >
+                            <span
+                                style="
+                                    color: #656565;
+                                    font-family: SF Pro Text;
+                                    font-size: 14px;
+                                    font-style: normal;
+                                    font-weight: 400;
+                                    line-height: normal;
+                                "
+                                >{{ selectedDataEmployee.fullName }}</span
+                            >
+                        </div>
+                    </div>
+                </div>
+                <app-employee-select [needCompany]="true"
+                    (selected)="selectFilter($event, 'user')"
+                    [isNeedHeader]="false"
+                    (hide)="hideDialogEmpSelect()"
+                    [visible]="visibleEmployeeSelect"
+                ></app-employee-select>
+                <div class="col-12">
+                    <app-date-range-picker
+                        #dateRangePicker
+                        (apply)="onApplyDateRange($event)"
+                        [startDate]="formFilter.getRawValue().start"
+                        [endDate]="formFilter.getRawValue().end"
+                    ></app-date-range-picker>
+                </div>
+                <div class="col-12">
+                    <button
+                        (click)="onResetFilter()"
+                        style="
+                            outline: none;
+                            border: none;
+                            background-color: transparent;
+                            padding: 0;
+                            font-family: SF Pro Text;
+                        "
+                        class="text-click"
+                    >
+                        Reset Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="card">
+            <div class="grid" *ngIf="loading">
+                <div class="col-12">
+                    <span class="font-card-title"
+                        ><p-skeleton height="27px"></p-skeleton
+                    ></span>
+                </div>
+                <div class="col-12">
+                    <div class="grid no-pad">
+                        <div
+                            class="col-12 no-pad flex flex-column"
+                            style="gap: 20px"
+                        >
+                            <div class="history-list">
+                                <div class="w-full">
+                                    <p-skeleton
+                                        height="27px"
+                                        width="258px"
+                                    ></p-skeleton>
+                                </div>
+                                <div class="history-list__wrapper-list">
+                                    <p-skeleton height="77px"></p-skeleton>
+                                    <p-skeleton height="77px"></p-skeleton>
+                                    <p-skeleton height="77px"></p-skeleton>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid" *ngIf="!loading">
+                <div class="col-12">
+                    <span class="font-card-title">{{
+                        "historyList" | translate
+                    }}</span>
+                </div>
+                <div
+                    class="col-12"
+                    appInfiniteScroll
+                    (nearEnd)="onScrollNearEnd()"
+                    [maxDataReached]="maxDataReached"
+                >
+                    <div *ngIf="listData.length" class="grid no-pad">
+                        <div
+                            class="col-12 no-pad flex flex-column"
+                            style="gap: 20px"
+                        >
+                            <div
+                                class="history-list"
+                                *ngFor="let item of listGroup; let idx = index"
+                            >
+                                <div class="history-list__header--date-key">
+                                    <button
+                                        class="date-key"
+                                        (click)="onClickDateKey(idx)"
+                                    >
+                                        <div class="angle-down--date-key">
+                                            <i
+                                                class="fa-solid"
+                                                [class.fa-angle-up]="
+                                                    openedIndexDateKey.includes(
+                                                        idx
+                                                    )
+                                                "
+                                                [class.fa-angle-down]="
+                                                    !openedIndexDateKey.includes(
+                                                        idx
+                                                    )
+                                                "
+                                            ></i>
+                                        </div>
+                                        <span class="text--date-key">{{
+                                            formatDateKey(item.dateKey)
+                                        }}</span>
+                                    </button>
+                                </div>
+                                <div
+                                    class="history-list__wrapper-list"
+                                    [class.active--collapse]="
+                                        openedIndexDateKey.includes(idx)
+                                    "
+                                >
+                                    <!-- Wrapper Card Log History -->
+                                    <div
+                                        *ngFor="
+                                            let log of item.entries;
+                                            let idx_ = index
+                                        "
+                                        class="flex pl-6 relative item--action-card__list"
+                                    >
+                                        <div
+                                            class="action-icon--card-list"
+                                            [ngClass]="
+                                                helpLog.checkAction(
+                                                    log.id.action
+                                                ).class
+                                            "
+                                        >
+                                            <i
+                                                [ngClass]="
+                                                    helpLog.checkAction(
+                                                        log.id.action
+                                                    ).icon
+                                                "
+                                            ></i>
+                                        </div>
+                                        <div
+                                            class="history-list__wrapper-card-log flex flex-column align-items-start w-full cursor-pointer"
+                                            (click)="onClickCardLog(log.id)"
+                                        >
+                                            <div
+                                                class="flex justify-content-between align-items-center w-full"
+                                            >
+                                                <div
+                                                    class="flex align-items-center"
+                                                    style="gap: 8px"
+                                                >
+                                                    <p-avatar
+                                                        label="U"
+                                                        styleClass="mr-2"
+                                                        [style]="{
+                                                            'background-color':
+                                                                '#9c27b0',
+                                                            color: '#ffffff'
+                                                        }"
+                                                        shape="circle"
+                                                    ></p-avatar>
+                                                    <span
+                                                        class="user-name--card-log"
+                                                    >
+                                                        {{ log.id.user }}
+                                                    </span>
+                                                </div>
+                                                <span
+                                                    class="text--time-action"
+                                                    *ngIf="
+                                                        !openedIndexLogs.includes(
+                                                            idx_
+                                                        )
+                                                    "
+                                                    >{{
+                                                        helpLog.formatTime(
+                                                            log.entities[0]
+                                                                .timestamp
+                                                        )
+                                                    }}</span
+                                                >
+                                            </div>
+                                            <div
+                                                class="flex justify-content-between w-full"
+                                                style="gap: 10px"
+                                            >
+                                                <div>
+                                                    <span
+                                                        class="w-full text--module"
+                                                        ><b
+                                                            >{{
+                                                                helpLog.formatText(
+                                                                    log
+                                                                        .entities[0]
+                                                                        .module
+                                                                )
+                                                            }}
+                                                            |
+                                                            {{
+                                                                helpLog.formatText(
+                                                                    log
+                                                                        .entities[0]
+                                                                        .entityName
+                                                                )
+                                                            }}</b
+                                                        >
+                                                        :
+                                                    </span>
+                                                    <span
+                                                        class="text--action"
+                                                        >{{
+                                                            helpLog.formatText(
+                                                                log.entities[0]
+                                                                    .entityName,
+                                                                log.entities[0]
+                                                                    .action
+                                                            )
+                                                        }}</span
+                                                    >
+                                                </div>
+                                                <span
+                                                    class="text--time-action"
+                                                    *ngIf="
+                                                        openedIndexLogs.includes(
+                                                            idx_
+                                                        )
+                                                    "
+                                                    >{{
+                                                        helpLog.formatTime(
+                                                            log.entities[0]
+                                                                .timestamp
+                                                        )
+                                                    }}</span
+                                                >
+                                            </div>
+                                            <div
+                                                *ngIf="log.entities.length > 1"
+                                                class="flex w-full relative justify-content-start align-items-center py-2"
+                                            >
+                                                <button
+                                                    (click)="
+                                                        onClickShowMore(
+                                                            $event,
+                                                            idx_
+                                                        )
+                                                    "
+                                                    class="btn__show-more"
+                                                >
+                                                    {{
+                                                        openedIndexLogs.includes(
+                                                            idx_
+                                                        )
+                                                            ? "Less More"
+                                                            : "Show More"
+                                                    }}
+                                                </button>
+                                            </div>
+                                            <ng-container
+                                                *ngIf="
+                                                    openedIndexLogs.includes(
+                                                        idx_
+                                                    )
+                                                "
+                                            >
+                                                <ng-container
+                                                    *ngFor="
+                                                        let entity of log.entities;
+                                                        let i_ = index
+                                                    "
+                                                >
+                                                    <div
+                                                        *ngIf="i_ > 0"
+                                                        class="flex justify-content-between w-full"
+                                                        style="
+                                                            padding: 0 !important;
+                                                            gap: 10px;
+                                                        "
+                                                    >
+                                                        <div>
+                                                            <span
+                                                                class="w-full text--module"
+                                                                ><b
+                                                                    >{{
+                                                                        helpLog.formatText(
+                                                                            entity.module
+                                                                        )
+                                                                    }}
+                                                                    |
+                                                                    {{
+                                                                        helpLog.formatText(
+                                                                            entity.entityName
+                                                                        )
+                                                                    }}</b
+                                                                >
+                                                                :
+                                                            </span>
+                                                            <span
+                                                                class="text--action"
+                                                                >{{
+                                                                    helpLog.formatText(
+                                                                        entity.entityName,
+                                                                        entity.action
+                                                                    )
+                                                                }}</span
+                                                            >
+                                                        </div>
+                                                        <span
+                                                            *ngIf="
+                                                                openedIndexLogs.includes(
+                                                                    idx_
+                                                                )
+                                                            "
+                                                            class="text--time-action"
+                                                            >{{
+                                                                helpLog.formatTime(
+                                                                    entity.timestamp
+                                                                )
+                                                            }}</span
+                                                        >
+                                                    </div>
+                                                </ng-container>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="history-list" *ngIf="loadingScroll">
+                                <div class="history-list__wrapper-list">
+                                    <div class="pl-6">
+                                        <p-skeleton
+                                            height="77px"
+                                            class="pl-2"
+                                        ></p-skeleton>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid no-pad" *ngIf="!listData.length">
+                        <div class="col-12 text-center no-pad">
+                            <h5 style="color: #656565" class="m-0">
+                                <i>There is no history to show.</i>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

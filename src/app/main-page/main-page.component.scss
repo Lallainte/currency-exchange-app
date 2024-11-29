@@ -1,0 +1,29 @@
+.main-content{
+    background-color: #fbff0e;
+    border: 1px solid black;
+    border-radius: 24px;
+    padding: 0 12px 12px 12px;
+    div h1 {
+        color: #000000;
+
+    }
+
+}
+
+.main-content:hover{
+    transition: 0.8s;
+    background-color: #000000;
+    border: 1px solid #fbff0e;
+    border-radius: 40px;
+    div h1 {
+        color: #fbff0e;
+
+    }
+}
+
+
+
+
+.exchange-icon {
+    content: url(../../../src/assets/icon/exchange.png);
+}

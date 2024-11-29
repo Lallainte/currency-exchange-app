@@ -1,0 +1,42 @@
+.linov-checkbox-multiselect {
+    display: flex;
+    min-height: 42px;
+    align-items: center;
+
+    ::ng-deep {
+        $pm: "p-multiselect";
+
+        #{$pm} {
+            overflow: hidden;
+
+            &.p-inputwrapper-focus {
+                overflow: initial;
+            }
+        }
+
+        .#{$pm} {
+            border: 1px solid #eee;
+            background: #f5f6fa;
+        }
+
+        .#{$pm}-items {
+            padding: 0;
+        }
+
+        .#{$pm}-token {
+            background: #fff;
+        }
+
+        .#{$pm}-trigger-icon {
+            color: var(--primary-blue);
+        }
+
+        .#{$pm}-label-container {
+            width: 0;
+        }
+
+        .#{$pm}-panel .#{$pm}-header {
+            background: #fff;
+        }
+    }
+}

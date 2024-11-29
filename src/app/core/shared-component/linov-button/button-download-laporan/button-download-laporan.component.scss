@@ -1,0 +1,58 @@
+:host {
+    ::ng-deep .p-dialog-content {
+        padding-top: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        align-items: center;
+
+        .p-confirm-dialog-message {
+            text-align: center;
+        }
+    }
+
+    ::ng-deep .p-dialog-footer {
+        text-align: center;
+
+        button {
+            margin: 0 0.5rem 0 0.5rem;
+        }
+    }
+}
+
+:host ::ng-deep {
+    .c-icons {
+        width: 6rem;
+        height: 6rem;
+    }
+
+    .approved-icon {
+        background-image: url("/assets/icon/icon-approved.svg");
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .reject-icon {
+        background-image: url("/assets/icon/icon-reject.svg");
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .cancel-icon {
+        background-image: url("/assets/icon/icon-cancel.svg");
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .payment-icon {
+        background-image: url("/assets/icon/icon-payment.svg");
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .time-icon {
+        background-image: url("/assets/icon/icon-attandance.svg");
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+}

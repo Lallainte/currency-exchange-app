@@ -1,0 +1,29 @@
+<div class="grid p-fluid m-0 p-0 px-4">
+    <div class="col-12 border-line pt-4">
+        <div class="grid">
+            <div class="col-8">
+                <span class="font-card-title">{{ subTitle | translate }}</span>
+            </div>
+            <div class="col-4 text-right"></div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="grid">
+            <div class="col-12">
+                <app-search
+                    (search)="onSearch($event)"
+                    [isFilter]="false"
+                    [isFilterLov]="false"
+                    [isDate]="true"
+                ></app-search>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 p-0 pb-4">
+        <app-list-view-notification
+            #ListViewComponent
+            (action)="dataAction($event)"
+            [uri]="uri"
+        ></app-list-view-notification>
+    </div>
+</div>

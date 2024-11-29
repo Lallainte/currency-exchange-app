@@ -1,0 +1,53 @@
+<p-dropdown
+    *ngIf="!isMulti"
+    [(ngModel)]="selectedData"
+    (onChange)="onChange($event.value)"
+    [options]="list"
+    [disabled]="disabled || isSingleCompany"
+    [filter]="filter"
+    [readonly]="readonly"
+    appendTo="body"
+    optionLabel="name"
+    [showClear]="showClear"
+    placeholder="{{ label }}"
+    [ngClass]="ngClass"
+    dropdownIcon="fas fa-caret-down"
+    [styleClass]="styleClass"
+    appendTo="body"
+>
+    <ng-template let-country pTemplate="empty">
+        <p-progressBar
+            [style]="{ height: '4px' }"
+            mode="indeterminate"
+            *ngIf="loading; else normal"
+        ></p-progressBar>
+    </ng-template>
+</p-dropdown>
+
+<p-multiSelect
+    *ngIf="isMulti"
+    [(ngModel)]="selectedDatas"
+    (onChange)="onChange($event.value)"
+    [options]="list"
+    [disabled]="disabled || isSingleCompany"
+    [filter]="filter"
+    [readonly]="readonly"
+    optionLabel="name"
+    appendTo="body"
+    placeholder="{{ label }}"
+    [ngClass]="ngClass"
+    dropdownIcon="fas fa-caret-down"
+    [styleClass]="styleClass"
+    [style]="{ width: '14rem' }"
+    [display]="display"
+    appendTo="body"
+>
+    <ng-template let-country pTemplate="empty">
+        <p-progressBar
+            [style]="{ height: '4px' }"
+            mode="indeterminate"
+            *ngIf="loading; else normal"
+        ></p-progressBar>
+    </ng-template>
+</p-multiSelect>
+<ng-template #normal>No Data</ng-template>

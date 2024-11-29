@@ -1,0 +1,42 @@
+<p-dataView
+    #dv
+    [value]="list"
+    [(first)]="first"
+    pageLinks="3"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [lazy]="isLazy"
+    [rows]="rowsPerPage"
+    [loading]="loading"
+    [paginator]="paginator"
+    [totalRecords]="count"
+    [rowsPerPageOptions]="rowsPerPageOptions"
+    [showCurrentPageReport]="true"
+    [emptyMessage]="emptyMessage"
+    (onLazyLoad)="onDataLazyLoad($event)"
+    paginatorStyleClass="grid-view__paginator"
+    styleClass="grid-view"
+>
+    <ng-template let-item pTemplate="listItem" let-rowIndex="rowIndex">
+        <div class="col-12 md:col-6 lg:col-4 p-2">
+            <div
+                class="card-item-announcement"
+                (click)="onClickRow(item, rowIndex)"
+            >
+                <div class="banner-img-announcement">
+                    <img [src]="getImageUrl(item)" alt="" />
+                </div>
+                <div class="card-item-announcement__body">
+                    <span class="type-announcement">
+                        {{ item.lovTypeAnnouncementName }}
+                    </span>
+                    <span class="title-announcement">
+                        {{ item.title }}
+                    </span>
+                    <span class="date-post-announcement">
+                        {{ formatDate(item.effectiveDateStart) }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</p-dataView>

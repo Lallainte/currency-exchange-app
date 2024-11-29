@@ -1,0 +1,126 @@
+<div
+    class="layout-wrapper"
+    [ngClass]="{
+        'layout-overlay': isOverlay(),
+        'layout-static': isStatic(),
+        'layout-theme-light': !config?.dark,
+        'layout-theme-dark': config?.dark,
+        'layout-overlay-sidebar-active': overlayMenuActive,
+        'layout-static-sidebar-inactive': staticMenuInactive,
+        'layout-mobile-sidebar-active': menuActiveMobile,
+        'p-ripple-disabled': !config?.ripple,
+        'p-input-filled': config?.inputStyle === 'filled'
+    }"
+>
+    <app-topbar></app-topbar>
+    <app-submenu-component></app-submenu-component>
+    <div class="layout-sidebar pt-0">
+        <app-menu></app-menu>
+        <!-- <div>
+            <div
+                class="mt-5 pt-3 col-12 p-fluid upgrade-image text-center"
+                *ngIf="!premium"
+            >
+                <div class="col-12">
+                    <label class="content-upgrade cus-text-base">
+                        Sisa Waktu Trial
+                    </label>
+                </div>
+                <div class="col-12">
+                    <label class="title-upgrade cus-text-2xl"
+                        >{{ trialDays }} Hari
+                    </label>
+                </div>
+                <div class="col-12 pl-5 pr-5">
+                    <button
+                        pButton
+                        pRipple
+                        routerLink="/premium/upgrade"
+                        type="button"
+                        label="Aktivasi Premium"
+                        style="background-color: white"
+                        class="p-button-rounded p-button-text mr-2 mb-2 btn-small"
+                    ></button>
+                </div>
+            </div>
+        </div> -->
+    </div>
+    <div class="layout-main-container">
+        <div class="layout-main">
+            <!-- <div class="grid col" *ngIf="trialDays && !closed && !premium">
+                <div
+                    class="col-11 text-left bg-primary-color p-4 pb-5"
+                    style="border-radius: 10px 0px 0px 10px"
+                >
+                    <label class="title-upgrade text-center cus-text-lg">
+                        Aktivasi akun trial anda menjadi akun premium sekarang
+                        juga!
+                    </label>
+
+                    <button
+                        pButton
+                        pRipple
+                        routerLink="/premium/upgrade"
+                        type="button"
+                        label="Aktivasi Premium"
+                        style="background-color: white; top: 10%"
+                        class="p-button-rounded p-button-text ml-2 mt-1 btn-small"
+                    ></button>
+                </div>
+                <div
+                    class="col-1 bg-primary-color flex align-items-center justify-content-end"
+                    style="border-radius: 0px 10px 10px 0px"
+                >
+                    <i
+                        class="bi bi-x-lg"
+                        style="color: white; cursor: pointer"
+                        (click)="closed = true"
+                    ></i>
+                </div>
+            </div>
+            <div
+                class="grid col"
+                *ngIf="trialDaysExpired && !closed && premium"
+            >
+                <div
+                    class="col-11 text-left bg-primary-color p-4 pb-5"
+                    style="border-radius: 10px 0px 0px 10px"
+                >
+                    <label class="title-upgrade text-center cus-text-lg">
+                        Masa berlangganan anda tersisa {{ trialDays }} Hari
+                        lagi, silahkan ajukan perpanjangan..
+                    </label>
+
+                    <button
+                        pButton
+                        pRipple
+                        routerLink="/premium/renew-subscription"
+                        type="button"
+                        label="Perpanjang Premium"
+                        style="background-color: white; top: 10%"
+                        class="p-button-rounded p-button-text ml-2 mt-1 btn-small"
+                    ></button>
+                </div>
+                <div
+                    class="col-1 bg-primary-color flex align-items-center justify-content-end"
+                    style="border-radius: 0px 10px 10px 0px"
+                >
+                    <i
+                        class="bi bi-x-lg"
+                        style="color: white; cursor: pointer"
+                        (click)="closed = true"
+                    ></i>
+                </div>
+            </div> -->
+            <ngx-spinner></ngx-spinner>
+            <router-outlet *ngIf="!config?.loading"></router-outlet>
+            <p-scrollTop></p-scrollTop>
+        </div>
+    </div>
+    <!-- off dl theme selector -->
+    <!-- <app-config></app-config> -->
+    <div *ngIf="menuActiveMobile" class="layout-mask p-component-overlay"></div>
+
+    <flash-message-success></flash-message-success>
+    <flash-message-error></flash-message-error>
+</div>

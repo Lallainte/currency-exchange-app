@@ -1,0 +1,47 @@
+
+
+:host {
+  ::ng-deep .p-dialog-header{
+    border-bottom: none;
+    display: none;
+  }
+
+  ::ng-deep .p-dialog-content {
+      padding-top: 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      border-top-right-radius: 7px;
+      border-top-left-radius: 7px;
+      padding-bottom: 5px;
+
+      .p-confirm-dialog-message {
+          text-align: center;
+      }
+  }
+
+  ::ng-deep .p-dialog-footer {
+      text-align: center;
+
+      button {
+          margin: 0 0.5rem 0 0.5rem;
+      }
+
+      border-top: none;
+  }
+}
+
+:host ::ng-deep {
+  .c-icons {
+      width: 5.5rem;
+      height: 5.5rem;
+  }
+
+  .approved-icon {
+      background-image: url("/assets/icon/icon-approved-red.svg");
+      background-size: contain;
+      background-repeat: no-repeat;
+  }
+}
+

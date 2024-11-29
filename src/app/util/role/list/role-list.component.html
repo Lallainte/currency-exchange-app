@@ -1,0 +1,145 @@
+<div class="card">
+    <div class="grid field">
+        <div class="col-6 mt-2">
+            <h5>Daftar Peran</h5>
+        </div>
+    </div>
+    <p-table [value]="list" [totalRecords]="count" [lazy]="true" [(first)]="first" (onLazyLoad)="onTableLazyLoad($event)" [rows]="10" [loading]="loading" styleClass="p-datatable-gridlines" [paginator]="true" pageLinks="3" responsiveLayout="scroll">
+        <ng-template pTemplate="caption">
+            <div class="justify-content-between flex-column sm:flex-row">
+                <app-search (search)="onSearch($event)" [isFilter]="true" [customFilterLabel]="listFilter" placeholder="Aplikasi"></app-search>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>
+                    <div class="flex justify-content-between align-items-center">
+                        No
+                    </div>
+                </th>
+                <th>
+                    <div class="flex justify-content-between align-items-center">
+                        Nama Perusahaan
+                    </div>
+                </th>
+                <th>
+                    <div class="flex justify-content-between align-items-center">
+                        Nama Peran
+                    </div>
+                </th>
+                <th>
+                    <div class="flex justify-content-between align-items-center">
+                        Aplikasi
+                    </div>
+                </th>
+                <th>
+                    <div class="flex justify-content-between align-items-center">
+                        Laporan
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+            <tr>
+                <td (click)="onEdit(data)" style="width: 3rem;">
+                    {{rowIndex+1}}
+                </td>
+                <td (click)="onEdit(data)" style="min-width: 12rem;">
+                    {{data?.companyName}}
+                </td>
+                <td (click)="onEdit(data)" style="min-width: 12rem;">
+                    {{data?.name }}
+                </td>
+                <td (click)="onEdit(data)" style="min-width: 10rem;">
+                    {{data?.applicationName}}
+                </td>
+                <td class="text-center" style="min-width: 10rem;">
+                    <button pButton pRipple (click)="editReport(data)" type="button" icon="pi pi-pencil" class="p-button-rounded p-button-primary p-button-outlined mr-2 mb-2"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td class="text-center" colspan="5">No data found.</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td class="text-center" colspan="5">Loading data. Please wait.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog header="{{type}}Atur" [(visible)]="isShow" modal="modal" *ngIf="isShow" showEffect="fade" [style]="{width: '50vw'}"
+[contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 
+    'max-height': '80vh','min-height':'250px'}"
+    [breakpoints]="{'960px': '100vw'}">
+    <div class="grid p-fluid">
+        <div class="col-12 md:col-6">
+            <div class="field">
+                <label for="code">Nama Perusahaan</label>
+                <div>
+                    <input id="code" type="text" [(ngModel)]="item.companyName" disabled pInputText>
+                </div>
+            </div><div class="field">
+                <label for="code">Nama Peran</label>
+                <div>
+                    <input id="code" type="text" [(ngModel)]="item.name" disabled pInputText>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="field">
+                <label for="code">Nama Aplikasi</label>
+                <div>
+                    <input id="code" type="text" [(ngModel)]="item.applicationName" disabled pInputText>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p-table [value]="listDetail?.pojoPremiumMenus" dataKey="id" [rows]="10" [loading]="detailLoading" styleClass="p-datatable-gridlines" [paginator]="true" pageLinks="3" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>
+                    <div class="flex justify-content-between align-items-center">
+                        No
+                    </div>
+                </th>
+                <th>
+                    <div class="flex justify-content-between align-items-center">
+                        Nama
+                    </div>
+                </th>
+                <th style="width: 3em">
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+            <tr>
+                <td style="width: 3rem;">
+                    {{rowIndex +1}}
+                </td>
+                <td>
+                    {{data.name}}
+                </td>
+                <td>
+                    <p-checkbox binary="true" [(ngModel)]="data.isSelected" id="cf"></p-checkbox>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td class="text-center" colspan="3">No data found.</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td class="text-center" colspan="3">Loading data. Please wait.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <ng-template pTemplate="footer">
+        <btn-update (onClick)="onSave()"></btn-update>
+    </ng-template>
+</p-dialog>

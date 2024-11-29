@@ -1,0 +1,27 @@
+<p-dropdown *ngIf="!isMulti" [(ngModel)]="selectedData" (onChange)="onChange($event.value)" [options]="list"
+    [disabled]="disabled" [filter]="filter" [readonly]="readonly" [showClear]="showClear" (onClear)="onClear($event)"
+    [optionLabel]="optLabel" placeholder="{{ label }}" appendTo="body" [ngClass]="ngClass"
+    dropdownIcon="fas fa-caret-down" [styleClass]="styleClass">
+    <ng-container *ngIf="isTaxObject">
+        <ng-template pTemplate="selectedItem">
+            <span *ngIf="isTaxObject">({{ selectedData.code }}) {{ selectedData.name }}</span>
+        </ng-template>
+        <ng-template let-data pTemplate="item">
+            <span class="is-tax-object--element" *ngIf="isTaxObject">({{ data.code }}) {{ data.name }}</span>
+        </ng-template>
+    </ng-container>
+    <ng-template let-country pTemplate="empty">
+        <p-progressBar [style]="{ height: '4px' }" mode="indeterminate" *ngIf="loading; else normal"></p-progressBar>
+    </ng-template>
+</p-dropdown>
+
+<p-multiSelect *ngIf="isMulti" [(ngModel)]="selectedDatas" (onChange)="onChange($event)" [options]="list"
+    [disabled]="disabled" [closeicon]="false" [readonly]="readonly" [optionLabel]="optLabel" optionDisabled="isDisable"
+    placeholder="{{ label }}" [ngClass]="ngClass" [display]="useChip ? 'chip' : 'comma'" appendTo="body"
+    dropdownIcon="fas fa-caret-down" [styleClass]="styleClass" [showHeader]="false">
+    <ng-template let-country pTemplate="empty">
+        <p-progressBar [style]="{ height: '4px' }" mode="indeterminate" *ngIf="loading; else normal"></p-progressBar>
+    </ng-template>
+</p-multiSelect>
+
+<ng-template #normal>No Data</ng-template>

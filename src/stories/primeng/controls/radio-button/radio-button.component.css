@@ -1,0 +1,25 @@
+:host ::ng-deep .p-radiobutton-label{
+    font-size: 14px;
+    font-weight: 400;
+    color: #656565;
+}
+
+:host ::ng-deep p-radiobutton{
+    margin-bottom: 0.5em;
+    margin-right: 1em;
+}
+
+:host ::ng-deep .p-radiobutton-label{
+    margin-left: unset;
+    margin-left: 0.2em;
+}
+
+div.horizontal{
+    display: flex;
+    flex-direction: row;
+}
+
+div.vertical{
+    display: flex;
+    flex-direction: column;
+}

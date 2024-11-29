@@ -1,0 +1,5 @@
+<button *ngIf="!isMulti" pButton pRipple [disabled]="disabled" class="btn-download-laporan mb-2 ml-2" (click)="click()"
+  label="Export PDF" icon="fas fa-file-pdf"></button>
+
+<p-splitButton #sb *ngIf="isMulti" [disabled]="disabled" (onClick)="sb.onDropdownButtonClick(null)" styleClass="btn-multi-action ml-2 mb-2" [label]="btnLabel"
+  [model]="items"></p-splitButton>

@@ -1,0 +1,4 @@
+<p class="box-data" [style]="style" [class.italic]="italic">
+    <span *ngIf="useValue">{{ value == "0" ? "0" : value || "-" }}</span>
+    <ng-content *ngIf="!useValue"></ng-content>
+</p>

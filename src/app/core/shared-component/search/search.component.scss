@@ -1,0 +1,16 @@
+.input-search {
+    height: 2.5rem;
+    width: 19rem;
+    color: var(--surface-700);
+    border-color: var(--surface-200) !important;
+
+    &::placeholder{
+        color: var(--surface-500);
+    }
+
+    &:focus-within {
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+}
+

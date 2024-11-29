@@ -1,0 +1,22 @@
+<button
+    *ngIf="!isSmall"
+    pButton
+    pRipple
+    label="{{ label | translate }}"
+    [disabled]="disabled"
+    class="mb-2 ml-2 btn-add"
+    id="btnResponsive"
+    (click)="click()"
+    icon="fas fa-plus"
+></button>
+
+<button
+    *ngIf="isSmall"
+    pButton
+    pRipple
+    [disabled]="disabled"
+    class="mb-2 ml-2 mini-button-add"
+    id="btnResponsive"
+    (click)="click()"
+    icon="fas fa-plus"
+></button>

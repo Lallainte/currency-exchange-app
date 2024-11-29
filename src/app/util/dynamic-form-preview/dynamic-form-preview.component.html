@@ -1,0 +1,354 @@
+<p-header>
+    <div class="grid field py-2">
+        <div class="col-12">
+            <div class="flex align-items-center">
+                <app-button-back-general></app-button-back-general>
+                <h1
+                    class="font-title"
+                    style="margin: 0; font-size: 1.714285714285714rem"
+                >
+                    Dynamic Form Editor
+                </h1>
+                <i
+                    class="fas fa-info-circle"
+                    style="
+                        margin-left: 0.5714285714285714rem;
+                        color: #0e8ec5;
+                        font-size: 1.428571428571429rem;
+                    "
+                ></i>
+            </div>
+        </div>
+    </div>
+</p-header>
+
+<div class="card" [formGroup]="dynamicForm">
+    <ng-container *ngFor="let d of data.elements">
+        <ng-container *ngFor="let dataComponent of d.components">
+            <ng-container *ngIf="dataComponent.type === 'Form'">
+                <div class="col-12 border-line" style="margin-bottom: 25px">
+                    <div class="grid">
+                        <div class="col-6">
+                            <span class="font-card-title">{{ d.title }}</span>
+                        </div>
+                        <div class="col-6 text-right">
+                            <btn-cancel (onClick)="onCancel()"></btn-cancel>
+                            <btn-save (onClick)="onSave()"></btn-save>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="grid p-fluid custom-gutter">
+                        <div
+                            class="col-6"
+                            *ngFor="
+                                let formComponent of dataComponent.components
+                            "
+                        >
+                            <div
+                                class="grid"
+                                *ngFor="let formField of formComponent"
+                            >
+                                <div
+                                    class="col-3"
+                                    [ngClass]="{
+                                        'center-label': formField.centerLabel
+                                    }"
+                                >
+                                    <label
+                                        style="display: block"
+                                        [for]="formField.inputId"
+                                        [ngClass]="{
+                                            required: formField.required
+                                        }"
+                                        [ngStyle]="{
+                                            padding:
+                                                !formField.centerLabel &&
+                                                '11.5px 0'
+                                        }"
+                                        >{{ formField.label }}</label
+                                    >
+                                </div>
+
+                                <div class="col-9">
+                                    <input
+                                        type="text"
+                                        class="w-full"
+                                        *ngIf="formField.type === 'Input Text'"
+                                        pInputText
+                                        [ngClass]="{
+                                            'ng-dirty ng-invalid':
+                                                hasError(formField)
+                                        }"
+                                        [disabled]="formField.disabled"
+                                        [placeholder]="formField.placeholder"
+                                        [formControlName]="
+                                            formField.propertyName
+                                        "
+                                    />
+
+                                    <p-inputNumber
+                                        *ngIf="formField.type === 'Number'"
+                                        class="w-full"
+                                        styleClass="w-full flex"
+                                        [ngClass]="{
+                                            'ng-dirty ng-invalid':
+                                                hasError(formField)
+                                        }"
+                                        [inputId]="formField.inputId"
+                                        [disabled]="formField.disabled"
+                                        [showButtons]="
+                                            formField.showIncrementButtonInputNumber
+                                        "
+                                        [placeholder]="formField.placeholder"
+                                        [formControlName]="
+                                            formField.propertyName
+                                        "
+                                    >
+                                    </p-inputNumber>
+
+                                    <textarea
+                                        rows="5"
+                                        cols="30"
+                                        class="w-full"
+                                        *ngIf="formField.type === 'Textarea'"
+                                        pInputTextarea
+                                        [id]="formField.inputId"
+                                        [ngClass]="{
+                                            'ng-dirty ng-invalid':
+                                                hasError(formField)
+                                        }"
+                                        [disabled]="formField.disabled"
+                                        [placeholder]="formField.placeholder"
+                                        [formControlName]="
+                                            formField.propertyName
+                                        "
+                                    ></textarea>
+
+                                    <div
+                                        *ngIf="formField.type === 'Switch'"
+                                        class="flex align-items-center"
+                                        style="gap: 12px"
+                                    >
+                                        <p-inputSwitch
+                                            inputId
+                                            [inputId]="formField.inputId"
+                                            [disabled]="formField.disabled"
+                                            [formControlName]="
+                                                formField.propertyName
+                                            "
+                                        ></p-inputSwitch>
+                                        <span>{{
+                                            formField.value ||
+                                            formField.defaultValue
+                                                ? formField.labelSwitchOn
+                                                : formField.labelSwitchOff
+                                        }}</span>
+                                    </div>
+
+                                    <p-calendar
+                                        *ngIf="formField.type === 'Date & Time'"
+                                        [view]="formField.calendarView"
+                                        [ngClass]="{
+                                            'ng-dirty ng-invalid':
+                                                hasError(formField)
+                                        }"
+                                        [placeholder]="formField.placeholder"
+                                        [formControlName]="
+                                            formField.propertyName
+                                        "
+                                    ></p-calendar>
+
+                                    <div
+                                        class="flex flex-wrap gap-3"
+                                        *ngIf="formField.type === 'Radio'"
+                                    >
+                                        <div
+                                            class="flex align-items-center"
+                                            *ngFor="
+                                                let choice of formField.values
+                                            "
+                                        >
+                                            <p-radioButton
+                                                class="m-0"
+                                                [value]="choice.value"
+                                                [inputId]="choice.value"
+                                                [formControlName]="
+                                                    formField.propertyName
+                                                "
+                                            ></p-radioButton>
+                                            <label
+                                                [for]="choice.value"
+                                                class="ml-2"
+                                                >{{ choice.label }}</label
+                                            >
+                                        </div>
+                                    </div>
+
+                                    <ng-container
+                                        *ngIf="formField.type === 'Dropdown'"
+                                    >
+                                        <app-lov-company
+                                            *ngIf="
+                                                formField.templateLov ===
+                                                'company'
+                                            "
+                                            [filter]="formField.lovFilter"
+                                            [getFirstValue]="
+                                                formField.lovGetFirstValue
+                                            "
+                                            (selected)="
+                                                handleSelectedLov(
+                                                    $event,
+                                                    formField.propertyName
+                                                )
+                                            "
+                                        ></app-lov-company>
+
+                                        <app-lov
+                                            *ngIf="!formField.templateLov"
+                                            [uri]="formField.uriLov"
+                                            [label]="formField.placeholder"
+                                            [value]="formField.value"
+                                            [filter]="formField.lovFilter"
+                                            [chaining]="true"
+                                            [optLabel]="
+                                                formField.lovOptionLabel
+                                            "
+                                            [customOption]="formField.values"
+                                            [getFirstValue]="
+                                                formField.lovGetFirstValue
+                                            "
+                                            (selected)="
+                                                handleSelectedLov(
+                                                    $event,
+                                                    formField.propertyName
+                                                )
+                                            "
+                                        ></app-lov>
+                                    </ng-container>
+
+                                    <div
+                                        class="flex flex-wrap gap-3"
+                                        *ngIf="formField.type === 'Checkbox'"
+                                    >
+                                        <div
+                                            class="flex align-items-center"
+                                            style="min-height: 42px"
+                                            *ngFor="
+                                                let choice of formField.values
+                                            "
+                                        >
+                                            <p-checkbox
+                                                class="m-0"
+                                                [value]="choice.value"
+                                                [inputId]="choice.value"
+                                                [formControl]="
+                                                    dynamicForm.controls[
+                                                        formField.propertyName
+                                                    ]
+                                                "
+                                            ></p-checkbox>
+                                            <label
+                                                [for]="choice.value"
+                                                class="ml-2"
+                                                >{{ choice.label }}</label
+                                            >
+                                        </div>
+                                    </div>
+
+                                    <app-linov-upload
+                                        *ngIf="formField.type === 'Attachment'"
+                                        [isImage]="
+                                            formField.attachmentAcceptFile ===
+                                            'image'
+                                        "
+                                        [fileType]="
+                                            formField.attachmentAcceptFile
+                                        "
+                                        [disabled]="formField.disabled"
+                                        (onChange)="
+                                            handleChangeAttachment(
+                                                $event,
+                                                formField.propertyName
+                                            )
+                                        "
+                                    ></app-linov-upload>
+
+                                    <small
+                                        class="p-error"
+                                        style="display: block"
+                                        *ngIf="hasError(formField)"
+                                        [ngStyle]="{
+                                            'margin-top':
+                                                formField.type !== 'Switch' &&
+                                                '8.5px'
+                                        }"
+                                        >{{ getErrorMessage(formField) }}</small
+                                    >
+
+                                    <small
+                                        *ngIf="formField.description"
+                                        style="display: block; color: #999"
+                                        [ngStyle]="{
+                                            'margin-top':
+                                                formField.type !== 'Switch' &&
+                                                '8.5px'
+                                        }"
+                                        >{{ formField.description }}</small
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+
+            <ng-container *ngIf="dataComponent.type === 'Table'">
+                <div class="col-12 border-line" style="margin-bottom: 25px">
+                    <div class="grid">
+                        <div class="col-6">
+                            <span class="font-card-title">{{ d.title }}</span>
+                        </div>
+                        <div class="col-6 text-right">
+                            <btn-delete
+                                [selected]="selected"
+                                (onClick)="onDelete()"
+                                [disabled]="isButtonDisabled"
+                            ></btn-delete>
+                            <btn-add (onClick)="onAdd()"></btn-add>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 mt-4">
+                    <div class="grid">
+                        <div class="col-10">
+                            <app-search
+                                [isFilter]="true"
+                                (search)="onSearch($event)"
+                            ></app-search>
+                        </div>
+                        <div class="col-2 text-right flex justify-content-end">
+                            <span *ngIf="selectedList.length > 0"
+                                >{{ selectedItems }} items selected</span
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <app-table
+                        #TableComponent
+                        [uri]="dataComponent.uri"
+                        [columMap]="dataComponent.columns"
+                        [isStatus]="dataComponent.columnStatus"
+                        [isSelectable]="dataComponent.checkboxSelection"
+                        (selected)="actionSelected($event)"
+                    ></app-table>
+                </div>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+</div>

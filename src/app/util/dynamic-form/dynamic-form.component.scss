@@ -1,0 +1,288 @@
+$clrPrimary: #0e8ec5;
+
+@mixin droppableStyle($brdrClr: transparent) {
+    border: 2px dashed $brdrClr;
+    border-radius: 4px;
+    transition: background 0.2s ease-in-out, 0.2s ease-in-out;
+
+    &.p-draggable-enter {
+        border-color: $clrPrimary;
+    }
+}
+
+@mixin moveStyle($isCenter: false) {
+    position: absolute;
+    top: if($isCenter, 13px, 44px);
+    left: -18px;
+    display: flex;
+    gap: 2px;
+    cursor: move;
+
+    i {
+        color: #cbd6e2;
+    }
+}
+
+@mixin dragPlaceholderStyle($height, $borderWidth, $borderRadius) {
+    height: $height;
+    border: $borderWidth dashed #0e8ec5;
+    border-radius: $borderRadius;
+    background: hsla(198, 87%, 41%, 0.094);
+    transition: transform 0.25s cubic-bezier(0, 0, 0.2, 1);
+}
+
+$sc: "sidebar-section";
+
+:host ::ng-deep {
+    [pDraggable] {
+        cursor: move;
+    }
+
+    sidebar-section {
+        &:last-child {
+            .separator {
+                display: none;
+            }
+        }
+    }
+
+    .dynamic-form-wrapper {
+        height: calc(100vh - 104px);
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 310px 1fr;
+    }
+
+    .editor {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        padding: 0 25px;
+        background: #fff;
+    }
+
+    .drop-section {
+        @include droppableStyle;
+
+        width: 100%;
+        position: relative;
+        margin: 25px 0;
+        border: 2px dashed #eee;
+        border-radius: 8px;
+        padding: 30px 30px 5px;
+        background: #fff;
+    }
+
+    .drop-form {
+        border: 1px dashed #eee;
+        border-radius: 4px;
+        padding: 10px 14px;
+        background: #fff;
+        transition: border-color 0.25s cubic-bezier(0, 0, 0.2, 1),
+            background-color 0.25s cubic-bezier(0, 0, 0.2, 1);
+
+        p {
+            color: #656565;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        &.dragging {
+            position: relative;
+            z-index: 1;
+            background: hsla(198, 87%, 41%, 0.094);
+        }
+    }
+
+    .dragging {
+        border-color: $clrPrimary;
+
+        &::after {
+            content: "";
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: inherit;
+            background: rgba(0, 0, 0, 0);
+        }
+    }
+
+    #{$sc}:last-child {
+        .#{$sc}__separator {
+            display: none;
+        }
+    }
+
+    .section {
+        position: relative;
+    }
+
+    .section-move {
+        @include moveStyle;
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+
+        i {
+            color: #d11a2a;
+        }
+    }
+
+    .section-title {
+        width: 100%;
+        min-height: 40px;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        padding: 10px 14px;
+        background: #fff;
+        color: #9f9f9f;
+        font-family: inherit;
+        font-size: 1rem;
+
+        &:focus {
+            outline: none;
+            border-color: #0e8ec5;
+        }
+    }
+
+    .section-placeholder {
+        height: 240px;
+        display: grid;
+        place-items: center;
+        color: #656565;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .item-move {
+        padding: 2px 4px;
+        border-radius: 4px;
+
+        i {
+            margin-left: 2px;
+        }
+    }
+
+    .vertical-space {
+        height: 1px;
+        margin: 25px 0;
+        background: #eee;
+    }
+
+    .block {
+        display: grid !important;
+        align-items: center;
+        grid-template-columns: repeat(2, 1fr) 24px;
+        gap: 8px;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        padding: 10px 14px;
+        background: #fff;
+        user-select: none;
+
+        i {
+            justify-self: center;
+            color: #cbd6e2;
+        }
+
+        &--required {
+            border-left: 3px solid #0e8ec5;
+        }
+
+        &--table {
+            grid-template-columns: 1fr 24px;
+            margin-bottom: 1rem;
+
+            i {
+                padding: 2px 4px;
+            }
+        }
+    }
+
+    .drop-section-list-item {
+        display: block;
+    }
+
+    .cdk-drag-animating {
+        transition: transform 0.25s cubic-bezier(0, 0, 0.2, 1);
+    }
+
+    .drop-section-list.cdk-drop-list-dragging
+        .drop-section-list-item:not(.cdk-drag-placeholder) {
+        transition: transform 0.25s cubic-bezier(0, 0, 0.2, 1);
+    }
+
+    .drop-section--placeholder {
+        @include dragPlaceholderStyle(105px, 2px, 8px);
+    }
+
+    .drop-section-item--placeholder {
+        @include dragPlaceholderStyle(41px, 1px, 4px);
+
+        margin: 0 !important;
+    }
+
+    .drop-section-item {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        align-items: start;
+        gap: 25px 75px;
+        margin-bottom: 25px;
+
+        &--empty {
+            display: block;
+        }
+    }
+
+    .drop-section-list {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .create-new-section {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        margin: 25px 0px;
+        border: 2px dashed #eee;
+        border-radius: 8px;
+        padding: 2rem 1rem;
+
+        &__icon-wrapper {
+            width: 24px;
+            height: 24px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            text-align: center;
+            background: $clrPrimary;
+
+            i {
+                color: #fff;
+            }
+        }
+
+        &__text {
+            color: #656565;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}

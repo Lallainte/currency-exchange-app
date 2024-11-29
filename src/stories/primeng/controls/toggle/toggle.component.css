@@ -1,0 +1,21 @@
+:host ::ng-deep .p-inputswitch.p-component{
+    width: 42px;
+    height: 24px;
+    margin-right: 0.5rem;
+}
+
+:host ::ng-deep .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider{
+    background: #0E8EC5;
+}
+
+:host ::ng-deep .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider:before{
+    transform: unset;
+    transform: translateX(2.4rem);
+}
+
+div.toggle-custom{
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 400;
+}

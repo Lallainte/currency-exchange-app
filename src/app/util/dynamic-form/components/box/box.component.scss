@@ -1,0 +1,14 @@
+:host::ng-deep {
+    .p-tabview .p-tabview-panels {
+        padding-bottom: 1.25rem;
+    }
+
+    .p-calendar,
+    .p-dropdown {
+        display: flex;
+    }
+
+    .btn-upload {
+        width: 100%;
+    }
+}

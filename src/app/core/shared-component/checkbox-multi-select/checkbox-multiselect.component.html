@@ -1,0 +1,20 @@
+<div class="linov-checkbox-multiselect">
+    <linov-checkbox
+        [name]="checkboxName"
+        [disabled]="disabledCheckbox"
+        [value]="checkboxValue"
+        (onChange)="handleCheckboxChange($event)"
+    ></linov-checkbox>
+    <p-multiSelect
+        class="w-full ml-3"
+        display="chip"
+        optionLabel="name"
+        dropdownIcon="fas fa-caret-down"
+        *ngIf="checkboxValue"
+        [name]="multiSelectName"
+        [options]="options"
+        [disabled]="disabledMultiCheckbox"
+        [placeholder]="placeholder"
+        [selectedOptions]="selectedOptions"
+    ></p-multiSelect>
+</div>

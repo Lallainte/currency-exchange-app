@@ -1,0 +1,79 @@
+.card {
+    background-color: var(--surface-0);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: $borderRadius;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.02), 0px 0px 2px rgba(0, 0, 0, 0.05),
+        0px 1px 4px rgba(0, 0, 0, 0.08) !important;
+
+    &.card-w-title {
+        padding-bottom: 2rem;
+    }
+}
+.card-outline {
+    background-color: var(--surface-0);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: $borderRadius;
+    outline: var(--neutral-border) solid 1px;
+    &.card-w-title {
+        padding-bottom: 2rem;
+    }
+}
+
+.card-header {
+    background-color: var(--surface-0);
+    padding: 1.5rem;
+    border-radius: $borderRadius-header;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.02), 0px 0px 2px rgba(0, 0, 0, 0.05),
+        0px 1px 4px rgba(0, 0, 0, 0.08) !important;
+
+    &.card-w-title {
+        padding-bottom: 2rem;
+    }
+}
+.card-content {
+    background-color: $card-content-bg;
+    padding: 1.5rem;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.02), 0px 0px 2px rgba(0, 0, 0, 0.05),
+        0px 1px 4px rgba(0, 0, 0, 0.08) !important;
+
+    &.card-w-title {
+        padding-bottom: 2rem;
+    }
+}
+.card-subscontent {
+    background-color: var(--surface-0);
+    padding: 1.5rem;
+    border-radius: $borderRadius;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.02), 0px 0px 2px rgba(0, 0, 0, 0.05),
+        0px 1px 4px rgba(0, 0, 0, 0.08) !important;
+
+    &.card-w-title {
+        padding-bottom: 2rem;
+    }
+}
+.card-footer {
+    background-color: var(--surface-0);
+    padding: 1.5rem;
+    border-radius: $borderRadius-footer;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.02), 0px 0px 2px rgba(0, 0, 0, 0.05),
+        0px 1px 4px rgba(0, 0, 0, 0.08) !important;
+
+    &.card-w-title {
+        padding-bottom: 2rem;
+    }
+
+    @media (max-width: 576px) {
+        .p-paginator {
+            .p-paginator-current {
+                width: 100%;
+                position: static;
+            }
+
+            .p-inputwrapper {
+                display: none;
+            }
+        }
+    }
+}

@@ -1,0 +1,36 @@
+<div class="layout-menubar-ess" id="layout-menubar-ess" *ngIf="!isAdmin">
+    <span class="font-medium text-red">{{ "notif&announ" | translate }}</span>
+</div>
+
+<div class="grid p-fluid custom-gutter">
+    <div class="col-12">
+        <div class="card no-pad" style="overflow: hidden">
+            <p-tabMenu
+                [model]="tabMenuItems"
+                [activeItem]="activeItem"
+                (activeItemChange)="onActiveItemChange($event)"
+            >
+                <ng-template pTemplate="item" let-item>
+                    <div
+                        class="flex align-items-center relative"
+                        style="gap: 8px"
+                    >
+                        <i [class]="item.icon" style="font-size: 18px"></i>
+                        <span class="pl-2">{{ item.label }}</span>
+                        <p-badge
+                            *ngIf="
+                                item.label.toLowerCase() == 'notifications' &&
+                                totalUnreadNotif !== 0
+                            "
+                            styleClass="badge-notif"
+                            [value]="totalUnreadNotif"
+                        ></p-badge>
+                    </div>
+                </ng-template>
+            </p-tabMenu>
+            <router-outlet
+                (activate)="onRouterOutletActivate($event)"
+            ></router-outlet>
+        </div>
+    </div>
+</div>

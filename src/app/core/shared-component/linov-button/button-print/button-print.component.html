@@ -1,0 +1,4 @@
+
+<button *ngIf="!isSmall" pButton pRipple label="{{ 'print' | translate}}" [disabled]="disabled" class="mb-2 ml-2 btn-save" (click)="click()" icon="fas fa-print"></button>
+
+<button *ngIf="isSmall" pButton pRipple [disabled]="disabled" class="mb-2 ml-2 btn-save-small" (click)="click()" icon="fas fa-print"></button>

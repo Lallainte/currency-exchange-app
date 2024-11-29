@@ -1,0 +1,110 @@
+
+<input type="text"  style="opacity: 0;position: absolute;">
+<input type="password" style="opacity: 0;position: absolute;">
+<div class="card">
+    <div class="grid field">
+        <div class="col-6 mt-2">
+            <h5>Pengguna - Detil</h5>
+        </div>
+        <div class="col-6">
+            <div class="field text-right hide-mobile">
+                <btn-kembali routeUrl="util/user"></btn-kembali>
+                <btn-multi-action [haveEdit]="true" [haveChangePass]="true" [haveResetPass]="true" [multiple]="false" (onClick)="click($event)"></btn-multi-action>
+            </div>
+            <div class="field text-right hide-desktop">
+                <btn-multi-action [haveEdit]="true" [haveChangePass]="true" [haveResetPass]="true" [multiple]="false" (onClick)="click($event)"></btn-multi-action>
+            </div>
+        </div>
+    </div>
+        <div class="grid p-fluid" [formGroup]="formControl" *ngIf="!loading else skel">
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label for="employee">Karyawan</label>
+                    <div>
+                        <app-lov uri="lov/employees" label="-" [value]="formControl.value?.employee?.id" [disabled]="true" [haveNullValue]="true"></app-lov>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="name" >Nama Pengguna</label>
+                    <div>
+                        <input id="name" type="text" formControlName="username" placeholder="Isi Nama" pInputText [ngClass]="{'ng-dirty ng-invalid' : (formControl.get('username').touched || formControl.get('username').dirty ) &&
+                        !formControl.get('username').valid}">
+                        <app-error-field-helper [formControlKey]="formControl.get('username')" ></app-error-field-helper>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="surel" >Email</label>
+                    <div>
+                        <input id="surel" type="text" formControlName="email" placeholder="example@google.com" pInputText [ngClass]="{'ng-dirty ng-invalid' : (formControl.get('email').touched || formControl.get('email').dirty ) &&
+                        !formControl.get('email').valid}">
+                        <app-error-field-helper [formControlKey]="formControl.get('email')" ></app-error-field-helper>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label for="effBegin" >Berlaku Dari</label>
+                    <div>
+                        <p-calendar id="effBegin"  dateFormat="dd-mm-yy" appendTo="body" placeholder="Isi Tanggal Bergabung" [ngClass]="{'ng-dirty ng-invalid' : (formControl.get('effBegin').touched || formControl.get('effBegin').dirty ) &&
+                        !formControl.get('effBegin').valid}"
+                            formControlName="effBegin"[showIcon]="true">
+                        </p-calendar>
+                        <app-error-field-helper [formControlKey]="formControl.get('effBegin')" ></app-error-field-helper>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="effEnd" >Berlaku Sampai</label>
+                    <div>
+                        <p-calendar id="effEnd"  dateFormat="dd-mm-yy" [minDate]="formControl.value.effBegin" appendTo="body" placeholder="Isi Tanggal Bergabung" [ngClass]="{'ng-dirty ng-invalid' : (formControl.get('effEnd').touched || formControl.get('effEnd').dirty ) &&
+                        !formControl.get('effEnd').valid}"
+                            formControlName="effEnd"[showIcon]="true">
+                        </p-calendar>
+                        <app-error-field-helper [formControlKey]="formControl.get('effEnd')" ></app-error-field-helper>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="active" >Aktif</label>
+                    <div style="pointer-events:none">
+                        <p-inputSwitch name="active"  formControlName="isActive"></p-inputSwitch>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+</div>
+
+
+<ng-template #skel>
+    <div class="custom-skeleton p-4">
+        <p-skeleton width="100%" height="150px"></p-skeleton>
+    </div>
+</ng-template>
+
+
+
+<p-dialog header="Ganti Password" [(visible)]="isShow" modal="modal" *ngIf="isShow" showEffect="fade" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 
+'max-height': '80vh','min-height':'250px'}"
+    [style]="{width: '30vw'}" [breakpoints]="{'960px': '75vw'}">
+    <div >
+        <div class="grid p-fluid">
+            <div class="col-12">             
+                <div class="field">
+                    <label for="pass" class="required" >Sandi</label>
+                    <p-password [(ngModel)]="password" #pass="ngModel" required [ngClass]="{'ng-dirty ng-invalid' : (pass.dirty || pass.touched || touched) && pass.errors?.['required']}"
+                    [toggleMask]="true" [ngModelOptions]="{standalone: true}"></p-password>
+                    <small *ngIf="pass.errors?.['required'] && (pass.dirty || pass.touched || touched)" class="p-error-empty text-left"></small>
+                </div>
+                <div class="field">
+                    <label for="rePass" class="required" >Sandi Ulang</label>
+                    <p-password [(ngModel)]="rePassword" #rePass="ngModel" required [ngClass]="{'ng-dirty ng-invalid' : rePassword!=password || pass.errors?.['required'] && (rePass.dirty || touched || rePass.touched)}"
+                    [toggleMask]="true" [ngModelOptions]="{standalone: true}"></p-password>
+                    <small *ngIf="rePass.errors?.['required'] && (rePass.dirty || rePass.touched || touched)" class="p-error-empty text-left"></small>
+                    <small *ngIf="rePassword != password && (rePass.dirty || rePass.touched || touched)" style="color: red;" class="p-error-empty text-left"> password tidak sama.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <btn-save (onClick)="onSave()"></btn-save>
+    </ng-template>
+</p-dialog>

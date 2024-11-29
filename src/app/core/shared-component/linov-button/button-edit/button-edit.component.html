@@ -1,0 +1,19 @@
+<button
+    *ngIf="!isSmall"
+    pButton
+    [label]="label | translate"
+    [disabled]="disabled"
+    class="btn-edit mb-2 ml-2"
+    (click)="click()"
+    icon="fas fa-pen"
+></button>
+
+<button
+    *ngIf="isSmall"
+    pButton
+    pRipple
+    [disabled]="disabled"
+    class="mb-2 ml-2 mini-button-edit"
+    (click)="click()"
+    icon="fas fa-pen"
+></button>

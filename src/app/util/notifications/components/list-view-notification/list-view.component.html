@@ -1,0 +1,60 @@
+<p-dataView
+    #dv
+    [value]="list"
+    [(first)]="first"
+    pageLinks="3"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [lazy]="isLazy"
+    [rows]="rowsPerPage"
+    [loading]="loading"
+    [paginator]="paginator"
+    [totalRecords]="count"
+    [rowsPerPageOptions]="rowsPerPageOptions"
+    [showCurrentPageReport]="true"
+    [emptyMessage]="emptyMessage"
+    (onLazyLoad)="onDataLazyLoad($event)"
+    paginatorStyleClass="grid-view__paginator"
+    styleClass="grid-view"
+>
+    <ng-template let-item pTemplate="listItem" let-rowIndex="rowIndex">
+        <div class="col-12 p-0">
+            <div
+                class="list-item__notification"
+                [class.unread]="!item.isRead"
+                (click)="onKebab('click', item, rowIndex)"
+            >
+                <div class="notif__img-avatar">
+                    <!-- <i class="fa-solid fa-user-large"></i> -->
+                    <ng-container
+                        *ngIf="
+                            item.sender?.person?.employeeId
+                                | employeePhoto
+                                | async as photo;
+                            else loading
+                        "
+                    >
+                        <img
+                            [src]="photo"
+                            class="border-circle custom-profile-image"
+                        />
+                    </ng-container>
+                    <ng-template #loading>
+                        <p-skeleton shape="circle" size="4rem"></p-skeleton>
+                    </ng-template>
+                </div>
+
+                <div class="list-item__notification__body">
+                    <div class="message-title">
+                        <small class="send-data">
+                            {{ formatDate(item.sentDate) }}
+                        </small>
+                        <p class="no-pad">{{ item.messageTitle }}</p>
+                    </div>
+                    <p class="message-content no-pad">
+                        {{ item.messageContent }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</p-dataView>

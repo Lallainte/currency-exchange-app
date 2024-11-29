@@ -1,0 +1,85 @@
+.wrapper-card__details-log {
+    width: 100%;
+    padding: 20px 30px;
+    border-radius: 8px;
+    border: 1px solid #eeeeee;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 100%;
+}
+
+.action-icon--card-list {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    place-items: center;
+    place-content: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.text--module {
+    font-family: SF Pro Text;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: normal;
+    color: #656565;
+}
+
+.details-log__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #eee;
+}
+
+.details-log__body {
+    width: 100%;
+}
+
+.text-prim-head {
+    color: #0e8ec5;
+    font-family: SF Pro Text;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.text-prim-chil {
+    color: #0e8ec5;
+    font-family: SF Pro Text;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.text-sec-head {
+    color: #9f9f9f;
+    font-family: SF Pro Text;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.text-sec-chil {
+    color: #656565;
+    font-family: SF Pro Text;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.arrow-left-log {
+    color: #656565;
+    height: 100%;
+    margin: auto 0;
+    font-size: 18px;
+}

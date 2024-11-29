@@ -1,0 +1,179 @@
+<div class="card">
+    <div class="grid field">
+        <div class="col-6 mt-2">
+            <h5>Daftar Perusahaan</h5>
+        </div>
+        <div class="col-6">
+            <div class="field text-right hide-mobile">
+                <btn-multi-action [haveExtend]="true" [haveTerminate]="true" [selected]="selected"
+                    (onClick)="aksi($event)"></btn-multi-action>
+                <btn-add (onClick)="onAdd()"></btn-add>
+            </div>
+            <div class="field text-right hide-desktop">
+                <btn-multi-action [haveExtend]="true" [haveTerminate]="true" [haveAdd]="true" [selected]="selected"
+                    (onClick)="aksi($event)">
+                </btn-multi-action>
+            </div>
+        </div>
+    </div>
+    <p-table [value]="list" [totalRecords]="count" [lazy]="true" (onLazyLoad)="onTableLazyLoad($event)" dataKey="id"
+        [rows]="10" [loading]="loading" [(first)]='first' styleClass="p-datatable-gridlines" [paginator]="true"
+        pageLinks="3" responsiveLayout="scroll" [(selection)]="selected">
+        <ng-template pTemplate="caption">
+            <div class="justify-content-between flex-column sm:flex-row">
+                <app-search [isFilter]="true" [customFilterLabel]="listFilter" (search)="onSearch($event)"></app-search>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 3em">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th>
+                    <div class="flex justify-content-between align-items-center">
+                        No
+                    </div>
+                </th>
+                <th>
+                    <div class="flex justify-content-between align-items-center">
+                        Kode
+                    </div>
+                </th>
+                <th>
+                    <div class="flex justify-content-between align-items-center">
+                        Nama
+                    </div>
+                </th>
+                <th>
+                    <div class="flex justify-content-between align-items-center">
+                        Email
+                    </div>
+                </th>
+                <th style="width: 8rem">
+                    <div class="flex justify-content-between align-items-center">
+                        Telepon
+                    </div>
+                </th>
+                <th style="width: 8rem">
+                    <div class="flex justify-content-between align-items-center">
+                        Jenis Usaha
+                    </div>
+                </th>
+                <th style="width: 8rem">
+                    <div class="flex justify-content-between align-items-center">
+                        Jumlah Karyawan
+                    </div>
+                </th>
+                <th style="width: 8rem">
+                    <div class="flex justify-content-between align-items-center">
+                        Berlaku Sampai
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="data">
+                <td>
+                    <p-tableCheckbox [value]="data"></p-tableCheckbox>
+                </td>
+                <td (click)="onEdit(data)" style="width: 3rem;">
+                    {{rowIndex+1}}
+                </td>
+                <td (click)="onEdit(data)" style="min-width: 12rem;">
+                    {{data.code}}
+                </td>
+                <td (click)="onEdit(data)" style="min-width: 12rem;">
+                    {{data.name}}
+                </td>
+                <td (click)="onEdit(data)" style="min-width: 12rem;">
+                    {{data.email}}
+                </td>
+                <td (click)="onEdit(data)" style="min-width: 12rem;">
+                    {{data.phone}}
+                </td>
+                <td (click)="onEdit(data)" style="min-width: 12rem;">
+                    {{data.type}}
+                </td>
+                <td (click)="onEdit(data)" style="min-width: 12rem;">
+                    {{data.totalEmp}}
+                </td>
+                <td (click)="onEdit(data)" style="min-width: 12rem;">
+                    {{data.endDate |formatDate}}
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td class="text-center" colspan="9">No data found.</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td class="text-center" colspan="9">Loading data. Please wait.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog header="Perpanjang" *ngIf="isShowExtend" [(visible)]="isShowExtend" modal="true" showEffect="fade"
+    [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 
+'max-height': '80vh','min-height':'250px'}" [style]="{width: '50vw'}" [breakpoints]="{'960px': '75vw'}"
+    [draggable]="false" [resizable]="false" [baseZIndex]="10000">
+    <div [formGroup]="form">
+        <div class="grid p-fluid">
+            <div class="col-12  md:col-6 ">
+                <div class="field">
+                    <label for="extDate" class="required">Sampai Tanggal</label>
+                    <div>
+                        <p-calendar id="extDate" dateFormat="dd-mm-yy" appendTo="body" formControlName="date"
+                            [showIcon]="true" [ngClass]="{'ng-dirty ng-invalid' : (form.get('date').touched || form.get('date').dirty ) &&
+                            !form.get('date').valid}">
+                        </p-calendar>
+                        <app-error-field-helper [formControlKey]="form.get('date')"></app-error-field-helper>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12  md:col-6">
+                <div class="field">
+                    <label for="companySubscription" class="required">Status Berlangganan</label>
+                    <div>
+                        <app-lov id="companySubscription" label="Pilih Status Berlangganan" appendTo="body"
+                            (selected)="selectCompSubs($event)" [ngClass]="{'ng-dirty ng-invalid' : (form.get('companySubscription').touched || form.get('companySubscription').dirty ) &&
+                                                                    !form.get('companySubscription').valid}"
+                            uri="lov/company-subscriptions">
+                        </app-lov>
+                        <app-error-field-helper [formControlKey]="form.get('companySubscription')">
+                        </app-error-field-helper>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <btn-save (onClick)="onSave(true)"></btn-save>
+    </ng-template>
+</p-dialog>
+
+
+<p-dialog header="Berhentikan" [(visible)]="isShowTermit" *ngIf="isShowTermit" modal="modal" showEffect="fade"
+    [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 
+'max-height': '80vh','min-height':'250px'}" [style]="{width: '30vw'}" [breakpoints]="{'960px': '75vw'}">
+    <div [formGroup]="form">
+        <div class="grid p-fluid">
+            <div class="col-12">
+                <div class="field">
+                    <label for="extDate" class="required">Tanggal Berhenti</label>
+                    <div>
+                        <p-calendar id="extDate" dateFormat="dd-mm-yy" appendTo="body" [ngClass]="{'ng-dirty ng-invalid' : (form.get('date').touched || form.get('date').dirty ) &&
+                        !form.get('date').valid}" formControlName="date" [showIcon]="true">
+                        </p-calendar>
+                        <app-error-field-helper [formControlKey]="form.get('date')"></app-error-field-helper>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <btn-save (onClick)="onSave(false)"></btn-save>
+    </ng-template>
+</p-dialog>

@@ -1,0 +1,133 @@
+<div class="card" style="padding-top: 0; padding-left: 0; padding-right: 0">
+    <div
+        class="px-3 flex align-items-center"
+        style="
+            background-image: linear-gradient(
+                357deg,
+                #f5463e,
+                var(--primary-color)
+            );
+            height: 13rem;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            color: var(--surface-0);
+        "
+    >
+        <div class="grid ml-2 mt-2" style="width: -webkit-fill-available">
+            <div class="col-6">
+                <p
+                    class="font-bold md:text-4xl lg:text-6xl sm:text-2xl"
+                    style="margin-bottom: 7px"
+                >
+                    Welcome to Admin!
+                </p>
+                <p class="md:text-lg" style="width: 70%">
+                    Welcome to admin panel, your central hub for overseeing and
+                    managing every aspect of our system!
+                </p>
+            </div>
+            <div class="col-6 text-right flex justify-content-end">
+                <img
+                    style="width: 17rem; height: 9rem"
+                    alt="Photo banner"
+                    src="assets/banner-profile-admin.svg"
+                />
+            </div>
+        </div>
+    </div>
+    <div class="grid px-5 py-4" infinite-scroll (scrolled)="onScroll()">
+        <div class="col-12">
+            <div class="grid">
+                <div class="col-6">
+                    <span
+                        class="font-bold text-xl"
+                        style="color: var(--surface-700)"
+                        >Announcements</span
+                    >
+                </div>
+                <div class="col-6 text-right">
+                    <span
+                        (click)="onClickView()"
+                        class="underline cursor-pointer"
+                        style="color: var(--primary-color)"
+                        >View All</span
+                    >
+                </div>
+            </div>
+        </div>
+        <div *ngIf="listData.length > 0" class="col-12 flex flex-wrap">
+            <div
+                class="col-12 xl:col-4 md:col-6 mt-2"
+                *ngFor="let item of listData"
+            >
+                <div
+                    class="custom-container-hover bg-white"
+                    (click)="onClickRow(item.id)"
+                    style="padding: 0; width: 25.16rem; height: 18.625rem"
+                >
+                    <div class="grid">
+                        <div class="col-12 py-3 card-title">
+                            <div class="grid mb-2">
+                                <div class="col-12" style="padding-top: 0">
+                                    <img
+                                        alt="Photo banner"
+                                        style="
+                                            width: 100%;
+                                            height: 10.375rem;
+                                            border-top-left-radius: 7px;
+                                            border-top-right-radius: 7px;
+                                            object-fit: cover;
+                                            object-position: center center;
+                                        "
+                                        [src]="getImageUrl(item)"
+                                    />
+                                </div>
+                            </div>
+                            <div class="grid flex-column px-4 mt-2">
+                                <span
+                                    class="text-base font-medium"
+                                    style="color: var(--surface-500)"
+                                    >{{
+                                        item.lovTypeAnnouncementName || "-"
+                                    }}</span
+                                >
+                                <span
+                                    class="text-lg font-semibold py-2"
+                                    style="color: var(--surface-700)"
+                                    >{{
+                                        (item.title | slice : 0 : 35) || "-"
+                                    }}</span
+                                >
+                                <span
+                                    class="text-sm"
+                                    style="color: var(--surface-500)"
+                                    >Posted on
+                                    {{
+                                        (item.effectiveDateStart
+                                            | date : "dd MMM yyyy") || "-"
+                                    }}</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 px-4 mt-3 mb-3" *ngIf="listData.length == 0">
+            <div class="col-12 text-center mt-3">
+                <img src="/assets/icon/icon-empty-state-paper.svg" />
+            </div>
+            <div
+                class="col-12 flex justify-content-center align-items-center"
+                style="padding-top: 0"
+            >
+                <div
+                    class="text-center"
+                    style="font-size: 1rem; color: var(--surface-500)"
+                >
+                    <p>There was no data announcement found</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

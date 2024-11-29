@@ -1,0 +1,289 @@
+<div
+    class="grid align-items-center mt-1"
+    style="width: fit-content; row-gap: 10px"
+    [formGroup]="formSearch"
+>
+    <div class="ml-2 mr-1 flex">
+        <span class="p-input-icon-left">
+            <i class="fas fa-search" style="color: var(--surface-500)"></i>
+            <input
+                (keyup.enter)="onPosSearch()"
+                formControlName="inquiry"
+                type="text"
+                pInputText
+                placeholder="Search"
+                class="input-search"
+            />
+        </span>
+        <div class="mx-3">
+            <button
+                class="btn-refresh"
+                type="button"
+                (click)="onRefresh()"
+                pButton
+                pRipple
+                icon="fas fa-sync-alt"
+            ></button>
+        </div>
+    </div>
+
+    <div class="col" *ngIf="isMovementType">
+        <p-dropdown
+            placeholder="All Movement Types"
+            styleClass="p-dropdown-filter"
+            optionLabel="name"
+            dropdownIcon="fas fa-caret-down"
+        >
+        </p-dropdown>
+    </div>
+
+    <div class="col" *ngIf="isAttendanceType">
+        <p-dropdown
+            placeholder="All Attendance Types"
+            styleClass="p-dropdown-filter"
+            optionLabel="name"
+            dropdownIcon="fas fa-caret-down"
+        >
+        </p-dropdown>
+    </div>
+
+    <div class="col" *ngIf="isLanguages">
+        <p-dropdown
+            placeholder="All Languages"
+            styleClass="p-dropdown-filter"
+            optionLabel="name"
+            dropdownIcon="fas fa-caret-down"
+        >
+        </p-dropdown>
+    </div>
+
+    <div class="mr-3" *ngIf="isFilter">
+        <p-dropdown
+            (onChange)="changeStatus($event.value)"
+            [(ngModel)]="filter"
+            [ngModelOptions]="{ standalone: true }"
+            [placeholder]="placeholder"
+            [options]="items"
+            styleClass="p-dropdown-filter"
+            dropdownIcon="fas fa-caret-down"
+        >
+            <ng-template let-item pTemplate="selectedItem">
+                {{ item.label }}
+            </ng-template>
+            <ng-template let-item pTemplate="item">
+                {{ item.label }}
+            </ng-template>
+        </p-dropdown>
+    </div>
+
+    <div class="mr-3" *ngIf="isCompany">
+        <app-lov-company
+            filter="true"
+            styleClass="p-dropdown-filter"
+            (selected)="selectCompany($event)"
+        ></app-lov-company>
+    </div>
+    <div class="mr-3" *ngIf="isCompanyMulti">
+        <app-lov-company
+            [isMulti]="true"
+            filter="true"
+            styleClass="p-dropdown-filter"
+            (selected)="selectCompanyMulti($event)"
+        ></app-lov-company>
+    </div>
+
+    <div class="col flex" *ngIf="isFilterGroup">
+        <ng-container *ngFor="let i of customFilterGroup">
+            <app-lov
+                #lovs
+                *ngIf="companyList.length > 0"
+                [isMulti]="true"
+                filter="true"
+                [label]="i.label"
+                styleClass="p-dropdown-filter mr-2"
+                (selected)="selectedFilterGroup($event, i.key)"
+                [chaining]="chaining"
+                [disabled]="!isCompanySet"
+                [uri]="i.uri + companyList[0]?.id"
+            ></app-lov>
+        </ng-container>
+    </div>
+
+    <div class="col" *ngIf="isMovementDate">
+        <p-dropdown
+            placeholder="All Movement Date"
+            styleClass="p-dropdown-filter"
+            optionLabel="name"
+            dropdownIcon="fas fa-caret-down"
+        >
+        </p-dropdown>
+    </div>
+
+    <div class="mr-3" *ngIf="isDate">
+        <p-calendar
+            dateFormat="dd-mm-yy"
+            class="custom-calendar"
+            [showIcon]="true"
+            appendTo="body"
+            placeholder="Pick Date"
+            (onSelect)="onSelectDate($event)"
+            class="p-date-filter"
+            formControlName="date"
+        >
+        </p-calendar>
+    </div>
+
+    <div class="mr-3" *ngIf="isDateRange">
+        <p-calendar
+            dateFormat="dd-mm-yy"
+            class="custom-calendar"
+            [showIcon]="true"
+            appendTo="body"
+            placeholder="All Punch Dates"
+            (onSelect)="onSelectDateRange()"
+            class="p-date-filter"
+            [(ngModel)]="rangeDates"
+            [ngModelOptions]="{ standalone: true }"
+            selectionMode="range"
+        >
+        </p-calendar>
+    </div>
+
+    <div class="mr-3" *ngIf="isApproval">
+        <p-dropdown
+            (onChange)="changeStatusApproval($event.value)"
+            [(ngModel)]="approval"
+            [ngModelOptions]="{ standalone: true }"
+            [options]="appItems"
+            styleClass="p-dropdown-filter"
+            dropdownIcon="fas fa-caret-down"
+        >
+        </p-dropdown>
+    </div>
+
+    <div class="mr-3" *ngIf="isProcess">
+        <p-dropdown
+            (onChange)="changeStatusProcess($event.value)"
+            [(ngModel)]="process"
+            [ngModelOptions]="{ standalone: true }"
+            [options]="appStatus"
+            styleClass="p-dropdown-filter"
+            dropdownIcon="fas fa-caret-down"
+        >
+        </p-dropdown>
+    </div>
+    <div class="mr-3" *ngIf="isLearningType">
+        <p-dropdown
+            (onChange)="changeStatusProcess($event.value)"
+            [(ngModel)]="learningType"
+            [ngModelOptions]="{ standalone: true }"
+            [options]="appLearningType"
+            styleClass="p-dropdown-filter"
+            dropdownIcon="fas fa-caret-down"
+        >
+        </p-dropdown>
+    </div>
+    <div class="mr-3" *ngIf="isPeriod">
+        <p-dropdown
+            (onChange)="changeStatusProcess($event.value)"
+            [(ngModel)]="period"
+            [ngModelOptions]="{ standalone: true }"
+            [options]="appPeriod"
+            styleClass="p-dropdown-filter"
+            dropdownIcon="fas fa-caret-down"
+        >
+        </p-dropdown>
+    </div>
+
+    <div class="flex align-items-center" *ngIf="isReview">
+        <div
+            class="flex align-items-center justify-content-center col-12 lg:col-2 md:col-3 sm:col-12 p-fluid p-dropdown-filter-group"
+        >
+            <p-dropdown
+                placeholder="All Reviewers"
+                styleClass="p-dropdown-filter-group__item"
+                optionLabel="name"
+                dropdownIcon="fas fa-caret-down"
+            >
+            </p-dropdown>
+            <div
+                class="border-right-1"
+                style="
+                    border-color: var(--surface-400);
+                    height: 2rem;
+                    align-content: center;
+                "
+            ></div>
+            <p-dropdown
+                placeholder="All Review Status"
+                styleClass="p-dropdown-filter-group__item"
+                optionLabel="name"
+                dropdownIcon="fas fa-caret-down"
+            >
+            </p-dropdown>
+            <div
+                class="border-right-1"
+                style="border-color: var(--surface-400); height: 2rem"
+            ></div>
+            <p-dropdown
+                placeholder="All Decisions"
+                styleClass="p-dropdown-filter-group__item"
+                optionLabel="name"
+                dropdownIcon="fas fa-caret-down"
+            >
+            </p-dropdown>
+        </div>
+    </div>
+
+    <div class="flex align-items-center ml-2 mr-2" *ngIf="isFilterLov">
+        <ng-container *ngFor="let i of customFilterGroup">
+            <app-lov
+                *ngIf="i.web"
+                #lovs
+                [uri]="i.uri"
+                [label]="i.label"
+                [web]="i.web"
+                [filter]="i.filter"
+                [styleClass]="
+                    i.styleClass ? i.styleClass : 'p-dropdown-filter mr-2'
+                "
+                [chaining]="chaining"
+                (selected)="selectedFilter($event, i.key)"
+            ></app-lov>
+            <app-lov
+                *ngIf="!i.web"
+                #lovs
+                [uri]="i.uri"
+                [label]="i.label"
+                [filter]="i.filter"
+                [getCustomValue]="i.valueDefault"
+                [defaultValue]="i.customDefault"
+                [styleClass]="
+                    i.styleClass ? i.styleClass : 'p-dropdown-filter mr-2'
+                "
+                [chaining]="chaining"
+                (selected)="selectedFilter($event, i.key)"
+            ></app-lov>
+        </ng-container>
+    </div>
+
+    <div class="flex align-items-center ml-2 mr-2" *ngIf="filterCustomOptions">
+        <ng-container *ngFor="let filterCustomOption of filterCustomOptions">
+            <app-lov
+                #lovs
+                [showClear]="true"
+                [label]="filterCustomOption.label"
+                [styleClass]="
+                    filterCustomOption.label.styleClass
+                        ? filterCustomOption.label.styleClass
+                        : 'p-dropdown-filter mr-2'
+                "
+                [customOption]="filterCustomOption.items"
+                (selected)="
+                    selectedFilterCustomOption($event, filterCustomOption.key)
+                "
+            ></app-lov>
+        </ng-container>
+    </div>
+    <ng-content></ng-content>
+</div>

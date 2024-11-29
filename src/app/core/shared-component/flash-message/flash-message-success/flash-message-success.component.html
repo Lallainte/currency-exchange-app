@@ -1,0 +1,11 @@
+<p-dialog class="message-error" [(visible)]="isMessageSuccess" [style]="{ width: '476px' }">
+        <div class="c-icons approved-icon"></div>
+        <div class="text-center">
+            <p class="text-xl font-bold mb-2" style="color:var(--surface-700);margin:0;">{{title}}</p>
+            <p class="text-base font-normal" style="color:var(--surface-500)">{{ message }}</p>
+        </div>
+
+    <ng-template pTemplate="footer">
+        <button type="button" pButton label="OK" (click)="clickBack()" [style]="{ width: '134px' }"></button>
+    </ng-template>
+</p-dialog>

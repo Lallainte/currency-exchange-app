@@ -1,0 +1,7 @@
+<p-inputSwitch
+    [inputId]="inputId"
+    [disabled]="disabled"
+    (onChange)="handleChange($event)"
+    [(ngModel)]="value"
+></p-inputSwitch>
+<span class="ml-3">{{ value ? labelTrue : labelFalse }}</span>

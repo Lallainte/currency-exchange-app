@@ -1,0 +1,59 @@
+.container {
+    width: 100vw;
+    position: fixed;
+    min-height: 100vh;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background: #da241c;
+    z-index: 0;
+    padding: 0 2.4rem;
+}
+
+.login-box {
+    width: 100%;
+}
+
+.login-logo {
+    height: 2.5rem;
+}
+
+.sub-title {
+    font-size: 12px;
+    text-align: center;
+    color: #b4b4b4;
+}
+
+.p-title {
+    font-family: SF Pro Text;
+    font-size: 30px;
+    font-weight: bold;
+    color: #4B4B4B;
+}
+
+.bg-login {
+    object-fit: cover;
+    object-position: left;
+}
+
+@media (min-width: 768px) {
+    .login-box {
+        width: 40rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .bg-login {
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .login-box {
+        width: 36rem;
+    }
+}

@@ -1,0 +1,27 @@
+:host ::ng-deep .save-dialog {
+    .p-dialog .p-dialog-header .p-dialog-title::before {
+        content: "\f0c7" !important;
+        font-weight: 900 !important;
+        font-size: 1.5rem !important;
+        font-family: "Font Awesome 5 Free" !important;
+    }
+    
+    .p-dialog .p-dialog-content{
+        border-bottom-right-radius:0;
+        border-bottom-left-radius:0;
+    }
+}
+:host ::ng-deep .save-dialog-terminate {
+    .p-dialog .p-dialog-header .p-dialog-title::before {
+        content: "\f15c" !important;
+        color: var(--primary-red) !important;
+        font-weight: 900 !important;
+        font-size: 1.5rem !important;
+        font-family: "Font Awesome 5 Free" !important;
+    }
+
+    .p-dialog .p-dialog-content{
+        border-bottom-right-radius:0;
+        border-bottom-left-radius:0;
+    }
+}

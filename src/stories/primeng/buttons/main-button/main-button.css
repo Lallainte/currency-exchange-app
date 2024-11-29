@@ -1,0 +1,32 @@
+div{
+    display: flex;
+}
+
+button{
+    /* display: flex; */
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center;
+    width: 128px;
+    height: 35px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin: 0;
+}
+
+:host ::ng-deep .p-button-label{
+    flex: none;
+}
+
+button:hover{
+    cursor: pointer;
+}
+
+button i{
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 600;
+}

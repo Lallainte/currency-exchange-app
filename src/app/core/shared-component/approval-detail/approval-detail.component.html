@@ -1,0 +1,263 @@
+<span class="text-link" (click)="onShow()">View approval details</span>
+
+<p-dialog
+    header="{{ 'approvalDetails' | translate }}"
+    [(visible)]="isShow"
+    [modal]="true"
+    showEffect="fade"
+    [style]="{ width: '60vw', overflow: 'hidden' }"
+    [draggable]="false"
+    [resizable]="false"
+    [appendTo]="appendTo"
+>
+    <ng-container *ngIf="approvalData?.length > 0 && isShow">
+        <p-accordion
+            styleClass="accordion__approval-details"
+            [multiple]="true"
+            [activeIndex]="[0]"
+        >
+            <ng-container
+                *ngFor="let approval of approvalData; let idx = index"
+            >
+                <p-accordionTab iconPos="end">
+                    <ng-template pTemplate="header">
+                        <div
+                            class="w-full flex align-items-center justify-content-between pr-3"
+                        >
+                            <span
+                                class="flex align-items-center"
+                                style="gap: 2px"
+                            >
+                                <span class="text-black"
+                                    >Approval Level
+                                    {{ approval.sequence }}</span
+                                >
+                            </span>
+                            <span
+                                class="flex align-items-center"
+                                style="gap: 12px"
+                            >
+                                <span
+                                    class="text-grey flex align-items-center text-base font-light"
+                                    style="gap: 8px"
+                                >
+                                    <i
+                                        class="fa-solid fa-user-check text-sm"
+                                    ></i>
+                                    {{ getApproverStatusFormat(approval) }}
+                                </span>
+                                <span
+                                    [ngClass]="
+                                        _helperService.getStatus(approval)
+                                            .statusCode
+                                    "
+                                >
+                                    {{
+                                        _helperService.getStatus(approval)
+                                            .statusLabel || "-" | titleCase
+                                    }}
+                                </span>
+                            </span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="content">
+                        <ng-container
+                            *ngFor="
+                                let data of approval.details;
+                                let idx = index;
+                                let last = last
+                            "
+                        >
+                            <div class="aprover-box" [class.mb-4]="!last">
+                                <div class="grid no-pad">
+                                    <div class="col-12 border-line py-2 px-3">
+                                        <div class="grid no-pad">
+                                            <ng-container
+                                                *ngFor="
+                                                    let approver of data.approvers
+                                                "
+                                            >
+                                                <div class="col-6">
+                                                    <div
+                                                        class="w-full flex"
+                                                        style="gap: 10px"
+                                                    >
+                                                        <img
+                                                            [src]="
+                                                                approver.employeeId
+                                                                    | employeePhoto
+                                                                    | async
+                                                            "
+                                                            class="custom-profile-image"
+                                                            style="
+                                                                width: 3rem;
+                                                                height: 3rem;
+                                                            "
+                                                        />
+
+                                                        <span
+                                                            class="flex flex-column no-pad"
+                                                        >
+                                                            <span
+                                                                class="flex align-items-center mb-1"
+                                                                style="gap: 8px"
+                                                            >
+                                                                <p
+                                                                    class="mb-0 text-black font-semibold"
+                                                                >
+                                                                    {{
+                                                                        approver.fullName
+                                                                    }}
+                                                                </p>
+                                                                <i
+                                                                    *ngIf="
+                                                                        approver.status.toLowerCase() ===
+                                                                        'approved'
+                                                                    "
+                                                                    style="
+                                                                        color: #29b129;
+                                                                    "
+                                                                    class="fa-solid fa-circle-check text-sm"
+                                                                ></i>
+                                                                <i
+                                                                    class="fa-solid fa-hourglass-half text-sm"
+                                                                    style="
+                                                                        color: #f39c12;
+                                                                    "
+                                                                    *ngIf="
+                                                                        approver.status.toLowerCase() ===
+                                                                        'pending'
+                                                                    "
+                                                                ></i>
+                                                            </span>
+                                                            <p
+                                                                class="no-pad text-grey"
+                                                            >
+                                                                {{
+                                                                    approver.jobPositionName
+                                                                }}
+                                                            </p>
+                                                            <p
+                                                                class="no-pad text-grey"
+                                                            >
+                                                                Approval date :
+                                                                {{
+                                                                    _helperService.convertDateToDateMonthYear(
+                                                                        approver.confirmTime
+                                                                    )
+                                                                }}
+                                                            </p>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 py-2 px-3">
+                                        <div class="grid no-pad">
+                                            <div class="col-12">
+                                                <div
+                                                    class="flex align-items-center"
+                                                    style="gap: 4px"
+                                                >
+                                                    <p class="no-pad">
+                                                        {{
+                                                            data.approvers
+                                                                .length > 1
+                                                                ? "Notes"
+                                                                : "Note"
+                                                        }}
+                                                        :
+                                                    </p>
+                                                    <p
+                                                        class="no-pad"
+                                                        *ngIf="
+                                                            data.approvers
+                                                                .length <= 1
+                                                        "
+                                                    >
+                                                        {{
+                                                            data.approvers[0]
+                                                                .notes || "-"
+                                                        }}
+                                                    </p>
+                                                    <button
+                                                        *ngIf="
+                                                            data.approvers
+                                                                .length > 1
+                                                        "
+                                                        class="btn-nude cursor-pointer flex align-items-center"
+                                                        style="gap: 6px"
+                                                        (click)="
+                                                            onShowNotes(idx)
+                                                        "
+                                                    >
+                                                        <span
+                                                            class="underline"
+                                                            style="
+                                                                color: var(
+                                                                    --black-netral
+                                                                );
+                                                            "
+                                                            >{{
+                                                                idx === idxShow
+                                                                    ? "Hide Notes"
+                                                                    : "View Notes"
+                                                            }}</span
+                                                        >
+                                                        <i
+                                                            *ngIf="
+                                                                idx !== idxShow
+                                                            "
+                                                            class="fa-solid fa-angle-down no-underline font-bold pt-1"
+                                                        ></i>
+                                                        <i
+                                                            *ngIf="
+                                                                idx === idxShow
+                                                            "
+                                                            class="fa-solid fa-angle-up no-underline font-bold pt-1"
+                                                        ></i>
+                                                    </button>
+                                                </div>
+                                                <ng-container
+                                                    *ngIf="
+                                                        data.approvers.length >
+                                                            1 && idx === idxShow
+                                                    "
+                                                >
+                                                    <ul class="my-1 pl-5">
+                                                        <ng-container
+                                                            *ngFor="
+                                                                let approver of data.approvers
+                                                            "
+                                                        >
+                                                            <li class="mb-1">
+                                                                <span
+                                                                    ><b
+                                                                        >{{
+                                                                            approver.fullName
+                                                                        }}:</b
+                                                                    >&nbsp;{{
+                                                                        approver.notes ||
+                                                                            "-"
+                                                                    }}</span
+                                                                >
+                                                            </li>
+                                                        </ng-container>
+                                                    </ul>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </ng-template>
+                </p-accordionTab>
+            </ng-container>
+        </p-accordion>
+    </ng-container>
+    <p-footer>
+        <btn-reminder (onClick)="onReminder()"></btn-reminder>
+    </p-footer>
+</p-dialog>

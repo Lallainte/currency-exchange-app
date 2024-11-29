@@ -1,0 +1,31 @@
+<p-dropdown appendTo="body" optionLabel="name" placeholder="Select color" dropdownIcon="fas fa-caret-down"
+  [disabled]="disabled" [filter]="true" [ngClass]="ngClass" [options]="data" (onChange)="handleChange($event)"
+  [(ngModel)]="selectedData">
+  <ng-template pTemplate="selectedItem">
+    <div class="flex align-items-center" *ngIf="selectedData" style="gap: 12px">
+      <div style="
+          width: 20px;
+          height: 20px;
+          border: 1px solid #eee;
+          border-radius: 4px;
+        " [ngStyle]="{
+          backgroundColor: selectedData.hexCode
+        }"></div>
+      <div>{{ selectedData.name }}</div>
+    </div>
+  </ng-template>
+
+  <ng-template let-color pTemplate="item">
+    <div class="flex align-items-center" style="gap: 12px">
+      <div style="
+          width: 20px;
+          height: 20px;
+          border: 1px solid #eee;
+          border-radius: 4px;
+        " [ngStyle]="{
+          backgroundColor: color.hexCode
+        }"></div>
+      <div>{{ color.name }}</div>
+    </div>
+  </ng-template>
+</p-dropdown>

@@ -1,0 +1,134 @@
+<div class="card">
+    <div class="grid field">
+        <div class="col-6 mt-2">
+            <h5>Perusahaan - Edit</h5>
+        </div>
+
+        <div class="col-6">
+            <div class="field text-right hide-mobile">
+                <btn-cancel [routeUrl]="'util/company/'+companyId"></btn-cancel>
+                <btn-update (onClick)="onUpdate()"></btn-update>
+            </div>
+            <div class="field text-right hide-desktop">
+                <btn-update (onClick)="onUpdate()"></btn-update>
+            </div>
+        </div>
+    </div>
+    <div class="grid field">
+        <div class="col-12 border-bottom-1 mt-2">
+            <h6>Detil Perusahaan</h6>
+        </div>
+    </div>
+    <ng-container [formGroup]="formGroup">
+        <div class="grid p-fluid" *ngIf="!loading else skel">
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label for="code">Kode</label>
+                    <div>
+                        <input id="code" type="text" formControlName="code" pInputText>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="name">Nama Perusahaan</label>
+                    <div>
+                        <input id="name" type="text" formControlName="name" pInputText>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="jenis-usaha" class="required">Jenis Usaha</label>
+                    <div>
+                        <app-lov uri="lov/company-types" label="Pilih Tipe Perusahaan"
+                            [value]="formGroup.value.companyType.id" (selected)="selectCT($event)" [ngClass]="{'ng-dirty ng-invalid' : (formGroup.get('companyType').touched || formGroup.get('companyType').dirty ) &&
+                        !formGroup.get('companyType').valid}"></app-lov>
+                        <app-error-field-helper [formControlKey]="formGroup.get('companyType')">
+                        </app-error-field-helper>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="effBegin">Bergabung</label>
+                    <div>
+                        <p-calendar id="effBegin" dateFormat="dd-mm-yy" appendTo="body" formControlName="effBegin"
+                            [showIcon]="true">
+                        </p-calendar>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="effEnd">Berlaku Sampai</label>
+                    <div>
+                        <p-calendar id="effEnd" dateFormat="dd-mm-yy" appendTo="body" formControlName="effEnd"
+                            [showIcon]="true">
+                        </p-calendar>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="address">Alamat Perusahaan</label>
+                    <div>
+                        <textarea id="address" class="custom-input" formControlName="address" rows="4" cols="33"
+                            pInputTextarea autoResize="autoResize" [ngClass]="{'ng-dirty ng-invalid' : (formGroup.get('address').touched || formGroup.get('address').dirty ) &&
+                        !formGroup.get('address').valid}"></textarea>
+                    </div>
+                </div>
+
+                <div class="field" *ngIf="isNpwp">
+                    <label for="companyTaxNumber">No. NPWP</label>
+                    <div>
+                        <p-inputMask styleClass="label-custom-form custom-input" formControlName="companyTaxNumber"
+                            unmask="true" mask="99.999.999.9-999-999"
+                            [ngClass]="{'ng-dirty ng-invalid' : (formGroup.get('companyTaxNumber').touched || formGroup.get('companyTaxNumber').dirty ) && !formGroup.get('companyTaxNumber').valid}">
+                        </p-inputMask>
+                        <app-error-field-helper [formControlKey]="formGroup.get('companyTaxNumber')">
+                        </app-error-field-helper>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label for="scale" class="required">Jumlah Karyawan</label>
+                    <div>
+                        <app-lov uri="lov/company-scales" label="Pilih Jumlah Karyawan" [value]="formGroup.value.scale"
+                            [isValueLabel]="true" (selected)="selectScale($event)"></app-lov>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="phone">Telpon</label>
+                    <div>
+                        <input id="phone" numberOnly type="text" formControlName="phone" pInputText [ngClass]="{'ng-dirty ng-invalid' : (formGroup.get('phone').touched || formGroup.get('phone').dirty ) &&
+                        !formGroup.get('phone').valid}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="fax">Fax</label>
+                    <div>
+                        <input id="fax" numberOnly type="text" formControlName="fax" pInputText [ngClass]="{'ng-dirty ng-invalid' : (formGroup.get('fax').touched || formGroup.get('fax').dirty ) &&
+                        !formGroup.get('fax').valid}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="email" class="required">Email</label>
+                    <div>
+                        <input id="email" type="email" formControlName="email" placeholder="Isi Email Perusahaan"
+                            pInputText [ngClass]="{'ng-dirty ng-invalid' : (formGroup.get('email').touched || formGroup.get('email').dirty ) &&
+                        !formGroup.get('email').valid}">
+                        <app-error-field-helper [formControlKey]="formGroup.get('email')"></app-error-field-helper>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="logo">Logo</label>
+                    <div>
+                        <app-linov-upload [isImage]="true" [src]="imgSrc" (onChange)="onFileChange($event)">
+                        </app-linov-upload>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    <ng-template #skel>
+        <div class="custom-skeleton p-4">
+            <p-skeleton width="100%" height="150px"></p-skeleton>
+        </div>
+    </ng-template>
+</div>

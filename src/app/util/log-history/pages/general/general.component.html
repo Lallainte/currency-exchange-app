@@ -1,0 +1,12 @@
+<p-header>
+    <div class="grid field py-2">
+        <div class="col-3">
+            <app-button-back-general *ngIf="isBack"></app-button-back-general>
+
+            <span class="font-title">{{ text.title | translate }}</span>
+
+            <app-information-view></app-information-view>
+        </div>
+    </div>
+</p-header>
+<router-outlet (activate)="onRouterOutletActivate($event)"></router-outlet>

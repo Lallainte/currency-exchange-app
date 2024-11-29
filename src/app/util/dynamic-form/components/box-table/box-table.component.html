@@ -1,0 +1,99 @@
+<div class="block block--table">
+    <span style="color: #6f719e">{{ type }} {{ columnNames }}</span>
+    <i
+        class="fa-solid fa-ellipsis-vertical"
+        tooltipPosition="left"
+        [pTooltip]="tooltipContent"
+        (click)="visible = true"
+    ></i>
+</div>
+
+<ng-template #tooltipContent>
+    <div><b>Click</b> to Open Menu</div>
+</ng-template>
+
+<p-dialog
+    contentStyleClass="pb-0"
+    [modal]="true"
+    [style]="{
+        width: '100%',
+        maxWidth: '728px',
+        overflow: 'auto',
+        background: '#fff'
+    }"
+    [draggable]="false"
+    [showHeader]="false"
+    [(visible)]="visible"
+>
+    <div style="height: 396px; overflow-y: auto">
+        <div class="mb-4">
+            <div class="mb-2">
+                <label for="checkboxSelection">Checkbox Selection</label>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px">
+                <p-inputSwitch
+                    inputId="checkboxSelection"
+                    [(ngModel)]="boxData.checkboxSelection"
+                ></p-inputSwitch
+                ><span>{{ boxData.checkboxSelection ? "Yes" : "No" }}</span>
+            </div>
+        </div>
+        <div class="mb-4">
+            <div class="mb-2">
+                <label for="endpointUrl">URI</label>
+            </div>
+            <input
+                id="endpointUrl"
+                type="text"
+                class="w-full"
+                style="background: #fff"
+                placeholder="URI"
+                pInputText
+                [(ngModel)]="boxData.uri"
+            />
+        </div>
+        <div class="mb-4">
+            <p style="margin: 0 0 7px">Columns</p>
+            <l-option-creator
+                valueKey="key"
+                valueTitle="Key"
+                labelTitle="Column"
+                placeholder="Column"
+                pluralPlaceholder="Columns"
+                [data]="columns"
+                (updated)="handleUpdatedOptionCreator($event)"
+                (removed)="handleRemovedOptionCreator($event)"
+            ></l-option-creator>
+        </div>
+        <div class="mb-4">
+            <div class="mb-2">
+                <label for="columnStatus">Column Status</label>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px">
+                <p-inputSwitch
+                    inputId="columnStatus"
+                    [(ngModel)]="boxData.columnStatus"
+                ></p-inputSwitch
+                ><span>{{ boxData.columnStatus ? "Yes" : "No" }}</span>
+            </div>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <button
+            pButton
+            pRipple
+            label="Cancel"
+            class="p-button-secondary"
+            (click)="cancel()"
+        ></button>
+        <button
+            pButton
+            pRipple
+            label="Remove"
+            class="p-button-danger"
+            (click)="remove()"
+        ></button>
+        <p-button label="Save" (click)="save()"></p-button>
+    </ng-template>
+</p-dialog>

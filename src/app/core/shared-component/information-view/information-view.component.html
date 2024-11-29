@@ -1,0 +1,36 @@
+<button
+    class="btn-info cursor-pointer"
+    style="margin-left: 13px"
+    *ngIf="src"
+    (click)="visibleModalInformation = true"
+>
+    <i class="fas fa-info-circle"></i>
+    <!-- <img src="assets/icon/icon-info.svg" alt="icon-info"> -->
+</button>
+
+<p-dialog
+    *ngIf="visibleModalInformation"
+    [modal]="true"
+    [style]="{
+        width: '80vw',
+        boxShadow: 'initial',
+    }"
+    [draggable]="false"
+    [maximizable]="true"
+    [contentStyle]="{
+        overflowY: 'auto',
+    }"
+    (onHide)="visibleModalInformation = false"
+    (onMaximize)="handleMaximizeModalInformation($event)"
+    [(visible)]="visibleModalInformation"
+>
+    <ng-template pTemplate="header">
+        <span class="text-xl font-bold">{{ title | translate }}</span>
+    </ng-template>
+
+    <ngx-extended-pdf-viewer
+        height="auto"
+        [src]="src"
+        [textLayer]="true"
+    ></ngx-extended-pdf-viewer>
+</p-dialog>

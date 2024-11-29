@@ -1,0 +1,1082 @@
+<div
+    class="block"
+    style="position: relative"
+    [ngClass]="{
+        'block--required': boxData.required
+    }"
+>
+    <span style="color: #6f719e">{{ boxData.label }}</span>
+    <span style="color: #9f9f9f">{{ type }}</span>
+    <div
+        tooltipPosition="left"
+        [pTooltip]="tooltipContent"
+        (click)="visible = true"
+    >
+        <ng-content></ng-content>
+    </div>
+</div>
+
+<ng-template #tooltipContent>
+    <div class="flex flex-column" style="gap: 4px">
+        <div><b>Drag</b> to move</div>
+        <div><b>Click</b> to Open Menu</div>
+    </div>
+</ng-template>
+
+<p-dialog
+    contentStyleClass="pb-0"
+    [modal]="true"
+    [style]="{
+        width: '90vw',
+        overflow: 'auto',
+        background: '#fff'
+    }"
+    [draggable]="false"
+    [showHeader]="false"
+    [(visible)]="visible"
+>
+    <div class="grid">
+        <div class="col-6 py-0">
+            <p-tabView>
+                <p-tabPanel header="Display">
+                    <div style="height: 396px; overflow-y: auto">
+                        <div class="mb-4">
+                            <div class="mb-2">
+                                <label for="inputId">Input Id</label>
+                            </div>
+                            <input
+                                id="inputId"
+                                type="text"
+                                class="w-full"
+                                placeholder="Input Id"
+                                pInputText
+                                [value]="boxData.inputId"
+                                (change)="updateDataInput($event, 'inputId')"
+                            />
+                        </div>
+                        <div class="mb-4">
+                            <div class="mb-2">
+                                <label for="label">Label</label>
+                            </div>
+                            <input
+                                id="label"
+                                type="text"
+                                class="w-full"
+                                placeholder="Label"
+                                pInputText
+                                [value]="boxData.label"
+                                (change)="updateDataInput($event, 'label')"
+                            />
+                        </div>
+                        <div class="mb-4">
+                            <div class="mb-2">
+                                <label for="centerLabel">Center Label</label>
+                            </div>
+                            <div
+                                style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 8px;
+                                "
+                            >
+                                <p-inputSwitch
+                                    inputId="centerLabel"
+                                    [(ngModel)]="boxData.centerLabel"
+                                ></p-inputSwitch
+                                ><span>{{
+                                    boxData.centerLabel ? "Yes" : "No"
+                                }}</span>
+                            </div>
+                        </div>
+                        <div class="mb-4" *ngIf="isNotAChoiceType">
+                            <div class="mb-2">
+                                <label for="placeholder">Placeholder</label>
+                            </div>
+                            <input
+                                id="placeholder"
+                                type="text"
+                                class="w-full"
+                                placeholder="Placeholder"
+                                pInputText
+                                [value]="boxData.placeholder"
+                                (change)="
+                                    updateDataInput($event, 'placeholder')
+                                "
+                            />
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="mb-2">
+                                <label for="description">Description</label>
+                            </div>
+                            <input
+                                id="description"
+                                type="text"
+                                class="w-full"
+                                placeholder="Description"
+                                pInputText
+                                [value]="boxData.description"
+                                (change)="
+                                    updateDataInput($event, 'description')
+                                "
+                            />
+                        </div>
+
+                        <ng-container *ngIf="boxData.type === 'Date & Time'">
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="calendarView"
+                                        >Calendar View</label
+                                    >
+                                </div>
+                                <p-dropdown
+                                    inputId="calendarView"
+                                    appendTo="body"
+                                    styleClass="w-full"
+                                    optionLabel="label"
+                                    optionValue="value"
+                                    placeholder="Calendar View"
+                                    [options]="calendarViews"
+                                    [(ngModel)]="boxData.calendarView"
+                                ></p-dropdown>
+                            </div>
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="formatDate">Format Date</label>
+                                </div>
+                                <input
+                                    id="formatDate"
+                                    type="text"
+                                    class="w-full"
+                                    placeholder="Format Date"
+                                    pInputText
+                                    [(ngModel)]="boxData.formatDate"
+                                />
+                            </div>
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="onlyTime">Only Time</label>
+                                </div>
+                                <div
+                                    style="
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 8px;
+                                    "
+                                >
+                                    <p-inputSwitch
+                                        inputId="onlyTime"
+                                        [(ngModel)]="boxData.onlyTime"
+                                    ></p-inputSwitch>
+                                    <span>{{
+                                        boxData.onlyTime ? "Yes" : "No"
+                                    }}</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="formatHour">Format Hour</label>
+                                </div>
+                                <input
+                                    id="formatHour"
+                                    type="text"
+                                    class="w-full"
+                                    placeholder="12 or 24"
+                                    pInputText
+                                    [(ngModel)]="boxData.formatHour"
+                                />
+                            </div>
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="showTime">Show Time</label>
+                                </div>
+                                <div
+                                    style="
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 8px;
+                                    "
+                                >
+                                    <p-inputSwitch
+                                        inputId="showTime"
+                                        [(ngModel)]="boxData.showTime"
+                                    ></p-inputSwitch>
+                                    <span>{{
+                                        boxData.showTime ? "Yes" : "No"
+                                    }}</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="showSeconds"
+                                        >Show Seconds</label
+                                    >
+                                </div>
+                                <div
+                                    style="
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 8px;
+                                    "
+                                >
+                                    <p-inputSwitch
+                                        inputId="showSeconds"
+                                        [(ngModel)]="boxData.showSeconds"
+                                    ></p-inputSwitch>
+                                    <span>{{
+                                        boxData.showSeconds ? "Yes" : "No"
+                                    }}</span>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <div class="mb-4">
+                            <div class="mb-2">
+                                <label for="disabled">Disabled</label>
+                            </div>
+                            <div
+                                style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 8px;
+                                "
+                            >
+                                <p-inputSwitch
+                                    inputId="disabled"
+                                    [(ngModel)]="boxData.disabled"
+                                ></p-inputSwitch
+                                ><span>{{
+                                    boxData.disabled ? "Yes" : "No"
+                                }}</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4" *ngIf="boxData.type === 'Number'">
+                            <div class="mb-2">
+                                <label
+                                    for="disabled"
+                                    for="showIncrementButtonInputNumber"
+                                    >Show Incremenet Button</label
+                                >
+                            </div>
+                            <div
+                                style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 8px;
+                                "
+                            >
+                                <p-inputSwitch
+                                    inputId="showIncrementButtonInputNumber"
+                                    [(ngModel)]="
+                                        boxData.showIncrementButtonInputNumber
+                                    "
+                                ></p-inputSwitch>
+                                <span>{{
+                                    boxData.showIncrementButtonInputNumber
+                                        ? "Show"
+                                        : "Hide"
+                                }}</span>
+                            </div>
+                        </div>
+
+                        <ng-container *ngIf="boxData.type === 'Switch'">
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="labelSwitchOn"
+                                        >Label Switch On</label
+                                    >
+                                </div>
+                                <input
+                                    id="labelSwitchOn"
+                                    type="text"
+                                    class="w-full"
+                                    placeholder="Label Switch On"
+                                    pInputText
+                                    [value]="boxData.labelSwitchOn"
+                                    (change)="
+                                        updateDataInput($event, 'labelSwitchOn')
+                                    "
+                                />
+                            </div>
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="labelSwitchOff"
+                                        >Label Switch Off</label
+                                    >
+                                </div>
+                                <input
+                                    id="labelSwitchOff"
+                                    type="text"
+                                    class="w-full"
+                                    placeholder="Label Switch Off"
+                                    pInputText
+                                    [value]="boxData.labelSwitchOff"
+                                    (change)="
+                                        updateDataInput(
+                                            $event,
+                                            'labelSwitchOff'
+                                        )
+                                    "
+                                />
+                            </div>
+                        </ng-container>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel header="Data">
+                    <div style="height: 396px; overflow-y: auto">
+                        <ng-container
+                            *ngIf="
+                                boxData.type === 'Input Text' ||
+                                boxData.type === 'Textarea'
+                            "
+                        >
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="value">Value</label>
+                                </div>
+                                <input
+                                    id="value"
+                                    type="text"
+                                    class="w-full"
+                                    placeholder="Value"
+                                    pInputText
+                                    [value]="boxData.value"
+                                    (change)="
+                                        handleInputChange($event, 'value')
+                                    "
+                                />
+                            </div>
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="defaultValue"
+                                        >Default Value</label
+                                    >
+                                </div>
+                                <input
+                                    id="defaultValue"
+                                    type="text"
+                                    class="w-full"
+                                    placeholder="Default Value"
+                                    pInputText
+                                    [value]="boxData.defaultValue"
+                                    (change)="
+                                        handleInputChange(
+                                            $event,
+                                            'defaultValue'
+                                        )
+                                    "
+                                />
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="boxData.type === 'Number'">
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="value">Value</label>
+                                </div>
+                                <p-inputNumber
+                                    class="w-full"
+                                    inputId="value"
+                                    styleClass="w-full flex"
+                                    placeholder="Value"
+                                    [showButtons]="true"
+                                    [(ngModel)]="boxData.value"
+                                >
+                                </p-inputNumber>
+                            </div>
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="defaultValue"
+                                        >Default Value</label
+                                    >
+                                </div>
+                                <p-inputNumber
+                                    class="w-full"
+                                    inputId="value"
+                                    styleClass="w-full flex"
+                                    placeholder="Default Value"
+                                    [showButtons]="true"
+                                    [(ngModel)]="boxData.defaultValue"
+                                >
+                                </p-inputNumber>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="boxData.type === 'Switch'">
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="value">Value</label>
+                                </div>
+                                <div
+                                    style="
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 8px;
+                                    "
+                                >
+                                    <p-inputSwitch
+                                        inputId="value"
+                                        [(ngModel)]="boxData.value"
+                                    ></p-inputSwitch
+                                    ><span>{{
+                                        boxData.value
+                                            ? boxData.labelSwitchOn
+                                            : boxData.labelSwitchOff
+                                    }}</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="defaultValue"
+                                        >Default Value</label
+                                    >
+                                </div>
+                                <div
+                                    style="
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 8px;
+                                    "
+                                >
+                                    <p-inputSwitch
+                                        inputId="defaultValue"
+                                        [(ngModel)]="boxData.defaultValue"
+                                    ></p-inputSwitch
+                                    ><span>{{
+                                        boxData.defaultValue
+                                            ? boxData.labelSwitchOn
+                                            : boxData.labelSwitchOff
+                                    }}</span>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-container
+                            *ngIf="
+                                boxData.type === 'Radio' ||
+                                boxData.type === 'Checkbox'
+                            "
+                        >
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="defaultValue"
+                                        >Default Value</label
+                                    >
+                                </div>
+                                <div class="flex flex-wrap gap-3">
+                                    <div
+                                        class="flex align-items-center"
+                                        style="min-height: 42px"
+                                    >
+                                        <p-radioButton
+                                            name="choice"
+                                            value=""
+                                            inputId="none"
+                                            *ngIf="boxData.type === 'Radio'"
+                                            [(ngModel)]="boxData.defaultValue"
+                                        ></p-radioButton>
+
+                                        <p-checkbox
+                                            name="choice"
+                                            value=""
+                                            inputId="none"
+                                            *ngIf="boxData.type === 'Checkbox'"
+                                            [(ngModel)]="boxData.defaultValue"
+                                            (onChange)="handleCheckboxNone()"
+                                        ></p-checkbox>
+                                        <label for="none" class="ml-2"
+                                            >None</label
+                                        >
+                                    </div>
+
+                                    <div
+                                        class="flex align-items-center"
+                                        style="min-height: 42px"
+                                        *ngFor="let choice of choices"
+                                    >
+                                        <p-radioButton
+                                            name="choice"
+                                            *ngIf="boxData.type === 'Radio'"
+                                            [inputId]="choice.value"
+                                            [value]="choice.value"
+                                            [(ngModel)]="boxData.defaultValue"
+                                        ></p-radioButton>
+
+                                        <p-checkbox
+                                            name="choice"
+                                            *ngIf="boxData.type === 'Checkbox'"
+                                            [value]="choice.value"
+                                            [inputId]="choice.value"
+                                            [(ngModel)]="boxData.defaultValue"
+                                        ></p-checkbox>
+
+                                        <label
+                                            [for]="choice.value"
+                                            class="ml-2"
+                                            >{{ choice.label }}</label
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <p style="margin: 0 0 7px">Values</p>
+                                <l-option-creator
+                                    placeholder="Choice"
+                                    pluralPlaceholder="Choices"
+                                    [data]="choices"
+                                    (updated)="
+                                        handleUpdatedOptionCreator($event)
+                                    "
+                                    (removed)="
+                                        handleRemovedOptionCreator($event)
+                                    "
+                                ></l-option-creator>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="boxData.type === 'Dropdown'">
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="lov">LOV</label>
+                                </div>
+                                <div
+                                    style="
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 8px;
+                                    "
+                                >
+                                    <p-inputSwitch
+                                        inputId="lov"
+                                        [(ngModel)]="boxData.lov"
+                                        (onChange)="handleLov($event)"
+                                    ></p-inputSwitch
+                                    ><span>{{
+                                        boxData.lov ? "Yes" : "No"
+                                    }}</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-4" *ngIf="!boxData.lov">
+                                <p style="margin: 0 0 7px">Options</p>
+                                <l-option-creator
+                                    placeholder="Option"
+                                    pluralPlaceholder="Options"
+                                    [data]="choices"
+                                    (updated)="
+                                        handleUpdatedOptionCreator($event)
+                                    "
+                                    (removed)="
+                                        handleRemovedOptionCreator($event)
+                                    "
+                                ></l-option-creator>
+                            </div>
+
+                            <div class="mb-4" *ngIf="boxData.lov">
+                                <div class="mb-2">
+                                    <label for="useLovTemplate"
+                                        >Use Template</label
+                                    >
+                                </div>
+                                <div
+                                    style="
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 8px;
+                                    "
+                                >
+                                    <p-inputSwitch
+                                        inputId="useLovTemplate"
+                                        (onChange)="
+                                            handleUseLovTemplate($event)
+                                        "
+                                        [(ngModel)]="boxData.useLovTemplate"
+                                    ></p-inputSwitch>
+                                    <span>{{
+                                        boxData.useLovTemplate ? "Yes" : "No"
+                                    }}</span>
+                                </div>
+                            </div>
+
+                            <div
+                                class="mb-4"
+                                *ngIf="boxData.lov && !boxData.useLovTemplate"
+                            >
+                                <div class="mb-2">
+                                    <label for="uriLov">URI LOV</label>
+                                </div>
+                                <input
+                                    id="uriLov"
+                                    type="text"
+                                    class="w-full"
+                                    placeholder="URI LOV"
+                                    pInputText
+                                    [value]="boxData.uriLov"
+                                    (change)="
+                                        handleInputChange($event, 'uriLov')
+                                    "
+                                />
+                            </div>
+                            <div class="mb-4" *ngIf="boxData.useLovTemplate">
+                                <div class="mb-2">
+                                    <label for="templateLov"
+                                        >Template LOV</label
+                                    >
+                                </div>
+                                <p-dropdown
+                                    appendTo="body"
+                                    styleClass="w-full"
+                                    optionLabel="label"
+                                    optionValue="value"
+                                    placeholder="Template LOV"
+                                    [options]="lovTemplates"
+                                    [(ngModel)]="boxData.templateLov"
+                                ></p-dropdown>
+                            </div>
+                            <div
+                                class="mb-4"
+                                *ngIf="boxData.lov && !boxData.useLovTemplate"
+                            >
+                                <div class="mb-2">
+                                    <label for="lovOptionLabel"
+                                        >LOV Option Label</label
+                                    >
+                                </div>
+                                <p-dropdown
+                                    appendTo="body"
+                                    styleClass="w-full"
+                                    optionLabel="label"
+                                    optionValue="value"
+                                    placeholder="LOV Option Label"
+                                    [options]="lovOptionLabels"
+                                    [disabled]="!lovOptionLabels.length"
+                                    [(ngModel)]="boxData.lovOptionLabel"
+                                ></p-dropdown>
+                            </div>
+
+                            <ng-container *ngIf="boxData.lov">
+                                <div class="mb-4">
+                                    <div class="mb-2">
+                                        <label for="lovGetFirstValue"
+                                            >LOV Get First Value</label
+                                        >
+                                    </div>
+                                    <div
+                                        style="
+                                            display: flex;
+                                            align-items: center;
+                                            gap: 8px;
+                                        "
+                                    >
+                                        <p-inputSwitch
+                                            inputId="lovGetFirstValue"
+                                            [(ngModel)]="
+                                                boxData.lovGetFirstValue
+                                            "
+                                        ></p-inputSwitch>
+                                        <span>{{
+                                            boxData.lovGetFirstValue
+                                                ? "Yes"
+                                                : "No"
+                                        }}</span>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <div class="mb-2">
+                                        <label for="lovFilter"
+                                            >LOV Filter</label
+                                        >
+                                    </div>
+                                    <div
+                                        style="
+                                            display: flex;
+                                            align-items: center;
+                                            gap: 8px;
+                                        "
+                                    >
+                                        <p-inputSwitch
+                                            inputId="lovFilter"
+                                            [(ngModel)]="boxData.lovFilter"
+                                        ></p-inputSwitch>
+                                        <span>{{
+                                            boxData.lovFilter ? "Yes" : "No"
+                                        }}</span>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel header="Validation">
+                    <div style="height: 396px; overflow-y: auto">
+                        <div class="mb-4">
+                            <div class="mb-2">
+                                <label for="required">Required</label>
+                            </div>
+                            <div
+                                style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 8px;
+                                "
+                            >
+                                <p-inputSwitch
+                                    inputId="required"
+                                    [(ngModel)]="boxData.required"
+                                ></p-inputSwitch>
+                                <span>{{
+                                    boxData.required ? "Yes" : "No"
+                                }}</span>
+                            </div>
+                        </div>
+
+                        <ng-container
+                            *ngIf="
+                                boxData.type !== 'Dropdown' &&
+                                boxData.type !== 'Date & Time' &&
+                                boxData.type !== 'Checkbox' &&
+                                isNotAChoiceType
+                            "
+                        >
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="minimumLength"
+                                        >Minimum Length</label
+                                    >
+                                </div>
+                                <p-inputNumber
+                                    class="w-full"
+                                    inputId="minimumLength"
+                                    styleClass="w-full flex"
+                                    [showButtons]="true"
+                                    placeholder="Minimum Length"
+                                    [(ngModel)]="boxData.minimumLength"
+                                >
+                                </p-inputNumber>
+                            </div>
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="maximumLength"
+                                        >Maximum Length</label
+                                    >
+                                </div>
+                                <p-inputNumber
+                                    class="w-full"
+                                    inputId="maximumLength"
+                                    styleClass="w-full flex"
+                                    [showButtons]="true"
+                                    placeholder="Maximum Length"
+                                    [(ngModel)]="boxData.maximumLength"
+                                >
+                                </p-inputNumber>
+                            </div>
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="customErrorMessage"
+                                        >Custom Error Message</label
+                                    >
+                                </div>
+                                <input
+                                    id="customErrorMessage"
+                                    type="text"
+                                    class="w-full"
+                                    placeholder="Custom Error Message"
+                                    pInputText
+                                />
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="boxData.type === 'Attachment'">
+                            <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="acceptFile">Accept File</label>
+                                </div>
+                                <p-dropdown
+                                    inputId="acceptFile"
+                                    appendTo="body"
+                                    styleClass="w-full"
+                                    optionLabel="label"
+                                    optionValue="value"
+                                    placeholder="Accept File"
+                                    [options]="acceptFiles"
+                                    [(ngModel)]="boxData.attachmentAcceptFile"
+                                ></p-dropdown>
+                            </div>
+                        </ng-container>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel header="API">
+                    <div style="height: 396px; overflow-y: auto">
+                        <div class="mb-4">
+                            <div class="mb-2">
+                                <label for="propertyName">Property Name</label>
+                            </div>
+                            <input
+                                id="propertyName"
+                                type="text"
+                                class="w-full"
+                                placeholder="Property Name"
+                                pInputText
+                                [value]="boxData.propertyName"
+                                (change)="
+                                    handleInputChange($event, 'propertyName')
+                                "
+                            />
+                        </div>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel header="Conditional">
+                    <div style="height: 396px; overflow-y: auto">
+                        <div class="mb-4">
+                            <div class="mb-2">
+                                <label for="this-component-should-display"
+                                    >This component should Display</label
+                                >
+                            </div>
+                            <input
+                                id="this-component-should-display"
+                                type="text"
+                                class="w-full"
+                                placeholder="This component should Display"
+                                pInputText
+                            />
+                        </div>
+                        <div class="mb-4">
+                            <div class="mb-2">
+                                <label for="when-the-form-component"
+                                    >This component should Display</label
+                                >
+                            </div>
+                            <input
+                                id="when-the-form-component"
+                                type="text"
+                                class="w-full"
+                                placeholder="When the form component"
+                                pInputText
+                            />
+                        </div>
+                        <div class="mb-4">
+                            <div class="mb-2">
+                                <label for="has-the-value">Has the value</label>
+                            </div>
+                            <input
+                                id="has-the-value"
+                                type="text"
+                                class="w-full"
+                                placeholder="Has the value"
+                                pInputText
+                            />
+                        </div>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel header="Logic">
+                    <div style="height: 396px; overflow-y: auto"></div>
+                </p-tabPanel>
+                <p-tabPanel header="Layout">
+                    <div style="height: 396px; overflow-y: auto"></div>
+                </p-tabPanel>
+            </p-tabView>
+        </div>
+        <div class="col-6 py-0">
+            <div
+                style="
+                    height: 51px;
+                    margin-bottom: 17.5px;
+                    border-bottom: 1px solid #eeeeee;
+                    padding: 1rem;
+                    color: #656565;
+                    font-weight: 700;
+                "
+            >
+                Preview
+            </div>
+            <div class="grid" style="padding: 0 1rem">
+                <div
+                    class="col-3"
+                    [ngClass]="{
+                        'center-label': boxData.centerLabel
+                    }"
+                >
+                    <label
+                        style="display: block"
+                        [for]="boxData.inputId"
+                        [ngClass]="{ required: boxData.required }"
+                        [ngStyle]="{
+                            padding: !boxData.centerLabel && '11.5px 0'
+                        }"
+                        >{{ boxData.label }}</label
+                    >
+                </div>
+                <div class="col-9">
+                    <input
+                        type="text"
+                        class="w-full"
+                        *ngIf="boxData.type === 'Input Text'"
+                        pInputText
+                        [value]="boxData.value || boxData.defaultValue || ''"
+                        [disabled]="boxData.disabled"
+                        [placeholder]="boxData.placeholder"
+                    />
+
+                    <p-inputNumber
+                        class="w-full"
+                        styleClass="w-full flex"
+                        *ngIf="boxData.type === 'Number'"
+                        [inputId]="boxData.inputId"
+                        [ngModel]="valueInputNumber"
+                        [disabled]="boxData.disabled"
+                        [showButtons]="boxData.showIncrementButtonInputNumber"
+                        [placeholder]="boxData.placeholder"
+                    >
+                    </p-inputNumber>
+
+                    <textarea
+                        rows="5"
+                        cols="30"
+                        class="w-full"
+                        *ngIf="boxData.type === 'Textarea'"
+                        pInputTextarea
+                        [id]="boxData.inputId"
+                        [value]="boxData.value || boxData.defaultValue || ''"
+                        [disabled]="boxData.disabled"
+                        [placeholder]="boxData.placeholder"
+                    ></textarea>
+
+                    <div
+                        *ngIf="boxData.type === 'Switch'"
+                        class="flex align-items-center"
+                        style="gap: 12px"
+                    >
+                        <p-inputSwitch
+                            inputId
+                            [inputId]="boxData.inputId"
+                            [disabled]="boxData.disabled"
+                            [(ngModel)]="boxData.value || boxData.defaultValue"
+                        ></p-inputSwitch>
+                        <span>{{
+                            valueSwitchPreview
+                                ? boxData.labelSwitchOn
+                                : boxData.labelSwitchOff
+                        }}</span>
+                    </div>
+
+                    <p-calendar
+                        *ngIf="boxData.type === 'Date & Time'"
+                        [view]="boxData.calendarView"
+                        [ngModel]="boxData.value || boxData.defaultValue"
+                        [disabled]="boxData.disabled"
+                        [showTime]="boxData.showTime"
+                        [timeOnly]="boxData.onlyTime"
+                        [dateFormat]="boxData.formatDate"
+                        [hourFormat]="boxData.formatHour"
+                        [showSeconds]="boxData.showSeconds"
+                        [placeholder]="boxData.placeholder"
+                    ></p-calendar>
+
+                    <div
+                        class="flex flex-wrap gap-3"
+                        *ngIf="boxData.type === 'Radio'"
+                    >
+                        <div
+                            class="flex align-items-center"
+                            style="min-height: 42px"
+                            *ngFor="let choice of choices"
+                        >
+                            <p-radioButton
+                                name="choice"
+                                class="m-0"
+                                [value]="choice.value"
+                                [inputId]="choice.value"
+                                [ngModel]="boxData.defaultValue"
+                                [disabled]="boxData.disabled"
+                            ></p-radioButton>
+                            <label [for]="choice.value" class="ml-2">{{
+                                choice.label
+                            }}</label>
+                        </div>
+                    </div>
+
+                    <ng-container *ngIf="boxData.type === 'Dropdown'">
+                        <app-lov-company
+                            *ngIf="boxData.templateLov === 'company'"
+                            [filter]="boxData.lovFilter"
+                            [getFirstValue]="boxData.lovGetFirstValue"
+                        ></app-lov-company>
+
+                        <app-lov
+                            *ngIf="!boxData.templateLov"
+                            [uri]="boxData.uriLov"
+                            [label]="boxData.placeholder"
+                            [filter]="boxData.lovFilter"
+                            [chaining]="true"
+                            [optLabel]="boxData.lovOptionLabel"
+                            [customOption]="boxData.values"
+                            [getFirstValue]="boxData.lovGetFirstValue"
+                            (selected)="handleLovGetFirstValue($event)"
+                            (setupKeys)="handleLovOptionLabel($event)"
+                        ></app-lov>
+                    </ng-container>
+
+                    <div
+                        class="flex flex-wrap gap-3"
+                        *ngIf="boxData.type === 'Checkbox'"
+                    >
+                        <div
+                            class="flex align-items-center"
+                            style="min-height: 42px"
+                            *ngFor="let choice of choices"
+                        >
+                            <p-checkbox
+                                name="choice"
+                                [value]="choice.value"
+                                [inputId]="choice.value"
+                                [ngModel]="boxData.defaultValue"
+                                [disabled]="boxData.disabled"
+                            ></p-checkbox>
+                            <label [for]="choice.value" class="ml-2">{{
+                                choice.label
+                            }}</label>
+                        </div>
+                    </div>
+
+                    <app-linov-upload
+                        *ngIf="boxData.type === 'Attachment'"
+                        [isImage]="boxData.attachmentAcceptFile === 'image'"
+                        [fileType]="boxData.attachmentAcceptFile"
+                        [disabled]="boxData.disabled"
+                        (onChange)="handleChangeAttachment($event)"
+                    ></app-linov-upload>
+
+                    <small
+                        *ngIf="boxData.description"
+                        style="display: block; color: #999"
+                        [ngStyle]="{
+                            'margin-top': boxData.type !== 'Switch' && '8.5px'
+                        }"
+                        >{{ boxData.description }}</small
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <button
+            pButton
+            pRipple
+            label="Cancel"
+            class="p-button-secondary"
+            (click)="cancel()"
+        ></button>
+        <button
+            pButton
+            pRipple
+            label="Remove"
+            class="p-button-danger"
+            (click)="remove()"
+        ></button>
+        <p-button label="Save" (click)="save()"></p-button>
+    </ng-template>
+</p-dialog>

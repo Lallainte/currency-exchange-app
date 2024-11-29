@@ -1,0 +1,20 @@
+<button
+    id="btnResponsive"
+    *ngIf="!isSmall"
+    pButton
+    pRipple
+    label="{{ 'apply' | translate }}"
+    [disabled]="disabled"
+    class="mb-2 ml-2 btn-submit"
+    (click)="click()"
+></button>
+
+<button
+    id="btnResponsive"
+    *ngIf="isSmall"
+    pButton
+    pRipple
+    [disabled]="disabled"
+    class="mb-2 ml-2 mini-button-add"
+    (click)="click()"
+></button>

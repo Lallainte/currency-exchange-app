@@ -1,0 +1,224 @@
+{
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "cli": {
+        "analytics": "ce97bb19-b799-4693-8d1b-1f81e6d3569f"
+    },
+    "newProjectRoot": "projects",
+    "projects": {
+        "linovhr": {
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "configurations": {
+                        "development": {
+                            "buildOptimizer": false,
+                            "extractLicenses": false,
+                            "namedChunks": true,
+                            "optimization": false,
+                            "sourceMap": true,
+                            "vendorChunk": true
+                        },
+                        "production": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.prod.ts"
+                                }
+                            ],
+                            "optimization": false,
+                            "outputHashing": "all",
+                            "sourceMap": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": false,
+                            "vendorChunk": false,
+                            "buildOptimizer": false
+                        },
+                        "staging": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.staging.ts"
+                                }
+                            ],
+                            "optimization": false,
+                            "outputHashing": "all",
+                            "sourceMap": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": false,
+                            "vendorChunk": false,
+                            "buildOptimizer": false
+                        },
+                        "develop": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.develop.ts"
+                                }
+                            ],
+                            "optimization": false,
+                            "outputHashing": "all",
+                            "sourceMap": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": false,
+                            "vendorChunk": false,
+                            "buildOptimizer": false
+                        }
+                    },
+                    "defaultConfiguration": "production",
+                    "options": {
+                        "allowedCommonJsDependencies": [
+                            "chart.js",
+                            "treant-js",
+                            "crypto-js",
+                            "leaflet",
+                            "apexcharts",
+                            "file-saver",
+                            "@ckeditor/ckeditor5-build-classic",
+                            "lodash",
+                            "rgbcolor",
+                            "html2canvas",
+                            "core-js",
+                            "raf",
+                            "quill",
+                            "jquery",
+                            "stompjs",
+                            "sockjs-client"
+                        ],
+                        "assets": [
+                            "src/favicon.ico",
+                            "src/assets",
+                            "src/translations",
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/ngx-extended-pdf-viewer/assets/",
+                                "output": "/assets/"
+                            }
+                        ],
+                        "index": "src/index.html",
+                        "inlineStyleLanguage": "scss",
+                        "main": "src/main.ts",
+                        "outputPath": "dist/linovhr5",
+                        "polyfills": "src/polyfills.ts",
+                        "scripts": [
+                            "node_modules/jquery/dist/jquery.js",
+                            "node_modules/prismjs/prism.js",
+                            "node_modules/prismjs/components/prism-typescript.js",
+                            "node_modules/apexcharts/dist/apexcharts.min.js",
+                            "node_modules/quill/dist/quill.js",
+                            "src/assets/richtexteditor/rte.js",
+                            "src/assets/richtexteditor/plugins/all_plugins.js",
+                            "node_modules/particles.js/particles.js"
+                        ],
+                        "styles": [
+                            "src/styles.scss",
+                            "node_modules/@fortawesome/fontawesome-free/css/all.css",
+                            "node_modules/@fortawesome/fontawesome-free/css/fontawesome.css",
+                            "node_modules/leaflet/dist/leaflet.css",
+                            "node_modules/quill/dist/quill.core.css",
+                            "node_modules/quill/dist/quill.snow.css",
+                            "src/assets/richtexteditor/rte_theme_default.css",
+                            "primeng/resources/themes/lara-dark-blue/theme.css"
+                        ],
+                        "tsConfig": "tsconfig.app.json"
+                    }
+                },
+                "extract-i18n": {
+                    "builder": "@angular-devkit/build-angular:extract-i18n",
+                    "options": {
+                        "browserTarget": "linovhr:build"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "configurations": {
+                        "development": {
+                            "browserTarget": "linovhr:build:development"
+                        },
+                        "production": {
+                            "browserTarget": "linovhr:build:production"
+                        },
+                        "staging": {
+                            "browserTarget": "linovhr:build:staging"
+                        }
+                    },
+                    "defaultConfiguration": "development"
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "assets": ["src/favicon.ico", "src/assets"],
+                        "inlineStyleLanguage": "scss",
+                        "karmaConfig": "karma.conf.js",
+                        "main": "src/test.ts",
+                        "polyfills": "src/polyfills.ts",
+                        "scripts": [],
+                        "styles": [
+                            "src/styles.scss",
+                            "node_modules/@fortawesome/fontawesome-free/css/all.css",
+                            "node_modules/@fortawesome/fontawesome-free/css/fontawesome.css",
+                            "node_modules/leaflet/dist/leaflet.css"
+                        ],
+                        "tsConfig": "tsconfig.spec.json"
+                    }
+                },
+                "storybook": {
+                    "builder": "@storybook/angular:start-storybook",
+                    "options": {
+                        "configDir": ".storybook",
+                        "browserTarget": "linovhr:build",
+                        "compodoc": true,
+                        "compodocArgs": ["-e", "json", "-d", "."],
+                        "stylePreprocessorOptions": {
+                            "includePaths": ["src/styles.scss"]
+                        },
+                        "styles": [
+                            "src/styles.scss",
+                            "node_modules/@fortawesome/fontawesome-free/css/all.css",
+                            "node_modules/@fortawesome/fontawesome-free/css/fontawesome.css",
+                            "node_modules/leaflet/dist/leaflet.css",
+                            "src/assets/theme/linov-default/theme.css",
+                            "node_modules/quill/dist/quill.core.css",
+                            "node_modules/quill/dist/quill.snow.css"
+                        ],
+                        "port": 6006
+                    }
+                },
+                "build-storybook": {
+                    "builder": "@storybook/angular:build-storybook",
+                    "options": {
+                        "configDir": ".storybook",
+                        "browserTarget": "linovhr:build",
+                        "compodoc": true,
+                        "compodocArgs": ["-e", "json", "-d", "."],
+                        "stylePreprocessorOptions": {
+                            "includePaths": ["src/styles.scss"]
+                        },
+                        "styles": [
+                            "src/styles.scss",
+                            "node_modules/@fortawesome/fontawesome-free/css/all.css",
+                            "node_modules/@fortawesome/fontawesome-free/css/fontawesome.css",
+                            "node_modules/leaflet/dist/leaflet.css",
+                            "src/assets/theme/linov-default/theme.css",
+                            "node_modules/quill/dist/quill.core.css",
+                            "node_modules/quill/dist/quill.snow.css"
+                        ],
+                        "outputDir": "storybook-static"
+                    }
+                }
+            },
+            "prefix": "app",
+            "projectType": "application",
+            "root": "",
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "scss"
+                }
+            },
+            "sourceRoot": "src"
+        }
+    },
+    "version": 1
+}

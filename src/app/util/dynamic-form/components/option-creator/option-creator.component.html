@@ -1,0 +1,84 @@
+<p-table dataKey="id" [value]="data" [reorderableColumns]="true">
+    <ng-template pTemplate="header">
+        <tr>
+            <th></th>
+            <th>{{ labelTitle }}</th>
+            <th>{{ valueTitle }}</th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template
+        pTemplate="body"
+        let-choice
+        let-index="rowIndex"
+        let-editing="editing"
+    >
+        <tr [pReorderableRow]="index">
+            <td>
+                <span class="fa-solid fa-bars" pReorderableRowHandle></span>
+            </td>
+            <td
+                [pEditableColumn]="choice[labelKey]"
+                pEditableColumnField="label"
+            >
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <input
+                            class="w-full"
+                            pInputText
+                            type="text"
+                            [(ngModel)]="choice[labelKey]"
+                        />
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{ choice[labelKey] }}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <td
+                [pEditableColumn]="choice[valueKey]"
+                pEditableColumnField="value"
+            >
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <input
+                            class="w-full"
+                            pInputText
+                            type="text"
+                            [(ngModel)]="choice[valueKey]"
+                            required
+                        />
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{ choice[valueKey] }}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <td>
+                <div class="flex align-items-center justify-content-center">
+                    <button
+                        pButton
+                        pRipple
+                        type="button"
+                        icon="fa-solid fa-xmark"
+                        (click)="remove(index)"
+                        class="p-button-rounded p-button-text p-button-danger"
+                    ></button>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="4">{{ emptyMessage }}</td>
+        </tr>
+    </ng-template>
+</p-table>
+<button
+    pButton
+    pRipple
+    icon="fa-solid fa-plus"
+    class="w-full mt-4 option-creator-btn-add-another"
+    (click)="add()"
+    label="Add Another"
+></button>

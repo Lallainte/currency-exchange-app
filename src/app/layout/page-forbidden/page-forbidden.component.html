@@ -1,0 +1,35 @@
+<div
+    class="text-center flex h-screen justify-content-center align-items-center"
+>
+    <div>
+        <img
+            alt="Error 404"
+            src="assets/images/403-error.svg"
+            class="w-10 xl:w-28rem"
+        />
+        <div class="my-4 xl:my-2">
+            <div class="grid justify-content-center">
+                <div class="xl:col-8">
+                    <h2 class="font-bold text-2xl mt-3 mb-0">
+                        Uh-oh! Access Denied 🚧
+                    </h2>
+                </div>
+                <div class="text-xl px-3 col-11 xl:col-6">
+                    <p>
+                        It seems you've encountered a locked gate. You currently
+                        don't have the permissions to enter. Reach out to your
+                        administrator for assistance
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <button
+            (click)="returnToHome()"
+            pButton
+            pRipple
+            label="Back to LinovHR"
+            class="w-5 xl:w-2"
+        ></button>
+    </div>
+</div>

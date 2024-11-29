@@ -1,0 +1,59 @@
+<p-dataView
+    #dv
+    [value]="list"
+    [(first)]="first"
+    pageLinks="3"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [lazy]="isLazy"
+    [rows]="rowsPerPage"
+    [loading]="loading"
+    [paginator]="paginator"
+    [totalRecords]="count"
+    [rowsPerPageOptions]="rowsPerPageOptions"
+    [showCurrentPageReport]="true"
+    [emptyMessage]="emptyMessage"
+    (onLazyLoad)="onDataLazyLoad($event)"
+    paginatorStyleClass="grid-view__paginator"
+    [styleClass]="styleClass"
+    [gridStyleClass]="gridStyleClass"
+    [layout]="layout"
+>
+    <ng-template
+        *ngIf="layout === 'list'"
+        let-item
+        pTemplate="listItem"
+        let-idx="rowIndex"
+    >
+        <ng-container
+            *ngTemplateOutlet="
+                itemTemplate;
+                context: { $implicit: item, index: idx }
+            "
+        ></ng-container>
+    </ng-template>
+    <ng-template
+        *ngIf="layout === 'grid'"
+        let-item
+        pTemplate="gridItem"
+        let-idx="rowIndex"
+    >
+        <ng-container
+            *ngTemplateOutlet="
+                itemTemplate;
+                context: { $implicit: item, index: idx }
+            "
+        ></ng-container>
+    </ng-template>
+    <ng-template pTemplate="empty">
+        <span
+            *ngIf="!useCustomEmptyMessage"
+            class="font-italic"
+            style="color: #9f9f9f"
+            >{{ emptyMessage }}</span
+        >
+        <ng-content
+            *ngIf="useCustomEmptyMessage"
+            select="[emptyMessage]"
+        ></ng-content>
+    </ng-template>
+</p-dataView>

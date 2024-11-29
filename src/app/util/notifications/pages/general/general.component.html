@@ -1,0 +1,9 @@
+<p-header *ngIf="isAdmin">
+    <div class="grid custom-gutter field py-2">
+        <div class="col-6">
+            <app-button-back-general *ngIf="isBack"></app-button-back-general>
+            <span class="font-title">{{ title | translate }}</span>
+        </div>
+    </div>
+</p-header>
+<router-outlet (activate)="onRouterOutletActivate($event)"></router-outlet>

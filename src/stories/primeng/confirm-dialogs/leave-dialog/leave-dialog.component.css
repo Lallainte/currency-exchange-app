@@ -1,0 +1,62 @@
+div.dialog-header{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+:host ::ng-deep .p-dialog.p-component{
+    max-height: 196px;
+    max-width: 495px;
+}
+
+:host ::ng-deep .p-dialog-header{
+    padding: 3rem 3rem 1rem 3rem;
+    border-bottom: 1px solid #EEEEEE;
+}
+
+:host ::ng-deep .p-dialog-content{
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
+:host ::ng-deep .p-dialog-footer{
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding: 1rem 3rem 3rem 3rem;
+    border-top: 1px solid #EEEEEE;
+}
+
+:host ::ng-deep .p-dialog-header div div span{
+    font-size: 20px;
+    font-weight: 700;
+}
+
+div.dialog-header div svg{
+    margin-right: 1rem;
+}
+
+:host ::ng-deep .p-dialog-content span{
+    font-size: 14px;
+    font-weight: 600;
+}
+
+:host ::ng-deep .p-element.secondary.p-button.p-component{
+    width: 128px;
+    height: 35px;
+    font-size: 14px;
+    font-weight: 700;
+    background-color: #E8F2FF;
+    color: #0E8EC5;
+    border: none;
+}
+
+:host ::ng-deep .p-element.primary.p-button.p-component{
+    width: 128px;
+    height: 35px;
+    font-size: 14px;
+    font-weight: 700;
+    background-color: #0E8EC5;
+    color: #FFFFFF;
+    border: none;
+}

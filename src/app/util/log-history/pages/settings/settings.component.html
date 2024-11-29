@@ -1,0 +1,67 @@
+<div class="card">
+    <div class="grid no-pad p-fluid">
+        <div class="col-12 border-line">
+            <div class="grid">
+                <div class="col-6">
+                    <span class="font-card-title">{{
+                        text.subTitle | translate
+                    }}</span>
+                </div>
+                <div class="col-6 text-right">
+                    <ng-container *ngIf="isEdit">
+                        <btn-cancel
+                            [isNeedConfirmation]="false"
+                            (onClick)="onCancel()"
+                        ></btn-cancel>
+                        <btn-update (onClick)="onUpdate()"></btn-update>
+                    </ng-container>
+                    <ng-container *ngIf="!isEdit">
+                        <btn-edit [disabled]="loading" (onClick)="onEdit()"></btn-edit>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 pt-3" [formGroup]="formReady">
+            <div class="grid no-pad">
+                <div class="col-4 center-label">
+                    <label for="isLogApiActive">{{
+                        "isLogApiActive" | translate
+                    }}</label>
+                </div>
+                <div class="col-8 flex align-items-center" style="gap: 10px">
+                    <p-inputSwitch
+                        id="isLogApiActive"
+                        name="isLogApiActive"
+                        inputId="isLogApiActive"
+                        formControlName="isLogApiActive"
+                    ></p-inputSwitch>
+                    <label for="isLogApiActive">{{
+                        formReady.get("isLogApiActive").value
+                            ? ("use" | translate)
+                            : ("notUse" | translate)
+                    }}</label>
+                </div>
+            </div>
+            <div class="grid no-pad">
+                <div class="col-4 center-label">
+                    <label for="isLogActivityActive">{{
+                        "isLogActivityActive" | translate
+                    }}</label>
+                </div>
+                <div class="col-8 flex align-items-center" style="gap: 10px">
+                    <p-inputSwitch
+                        id="isLogActivityActive"
+                        name="isLogActivityActive"
+                        inputId="isLogActivityActive"
+                        formControlName="isLogActivityActive"
+                    ></p-inputSwitch>
+                    <label for="isLogActivityActive">{{
+                        formReady.get("isLogActivityActive").value
+                            ? ("use" | translate)
+                            : ("notUse" | translate)
+                    }}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

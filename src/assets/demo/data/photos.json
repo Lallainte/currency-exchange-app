@@ -1,0 +1,22 @@
+{
+    "data": [
+        {
+            "alt": "Slide1",
+            "itemImageSrc": "assets/logo/Slide1.svg",
+            "thumbnailImageSrc": "assets/logo/Slide1.svg",
+            "title": "Slide 1"
+        },
+        {
+            "alt": "Slide2",
+            "itemImageSrc": "assets/logo/Slide2.svg",
+            "thumbnailImageSrc": "assets/logo/Slide2.svg",
+            "title": "Slide 2"
+        },
+        {
+            "alt": "Slide 3",
+            "itemImageSrc": "assets/logo/Slide3.svg",
+            "thumbnailImageSrc": "assets/logo/Slide3.svg",
+            "title": "Slide 3"
+        }
+    ]
+}

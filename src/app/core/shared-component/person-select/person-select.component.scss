@@ -1,0 +1,133 @@
+.float-menu {
+    width: 120px;
+    position: absolute;
+    right: 0;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+    padding: 8px;
+    border-radius: 4px;
+    background: white;
+    z-index: 1;
+
+    p:hover {
+        cursor: pointer;
+        opacity: 0.6;
+    }
+}
+
+.box-data {
+    color: #8f9192;
+    border: 1px solid #eee;
+    background-color: #f5f6fa;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 0.8rem 0.8571428571428571rem;
+    line-height: 1.215;
+}
+
+.action-menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    .delete {
+        color: #d85454;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 0.7142857142857143rem;
+        padding: 0.5714285714285714rem 0.8571428571428571rem;
+        color: #656565;
+        cursor: pointer;
+
+        &:hover {
+            background: #e9ecef;
+        }
+    }
+}
+
+.employee-select {
+    background-color: #e8f2ff !important;
+    border: none !important;
+
+    i {
+        color: #0e8ec5;
+        font-size: 18px;
+    }
+}
+
+.p-inputgroup {
+    #employee {
+        border-right: none !important;
+    }
+}
+
+.btn-select-employee__show-dialog {
+    span {
+        font-size: 3rem !important;
+        color: #fff;
+    }
+}
+
+.input-search {
+    height: 2.5rem;
+    // width: 240px !important;
+    color: var(--surface-700);
+    border-color: var(--surface-200) !important;
+
+    span {
+        color: #0e8ec5;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+    }
+
+    &::placeholder {
+        color: var(--surface-500);
+    }
+
+    &:focus-within {
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+}
+
+.dialog-employee-select {
+    overflow: hidden !important;
+}
+
+.dialog-employee-select__content {
+    height: 350px !important;
+    overflow-y: auto !important;
+    margin: 14px 0 !important;
+}
+
+.input-search-group {
+    width: 240px;
+}
+
+.button-refresh-group {
+    width: 2.5rem;
+}
+
+.button-search-advanced-group {
+    width: 14rem;
+}
+
+.hide__main-select-employee {
+    display: none;
+}
+
+.show__main-select-employee {
+    display: flex;
+}
+
+.show-advanced-search {
+    display: flex;
+}
+
+.hide-advanced-search {
+    display: none;
+}

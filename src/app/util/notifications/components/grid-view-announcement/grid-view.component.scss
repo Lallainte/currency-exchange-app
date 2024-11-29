@@ -1,0 +1,115 @@
+:host ::ng-deep {
+    .p-paginator {
+        padding: 0.5rem 1rem 0 1rem;
+    }
+
+    .p-paginator p-dropdown {
+        width: auto;
+        display: flex;
+        align-items: center;
+    }
+}
+
+.card-item-announcement {
+    background-color: #ffff;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    height: 100%;
+
+    &:hover {
+        // box-shadow: 2px 4px 5px -3px rgba(0, 0, 0, 0.25);
+        // -webkit-box-shadow: 2px 4px 5px -3px rgba(0, 0, 0, 0.25);
+        // -moz-box-shadow: 2px 4px 5px -3px rgba(0, 0, 0, 0.25);
+        border-color: var(--primary-color);
+
+        .card-item-announcement__body {
+            .type-announcement,
+            .title-announcement,
+            .date-post-announcement {
+                color: var(--primary-color);
+            }
+
+            .date-post-announcement::before {
+                color: var(--primary-color);
+            }
+        }
+    }
+
+    &.unread {
+        border-color: var(--primary-color);
+
+        .card-item-announcement__body {
+            background-color: var(--light-red);
+
+            .type-announcement,
+            .title-announcement,
+            .date-post-announcement {
+                color: var(--primary-color);
+            }
+
+            .date-post-announcement::before {
+                color: var(--primary-color);
+            }
+        }
+    }
+
+    .banner-img-announcement {
+        width: 100%;
+        height: 10rem;
+
+        img {
+            width: 100%;
+            height: 10rem;
+            object-fit: cover;
+            object-position: center;
+        }
+    }
+
+    &__body {
+        padding: 1.6rem;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        .type-announcement {
+            font-size: 14px;
+            font-weight: 600;
+            font-family: SF Pro Text;
+            color: #9f9f9f;
+            overflow-wrap: break-word;
+        }
+
+        .title-announcement {
+            font-size: 18px;
+            font-weight: 800;
+            font-family: SF Pro Text;
+            color: #656565;
+            overflow-wrap: break-word;
+        }
+
+        .date-post-announcement {
+            font-weight: 400;
+            font-size: 12px;
+            font-family: SF Pro Text;
+            color: #9f9f9f;
+            overflow-wrap: break-word;
+
+            &::before {
+                content: "Posted on";
+                font-family: SF Pro Text;
+                font-style: normal;
+                font-weight: 400;
+                font-size: 12px;
+                letter-spacing: 0.02em;
+                color: #9f9f9f;
+                margin-right: 2px;
+            }
+        }
+    }
+}

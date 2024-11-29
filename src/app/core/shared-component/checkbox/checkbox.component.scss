@@ -1,0 +1,10 @@
+.linov-checkbox {
+    display: flex;
+    align-items: center;
+
+    ::ng-deep {
+        .p-element {
+            line-height: 0;
+        }
+    }
+}

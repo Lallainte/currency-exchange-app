@@ -1,0 +1,30 @@
+<div
+    class="input-custom-icon"
+    [class.left-icon]="leftIcon"
+    [class.right-icon]="rightIcon"
+>
+    <div class="input-custom-icon__left">
+        <span *ngIf="!isIcon && leftIcon">{{ leftIcon }}</span>
+        <i *ngIf="isIcon && leftIcon" [class]="leftIcon"></i>
+    </div>
+    <div class="input-custom-icon__right">
+        <span *ngIf="!isIcon && rightIcon">{{ rightIcon }}</span>
+        <i *ngIf="isIcon && rightIcon" [class]="rightIcon"></i>
+    </div>
+    <p-inputNumber
+        id="{{ id }}"
+        [useGrouping]="useGrouping"
+        [readonly]="readonly"
+        [(ngModel)]="value"
+        [ngStyle]="{ width: '100%' }"
+        (ngModelChange)="onInput($event)"
+        [styleClass]="styleClass"
+        [ngClass]="ngClass"
+        [disabled]="disabled"
+        [placeholder]="placeholder"
+        inputStyleClass="w-full"
+        [mode]="mode"
+        [maxFractionDigits]="maxFractionDigits"
+        [minFractionDigits]="minFractionDigits"
+    />
+</div>

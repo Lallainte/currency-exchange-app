@@ -1,0 +1,353 @@
+<div
+    class="card"
+    style="padding: 20px 30px 30px 30px"
+    *ngIf="listData.length"
+    appInfiniteScroll
+    (nearEnd)="onScrollNearEnd()"
+    [maxDataReached]="maxDataReached"
+>
+    <div class="grid no-pad">
+        <div class="col-12 border-line">
+            <div class="grid">
+                <div class="col-6">
+                    <span class="font-card-title">{{
+                        text.subTitle | translate
+                    }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 px-0 pt-4 pb-0">
+            <div
+                class="flex flex-column align-items-start w-full"
+                style="gap: 20px"
+                *ngIf="updateActionTemplate"
+            >
+                <div
+                    class="flex align-items-stretch w-full"
+                    style="gap: 30px;"
+                    *ngFor="let log of listData; let idx = index"
+                >
+                    <div class="wrapper-card__details-log">
+                        <div class="details-log__header">
+                            <div class="action-icon--card-list action--update">
+                                <i class="fa-solid fa-pen"></i>
+                            </div>
+                            <span class="w-full text--module"
+                                >{{ helpLog.formatText(log.module) }}
+                                |
+                                {{ helpLog.formatText(log.entityName) }}
+                                (Edit)</span
+                            >
+                        </div>
+                        <div class="details-log__body grid no-pad">
+                            <div class="col-6 no-pad">
+                                <div
+                                    class="flex flex-column w-full"
+                                    style="gap: 20px"
+                                >
+                                    <div
+                                        *ngFor="
+                                            let left of log.before.fieldPerCol
+                                                ?.left;
+                                            let idx = index
+                                        "
+                                        style="gap: 4px; align-self: stretch"
+                                        class="w-full flex flex-column"
+                                    >
+                                        <span class="text-sec-head">{{
+                                            helpLog.formatKeysToSentence(left)
+                                        }}</span>
+                                        <span class="text-sec-chil">
+                                            {{
+                                                log.before.entity[left] !== ""
+                                                    ? log.before.entity[left]
+                                                    : "-"
+                                            }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="col-6 no-pad"
+                                *ngIf="log.before.isSplitCol"
+                            >
+                                <div
+                                    class="flex flex-column w-full"
+                                    style="gap: 20px"
+                                >
+                                    <div
+                                        *ngFor="
+                                            let right of log.before.fieldPerCol
+                                                ?.right;
+                                            let idx = index
+                                        "
+                                        style="gap: 4px; align-self: stretch"
+                                        class="w-full flex flex-column"
+                                    >
+                                        <span class="text-sec-head">{{
+                                            helpLog.formatKeysToSentence(right)
+                                        }}</span>
+                                        <span class="text-sec-chil">
+                                            {{
+                                                log.before.entity[right] !== ""
+                                                    ? log.before.entity[right]
+                                                    : "-"
+                                            }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="arrow-left-log">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                    <div class="wrapper-card__details-log">
+                        <div class="details-log__header">
+                            <div
+                                class="action-icon--card-list"
+                                [ngClass]="
+                                    helpLog.checkAction(log.after.action).class
+                                "
+                            >
+                                <i
+                                    [ngClass]="
+                                        helpLog.checkAction(log.after.action)
+                                            .icon
+                                    "
+                                ></i>
+                            </div>
+                            <span class="w-full text--module"
+                                >{{ helpLog.formatText(log.module) }}
+                                |
+                                {{ helpLog.formatText(log.entityName) }} ({{
+                                    helpLog.checkAction(log.after.action).title
+                                }})</span
+                            >
+                        </div>
+                        <div class="details-log__body grid no-pad">
+                            <div class="col-6 no-pad">
+                                <div
+                                    class="flex flex-column w-full"
+                                    style="gap: 20px"
+                                >
+                                    <div
+                                        *ngFor="
+                                            let left of log.after.fieldPerCol
+                                                .left;
+                                            let idx = index
+                                        "
+                                        style="gap: 4px; align-self: stretch"
+                                        class="w-full flex flex-column"
+                                    >
+                                        <span
+                                            [class.text-prim-head]="
+                                                helpLog
+                                                    .compareObjects(
+                                                        log.before,
+                                                        log.after
+                                                    )
+                                                    .includes(left)
+                                            "
+                                            [class.text-sec-head]="
+                                                !helpLog
+                                                    .compareObjects(
+                                                        log.before,
+                                                        log.after
+                                                    )
+                                                    .includes(left)
+                                            "
+                                            >{{
+                                                helpLog.formatKeysToSentence(
+                                                    left
+                                                )
+                                            }}</span
+                                        >
+                                        <span
+                                            [class.text-prim-chil]="
+                                                helpLog
+                                                    .compareObjects(
+                                                        log.before,
+                                                        log.after
+                                                    )
+                                                    .includes(left)
+                                            "
+                                            [class.text-sec-chil]="
+                                                !helpLog
+                                                    .compareObjects(
+                                                        log.before,
+                                                        log.after
+                                                    )
+                                                    .includes(left)
+                                            "
+                                        >
+                                            {{
+                                                log.after.entity[left] !== ""
+                                                    ? log.after.entity[left]
+                                                    : "-"
+                                            }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="col-6 no-pad"
+                                *ngIf="log.after.isSplitCol"
+                            >
+                                <div
+                                    class="flex flex-column w-full"
+                                    style="gap: 20px"
+                                >
+                                    <div
+                                        *ngFor="
+                                            let right of log.after.fieldPerCol
+                                                .right;
+                                            let idx = index
+                                        "
+                                        style="gap: 4px; align-self: stretch"
+                                        class="w-full flex flex-column"
+                                    >
+                                        <span
+                                            [class.text-prim-head]="
+                                                helpLog
+                                                    .compareObjects(
+                                                        log.before,
+                                                        log.after
+                                                    )
+                                                    .includes(right)
+                                            "
+                                            [class.text-sec-head]="
+                                                !helpLog
+                                                    .compareObjects(
+                                                        log.before,
+                                                        log.after
+                                                    )
+                                                    .includes(right)
+                                            "
+                                            >{{
+                                                helpLog.formatKeysToSentence(
+                                                    right
+                                                )
+                                            }}</span
+                                        >
+                                        <span
+                                            [class.text-prim-chil]="
+                                                helpLog
+                                                    .compareObjects(
+                                                        log.before,
+                                                        log.after
+                                                    )
+                                                    .includes(right)
+                                            "
+                                            [class.text-sec-chil]="
+                                                !helpLog
+                                                    .compareObjects(
+                                                        log.before,
+                                                        log.after
+                                                    )
+                                                    .includes(right)
+                                            "
+                                        >
+                                            {{
+                                                log.after.entity[right] !== ""
+                                                    ? log.after.entity[right]
+                                                    : "-"
+                                            }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="flex flex-column align-items-start"
+                style="gap: 20px"
+                *ngIf="!updateActionTemplate"
+            >
+                <div
+                    class="wrapper-card__details-log"
+                    *ngFor="let log of listData; let idx = index"
+                >
+                    <div class="details-log__header">
+                        <div
+                            class="action-icon--card-list"
+                            [ngClass]="
+                                helpLog.checkAction(log.after.action).class
+                            "
+                        >
+                            <i
+                                [ngClass]="
+                                    helpLog.checkAction(log.after.action).icon
+                                "
+                            ></i>
+                        </div>
+                        <span class="w-full text--module"
+                            >{{ helpLog.formatText(log.module) }}
+                            |
+                            {{ helpLog.formatText(log.entityName) }} ({{
+                                helpLog.checkAction(log.after.action).title
+                            }})</span
+                        >
+                    </div>
+                    <div class="details-log__body grid no-pad">
+                        <div class="col-6 no-pad">
+                            <div
+                                class="flex flex-column w-full"
+                                style="gap: 20px"
+                            >
+                                <div
+                                    *ngFor="
+                                        let left of log.after.fieldPerCol.left;
+                                        let idx = index
+                                    "
+                                    style="gap: 4px; align-self: stretch"
+                                    class="w-full flex flex-column"
+                                >
+                                    <span class="text-prim-head">{{
+                                        helpLog.formatKeysToSentence(left)
+                                    }}</span>
+                                    <span class="text-prim-chil">
+                                        {{
+                                            log.after.entity[left] !== ""
+                                                ? log.after.entity[left]
+                                                : "-"
+                                        }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 no-pad" *ngIf="log.after.isSplitCol">
+                            <div
+                                class="flex flex-column w-full"
+                                style="gap: 20px"
+                            >
+                                <div
+                                    *ngFor="
+                                        let right of log.after.fieldPerCol
+                                            .right;
+                                        let idx = index
+                                    "
+                                    style="gap: 4px; align-self: stretch"
+                                    class="w-full flex flex-column"
+                                >
+                                    <span class="text-prim-head">{{
+                                        helpLog.formatKeysToSentence(right)
+                                    }}</span>
+                                    <span class="text-prim-chil">
+                                        {{
+                                            log.after.entity[right] !== ""
+                                                ? log.after.entity[right]
+                                                : "-"
+                                        }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,365 @@
+.layout-topbar {
+    position: fixed;
+    height: 56px;
+    z-index: 997;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0 1rem;
+    background-color: var(--primary-color);
+    transition: left $transitionDuration;
+    display: flex;
+    align-items: center;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.02), 0px 0px 2px rgba(0, 0, 0, 0.05),
+        0px 1px 4px rgba(0, 0, 0, 0.08);
+
+    .layout-topbar-logo {
+        display: flex;
+        align-items: center;
+        color: var(--surface-900);
+        font-size: 1.5rem;
+        font-weight: 500;
+        border-radius: 12px;
+
+        img {
+            height: 3rem;
+            margin-right: 0.5rem;
+        }
+
+        // &:focus {
+        //     @include focused();
+        // }
+
+        .logo {
+            width: 180px;
+            height: 34px;
+        }
+    }
+
+    .layout-topbar-search {
+        input {
+            border-radius: 27px;
+            background-color: var(--primary-color-600);
+            color: var(--topbar-color);
+            border: none;
+            height: 32px;
+            width: 262px;
+            line-height: 16.37px;
+            font-size: 13px;
+            font-weight: 400;
+
+            &::placeholder {
+                color: var(--topbar-color);
+            }
+
+            &:focus {
+                -webkit-box-shadow: none;
+                box-shadow: none;
+            }
+        }
+
+        i {
+            color: var(--topbar-color);
+        }
+
+        .form {
+            height: 35px;
+        }
+    }
+
+    .layout-topbar-button {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        color: var(--topbar-color);
+        border-radius: 50%;
+        width: 3rem;
+        height: 3rem;
+        cursor: pointer;
+        transition: background-color $transitionDuration;
+
+        &:hover {
+            color: var(--topbar-color);
+            background-color: var(--hover);
+            transition: background-color 0.35s ease-in-out;
+        }
+
+        &:focus {
+            @include focused();
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            transition: background-color 0.35s ease-in-out;
+        }
+
+        i {
+            font-size: 1.5rem;
+            color: var(--topbar-color);
+        }
+
+        span {
+            font-size: 1rem;
+            display: none;
+            color: var(--topbar-color);
+        }
+
+        .i-top {
+            font-size: 1.5rem;
+            color: var(--topbar-color);
+        }
+    }
+
+    .layout-menu-button {
+        margin-left: 2rem;
+    }
+
+    .layout-topbar-menu-button {
+        display: none;
+
+        i {
+            font-size: 1.25rem;
+        }
+    }
+
+    .layout-topbar-icon {
+        margin: 0 0 0 auto;
+        padding: 0;
+        list-style: none;
+
+        .layout-topbar-button {
+            margin-left: 1rem;
+        }
+    }
+
+    .layout-topbar-menu {
+        position: absolute;
+        background-color: var(--surface-overlay);
+        box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.02),
+            0px 0px 2px rgba(0, 0, 0, 0.05), 0px 1px 4px rgba(0, 0, 0, 0.08);
+        border-radius: 6px;
+        padding-top: 1rem;
+        right: 1.2rem;
+        top: 5rem;
+        min-width: 20rem;
+        display: none;
+        -webkit-animation: fadein 0.15s linear;
+        animation: fadein 0.15s linear;
+
+        &.layout-topbar-menu-mobile-active {
+            display: block;
+        }
+
+        &.notif-panel {
+            min-width: 26rem;
+            right: 5rem;
+        }
+
+        .layout-topbar-button-user {
+            margin-left: 0;
+            display: flex;
+            width: 100%;
+            height: auto;
+            justify-content: flex-start;
+            border-radius: 0px;
+            padding: 1rem;
+            color: var(--surface-800);
+
+            &:hover {
+                background-color: none !important;
+
+                i {
+                    color: var(--primary-color) !important;
+                    transition: color 0.27s ease-in-out !important;
+                }
+
+                span {
+                    color: var(--primary-color) !important;
+                    transition: color 0.27s ease-in-out !important;
+                }
+
+                a {
+                    color: var(--primary-color) !important;
+                    transition: color 0.27s ease-in-out !important;
+                }
+            }
+
+            i {
+                font-size: 1rem;
+                margin-right: 0.5rem;
+            }
+
+            span {
+                font-weight: medium;
+                display: block;
+            }
+        }
+
+        .layout-topbar-button-lov {
+            margin-left: 0;
+            display: flex;
+            width: 100%;
+            height: auto;
+            justify-content: flex-start;
+            border-radius: none;
+            padding: 1rem;
+        }
+    }
+}
+
+@media (max-width: 991px) {
+    .layout-topbar-icon {
+        display: none;
+
+        .layout-topbar-button {
+            margin-left: 1rem;
+        }
+    }
+
+    .layout-topbar {
+        justify-content: space-between;
+
+        .layout-topbar-logo {
+            width: auto;
+            order: 2;
+        }
+
+        .layout-menu-button {
+            margin-left: 0;
+            order: 1;
+        }
+
+        .layout-topbar-menu-button {
+            display: inline-flex;
+            margin-left: 0;
+            order: 3;
+        }
+    }
+}
+
+@media (max-width: 576px) {
+    .layout-topbar {
+        justify-content: space-between;
+        
+        .layout-topbar-search {
+            margin-inline: 1rem;
+
+            input {
+                width: 200px;
+            }
+        }
+    }
+
+    .layout-topbar {
+        .layout-topbar-logo {
+            .logo {
+                width: auto;
+                height: 20px;
+            }
+        }
+    }
+}
+
+.layout-menubar {
+    position: fixed;
+    height: 48px;
+    z-index: 990;
+    left: 0;
+    top: 56px;
+    width: 100%;
+    padding-left: 6rem;
+    background-color: var(--surface-0);
+    transition: left $transitionDuration;
+    display: flex;
+    align-items: center;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.02), 0px 0px 2px rgba(0, 0, 0, 0.05),
+        0px 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.p-menubar 
+    .p-menubar-root-list {
+        flex-wrap: nowrap;
+        width: 100vw;
+        // position: fixed;
+}
+
+.p-menubar-root-list > .p-menuitem-active > p-menubarsub > .p-submenu-list {
+    position: fixed;
+}
+
+.overflow-parent {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.layout-menubar-ess {
+    position: fixed;
+    height: 48px;
+    z-index: 990;
+    left: 0;
+    top: 56px;
+    width: 100%;
+    padding-left: 19rem;
+    background-color: var(--surface-0);
+    transition: left $transitionDuration;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--surface-200);
+    // box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.02), 0px 0px 2px rgba(0, 0, 0, 0.05),
+    //     0px 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+
+
+.span-username {
+    color: var(--surface-700);
+    font-weight: 800;
+    font-size: 1rem;
+}
+
+.account-menu {
+    background-color: white;
+    border-radius: 6px;
+}
+
+.account-menu p {
+    color: var(--surface-500);
+    font-size: 14px;
+}
+
+.account-menu ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.account-menu ul li {
+    padding: 15px 20px;
+    background: var(--surface-0);
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+.account-menu ul li:hover {
+    background: var(--netral-active-menu);
+}
+
+.account-menu ul li i {
+    font-size: 1.1rem;
+    color: var(--surface-500);
+    transition: 0.5s;
+}
+
+.account-menu ul li:hover i {
+    color: var(--surface-700);
+}
+
+.account-menu ul li a {
+    font-size: 1.1rem;
+    color: var(--surface-500);
+    margin-left: 20px;
+    font-weight: 500;
+}
+
+.account-menu ul li:hover a {
+    color: var(--surface-700);
+}

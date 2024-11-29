@@ -1,0 +1,114 @@
+<main class="flex flex-column overflow-hidden" style="gap: 3rem">
+    <div
+        class="grid m-4  justify-content-between main-content"
+        [formGroup]="formConversion"
+    >
+        <div class="col-12 md:mb-6" >
+            <h1 class="font-bold text-center m-0 md:text-6xl"  >
+                Currency Exchange App
+            </h1>
+        </div>
+        <div class="col-12 md:col-3 p-fluid p-2">
+            <p-inputNumber
+                (onInput)="onInputNumber($event)"
+                formControlName="amount"
+                ngDefaultControl
+                inputId="currency-us"
+                mode="currency"
+                currency="USD"
+                locale="en-US"
+                [min]="0"
+            >
+            </p-inputNumber>
+        </div>
+        <div
+            class="col-12 grid md:col-9 p-0 m-0 align-items-center  md:pl-6"
+        >
+            <div id="lovFirst" class="col-12 p-fluid p-2 m-0 sm:col-5">
+                <app-lov
+                    *ngIf="dataCurrencies?.length > 0"
+                    #LovComponent
+                    [customOption]="dataCurrencies"
+                    label="Select currency"
+                    optLabel="lovLabel"
+                    (selected)="onSelectedCurrencyFirst($event)"
+                    [value]="formConversion.get('currencyFirst').value?.code"
+                >
+                </app-lov>
+            </div>
+            <div
+                class="col-12 flex justify-content-center align-items-center p-0 sm:col-2"
+                style="height: fit-content"
+                id="btnSwap"
+            >
+                <p-button (onClick)="swapCurrency()" class="">
+                    <span class="w-1rem p-2 m-0 exchange-icon"> </span>
+                </p-button>
+            </div>
+            <div id="lovSecond" class="col-12 p-fluid p-2 m-0 sm:col-5">
+                <app-lov
+                    *ngIf="dataCurrencies?.length > 0"
+                    #LovComponent
+                    [customOption]="dataCurrencies"
+                    label="Select currency"
+                    optLabel="lovLabel"
+                    (selected)="onSelectedCurrencySecond($event)"
+                    [value]="formConversion.get('currencySecond').value?.code"
+                >
+                </app-lov>
+            </div>
+        </div>
+        <div class="col-12 flex flex-column md:mt-5 p-2 m-0">
+            <div *ngIf="showResultConversion">
+                <p class="font-bold md:text-lg m-0">
+                    {{ resultConversionData?.beforeConversion }}
+                </p>
+                <p class="text-3xl md:text-5xl lg:text-6xl font-bold m-0 mb-3">
+                    {{ resultConversionData?.resultConversion }}
+                </p>
+                <p class="m-0 md:text-md">
+                    {{ resultConversionData?.rateCurrencyFirst }}
+                </p>
+                <p class="m-0 md:text-md">
+                    {{ resultConversionData?.rateCurrencySecond }}
+                </p>
+            </div>
+
+            <div
+                class="col-12 sm:col-3 md:col-2 p-fluid  p-0"
+                style="border-radius: 16rem; align-self: end"
+                *ngIf="showButtonConvert"
+                id="btnConvert"
+            >
+                <p-button
+                    (onClick)="onClickConvert()"
+                    label="Convert"
+                ></p-button>
+            </div>
+        </div>
+    </div>
+
+    <div
+        style="background-color: #fbff0e"
+        class="mx-4 px-2 py-4 border-round  mb-4"
+    >
+        <h1
+            style="color: #000000; letter-spacing: 0.05rem"
+            class="text-xl font-semibold"
+        >
+            Result in other currencies
+        </h1>
+        <app-table
+            *ngIf="dataCurrencies?.length > 0"
+            #TableComponent
+            [isSelectable]="false"
+            [isStatus]="false"
+            [columMap]="columnMap"
+            [isKebab]="false"
+            [count]="dataCurrencies?.length"
+            [list]="dataCurrencies"
+            [isLazy]="false"
+        ></app-table>
+    </div>
+</main>
+

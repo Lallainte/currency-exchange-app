@@ -1,0 +1,22 @@
+:host ::ng-deep .cancel-dialog {
+    .p-dialog .p-dialog-header .p-dialog-title::before {
+        content: "\f0e2" !important;
+        font-weight: 900 !important;
+        font-size: 1.5rem !important;
+        font-family: "Font Awesome 5 Free" !important;
+    }
+
+    .p-dialog .p-dialog-content {
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+}
+
+::ng-deep {
+    @media (max-width: 576px) {
+        #btnResponsive {
+            width: 100% !important;
+            margin: 0 !important;
+        }
+    }
+}

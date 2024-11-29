@@ -1,0 +1,12 @@
+<div class="linov-checkbox">
+    <p-checkbox
+        [name]="name"
+        [binary]="true"
+        [disabled]="disabled"
+        [(ngModel)]="value"
+        (onChange)="handleChange($event)"
+    ></p-checkbox>
+    <span class="ml-3 linov-checkbox__label">{{
+        value ? labelTrue : labelFalse
+    }}</span>
+</div>

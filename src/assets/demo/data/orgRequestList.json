@@ -1,0 +1,34 @@
+{
+    "data": [
+        {
+            "id": "1",
+            "code": "ORG-20",
+            "action": "Edit",
+            "orgName": "Human Resources",
+            "orgLevel": "3",
+            "orgParent": "Human Capital",
+            "workLocation": "Head Office",
+            "status": "PENDING"
+        },
+        {
+            "id": "2",
+            "code": "ORG-20",
+            "action": "Edit",
+            "orgName": "Human Resources",
+            "orgLevel": "3",
+            "orgParent": "Human Capital",
+            "workLocation": "Head Office",
+            "status": "PENDING"
+        },
+        {
+            "id": "3",
+            "code": "ORG-20",
+            "action": "Edit",
+            "orgName": "Human Resources",
+            "orgLevel": "3",
+            "orgParent": "Human Capital",
+            "workLocation": "Head Office",
+            "status": "PENDING"
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+<button [disabled]="disabled" pButton *ngIf="!isEss"
+    class="p-ripple p-element p-button p-component p-button-outlined justify-content-center"
+    style="font-weight: 600; height: 35px; width: 177px;" (click)="click()" label="{{ label | translate }}"
+    icon="fas fa-times"></button>
+ <button [disabled]="disabled" pButton *ngIf="isEss"
+    class="btn-cancel mb-2" style="width: 13rem !important;" (click)="click()" label="{{ label | translate }}"
+    icon="fas fa-times"></button>
+
+<p-dialog *ngIf="isNeedDialogComponent" class="custom-dialog-modal" [visible]="isShow" [modal]="true"
+    [style]="{ width: '500px' }" [baseZIndex]="10000" [draggable]="false" [resizable]="false" [closable]="false">
+    <ng-template pTemplate="header">
+        <div class="flex flex-column">
+            <label class="text-xl font-bold required">{{
+                "cancelRequest" | translate
+                }}</label>
+            <label class="text-left font-italic text-sm pt-1">{{
+                "cancelThisRequest" | translate
+                }}</label>
+        </div>
+    </ng-template>
+    <div class="grid">
+        <div class="col-12">
+            <textarea class="custom-input" placeholder="{{ 'enter' | translate }} cancelation notes" rows="4" cols="55"
+                pInputTextarea autoResize="autoResize" [(ngModel)]="notes"></textarea>
+        </div>
+    </div>
+    <p-footer>
+        <button pButton class="btn-cancel ml-2" icon="fas fa-times" (click)="isShow = false"
+            label="{{ 'cancel' | translate }}"></button>
+        <button pButton class="btn-reject-outlined px-2 mr-2" (click)="onReject()" label="Cancel Request" icon="fas fa-check"></button>
+    </p-footer>
+</p-dialog>

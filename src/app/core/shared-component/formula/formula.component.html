@@ -1,0 +1,358 @@
+<!-- <div class="grid no-pad w-full custom-gutter">
+    <div class="col-10 no-pad">
+        <input
+            type="text"
+            class="input-field--formula"
+            pInputText
+            disabled
+            [value]="inputString"
+            placeholder="Formula has not been defined yet"
+        />
+    </div>
+    <div class="col-2 no-pad text-right">
+        <button
+            type="button"
+            class="btn-edit--small"
+            pButton
+            (click)="showDialog()"
+            pRipple
+            icon="fa-solid fa-pen"
+        ></button>
+    </div>
+</div>
+
+<p-dialog
+    [modal]="true"
+    [style]="{ width: '70vw' }"
+    [contentStyle]="{ padding: '20px 30px' }"
+    [(visible)]="visibleDialog"
+    (onHide)="onHide()"
+    [draggable]="false"
+    [resizable]="false"
+    styleClass="dialog-insert-formula"
+    contentStyleClass="relative"
+>
+    <ng-template pTemplate="header">
+        <span class="text-xl font-bold" style="color: #656565"
+            >Insert Formula</span
+        >
+    </ng-template>
+    <div class="grid no-pad custom-gutter">
+        <div class="col-8 no-pad">
+            <div class="flex flex-column w-full no-pad" style="gap: 8px">
+                <div class="content--input-text-area">
+                    <textarea
+                        #textAreaInput
+                        rows="3"
+                        class="w-full text-area--input"
+                        [value]="inputString"
+                        pInputTextarea
+                        [autoResize]="true"
+                        placeholder="Insert Formula"
+                    ></textarea>
+                </div>
+                <div class="content--button-layout">
+                    <div class="number-layout">
+                        <ng-container
+                            *ngFor="let btnWhite of whiteButtonsLayout"
+                        >
+                            <div class="row--buttons">
+                                <ng-container *ngFor="let btn of btnWhite">
+                                    <button
+                                        pButton
+                                        pRipple
+                                        class="btn--formula-number"
+                                        (click)="handleBtnClick(btn.type, btn)"
+                                    >
+                                        {{ btn.value }}
+                                    </button>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="tool-layout">
+                        <ng-container *ngFor="let btnDark of darkButtonsLayout">
+                            <div class="row--buttons">
+                                <ng-container *ngFor="let btn of btnDark">
+                                    <button
+                                        pButton
+                                        pRipple
+                                        [ngClass]="
+                                            btn.type === 'cursor-left' ||
+                                            btn.type === 'cursor-right'
+                                                ? 'row-first-btn'
+                                                : ''
+                                        "
+                                        class="btn--formula-tool"
+                                        *ngIf="btn.type !== 'delete-char'"
+                                        (click)="handleBtnClick(btn.type, btn)"
+                                    >
+                                        {{ btn.value }}
+                                    </button>
+                                    <button
+                                        pButton
+                                        pRipple
+                                        class="btn--formula-tool row-first-btn"
+                                        *ngIf="btn.type === 'delete-char'"
+                                        (click)="handleBtnClick(btn.type, btn)"
+                                    >
+                                        <i class="fa-solid fa-delete-left"></i>
+                                    </button>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 lg:py-0 lg:pr-0 pl-5">
+            <div class="chips-component">
+                <div class="chips-component--header">
+                    <span>Components</span>
+                </div>
+                <div class="chips-component--content">
+                    <ng-container *ngFor="let chip of listChipPayrolls">
+                        <div class="chip-el">
+                            <span>{{ chip.label }}</span>
+                            <button
+                                pRipple
+                                pButton
+                                (click)="onAddChipComponent(chip)"
+                                class="chip-btn-add"
+                            >
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <div
+            style="gap: 14px"
+            class="flex justify-content-end align-items-center"
+        >
+            <button
+                class="btn-cancel justify-content-center align-items-center"
+                style="gap: 10px"
+                type="button"
+                pButton
+                (click)="onCancel()"
+                pRipple
+            >
+                <i class="fa-solid fa-xmark"></i>
+                <span class="font-bold">{{ "cancel" | translate }}</span>
+            </button>
+            <button
+                class="btn-save justify-content-center align-items-center"
+                style="gap: 10px"
+                type="button"
+                (click)="onSave()"
+                pButton
+                pRipple
+            >
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span class="font-bold">{{ "save" | translate }}</span>
+            </button>
+        </div>
+    </ng-template>
+</p-dialog> -->
+
+<div class="grid no-pad custom-gutter">
+    <div class="col-12 mb-4 border-line">
+        <span class="font-card-title">Insert Formula</span>
+    </div>
+    <div class="col-12 no-pad" [ngClass]="{ 'lg:col-8': !useIndexAllowance }">
+        <div class="flex flex-column w-full no-pad" style="gap: 8px">
+            <div class="content--input-text-area">
+                <textarea
+                    #textAreaInput
+                    rows="3"
+                    class="w-full text-area--input"
+                    [value]="inputString"
+                    pInputTextarea
+                    [autoResize]="true"
+                    [disabled]="disabled"
+                    placeholder="{{ label }}"
+                    (input)="handleInput($event)"
+                ></textarea>
+            </div>
+            <div class="content--button-layout">
+                <div class="grid no-pad" style="row-gap: 12px">
+                    <div class="col-12 md:col-7 no-pad">
+                        <div class="row--buttons">
+                            <div class="grid no-pad" style="row-gap: 12px">
+                                <ng-container
+                                    *ngFor="let btnWhite of whiteButtonsLayout"
+                                >
+                                    <ng-container *ngFor="let btn of btnWhite">
+                                        <div class="col-4 py-0 px-2">
+                                            <button
+                                                pButton
+                                                pRipple
+                                                class="btn--formula-number"
+                                                (click)="
+                                                    handleBtnClick(
+                                                        btn.type,
+                                                        btn
+                                                    )
+                                                "
+                                            >
+                                                {{ btn.value }}
+                                            </button>
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-5 no-pad">
+                        <div class="row--buttons">
+                            <div class="grid no-pad" style="row-gap: 12px">
+                                <ng-container
+                                    *ngFor="let btnDark of darkButtonsLayout"
+                                >
+                                    <ng-container *ngFor="let btn of btnDark">
+                                        <div class="col-6 py-0 px-2">
+                                            <button
+                                                pButton
+                                                pRipple
+                                                class="btn--formula-tool"
+                                                *ngIf="
+                                                    btn.type !== 'delete-char'
+                                                "
+                                                (click)="
+                                                    handleBtnClick(
+                                                        btn.type,
+                                                        btn
+                                                    )
+                                                "
+                                            >
+                                                {{ btn.value }}
+                                            </button>
+                                            <button
+                                                pButton
+                                                pRipple
+                                                class="btn--formula-tool"
+                                                *ngIf="
+                                                    btn.type === 'delete-char'
+                                                "
+                                                (click)="
+                                                    handleBtnClick(
+                                                        btn.type,
+                                                        btn
+                                                    )
+                                                "
+                                            >
+                                                <i
+                                                    class="fa-solid fa-delete-left"
+                                                ></i>
+                                            </button>
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div
+        class="col-12 p-0 pt-3"
+        [ngClass]="{
+            'lg:col-4 lg:py-0 lg:pr-0 lg:pl-5 lg:pt-0': !useIndexAllowance
+        }"
+    >
+        <div class="grid no-pad custom-gutter">
+            <div
+                class="col-12"
+                [ngClass]="{
+                    'lg:col-6 pl-0': useIndexAllowance,
+                    'p-0': !useIndexAllowance
+                }"
+            >
+                <div class="chips-component">
+                    <div class="chips-component--header">
+                        <span>Components</span>
+                    </div>
+                    <div class="p-fluid">
+                        <!-- input untuk search component -->
+                        <span class="p-input-icon-right">
+                            <i class="pi pi-search"></i>
+                            <input
+                                type="text"
+                                [(ngModel)]="searchPayrolls"
+                                (input)="onSearchChangePayrolls()"
+                                placeholder="Search Payrolls Components"
+                                pInputText
+                            />
+                        </span>
+                    </div>
+                    <div class="chips-component--content">
+                        <ng-container *ngFor="let chip of filteredListPayrolls">
+                            <div class="chip-el">
+                                <span
+                                    >({{ chip.value }}) - {{ chip.label }}</span
+                                >
+                                <button
+                                    pRipple
+                                    pButton
+                                    (click)="handleBtnClick('chip', chip)"
+                                    class="chip-btn-add"
+                                >
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+            <div
+                *ngIf="useIndexAllowance"
+                class="col-12"
+                [ngClass]="{
+                    'lg:col-6 pr-0': useIndexAllowance,
+                    'p-0': !useIndexAllowance
+                }"
+            >
+                <div class="chips-component">
+                    <div class="chips-component--header">
+                        <span>Performance Index Allowance</span>
+                    </div>
+                    <div class="p-fluid">
+                        <!-- input untuk search index -->
+                        <span class="p-input-icon-right">
+                            <i class="pi pi-search"></i>
+                            <input
+                                type="text"
+                                [(ngModel)]="searchPerformance"
+                                (input)="onSearchChangePerformance()"
+                                placeholder="Search Performance Index"
+                                pInputText
+                            />
+                        </span>
+                    </div>
+                    <div class="chips-component--content">
+                        <ng-container
+                            *ngFor="let chip of filteredListPerformance"
+                        >
+                            <div class="chip-el">
+                                <span>{{ chip.label }}</span>
+                                <button
+                                    pRipple
+                                    pButton
+                                    (click)="handleBtnClick('chip', chip)"
+                                    class="chip-btn-add"
+                                >
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

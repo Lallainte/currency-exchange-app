@@ -1,0 +1,11 @@
+<p-dialog
+    header="Privacy Policy"
+    [(visible)]="showPP"
+    [modal]="true"
+    (onHide)="onClose()"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: '90%', overflow: 'auto' }"
+>
+    <div class="ui-g-12" [innerHTML]="dataPP"></div>
+</p-dialog>

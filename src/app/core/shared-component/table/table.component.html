@@ -1,0 +1,1438 @@
+<p-table
+    #table
+    [selectionPageOnly]="false"
+    [dataKey]="dataKey"
+    [pageLinks]="3"
+    styleClass="p-datatable-gridlines"
+    responsiveLayout="scroll"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [lazy]="isLazy"
+    [rows]="rowsPerPage"
+    [value]="list"
+    [loading]="loading"
+    [paginator]="paginator"
+    [totalRecords]="count"
+    [rowsPerPageOptions]="rowsPerPageOptions"
+    [scrollable]="scrollable"
+    [scrollHeight]="scrollHeight"
+    [showCurrentPageReport]="true"
+    [(first)]="first"
+    [(selection)]="selectedData"
+    (onLazyLoad)="onTableLazyLoad($event)"
+    (selectionChange)="selectionChange($event)"
+    paginatorDropdownAppendTo="body"
+    [selectionMode]="selectionMode"
+    (onRowSelect)="onRowSelect($event)"
+>
+    <ng-template pTemplate="header">
+        <ng-container *ngIf="rowsMap.length > 1">
+            <ng-container *ngFor="let itemRow of rowsMap; let i = index">
+                <tr>
+                    <th
+                        [attr.rowspan]="rowsMap.length"
+                        style="width: 3rem"
+                        *ngIf="isSelectable && i == 0"
+                    >
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                    <th
+                        [attr.rowspan]="rowsMap.length"
+                        *ngIf="isIndex && i == 0"
+                    >
+                        <div class="text-center">{{ indexLabel }}</div>
+                    </th>
+                    <ng-container *ngFor="let column of itemRow">
+                        <th
+                            [pSortableColumn]="column.key"
+                            [pSortableColumnDisabled]="column.disableSort"
+                            [attr.rowspan]="column.rowspan"
+                            [attr.colspan]="column.colspan"
+                            [ngStyle]="{
+                                'text-align': column.isCenter && 'center',
+                                width:
+                                    (column.isUpdatedSections && '264px') ||
+                                    (column.isChip && '370px') ||
+                                    (column.isChipObject && '370px'),
+                                'min-width': column.width
+                                    ? column.width
+                                    : '15rem'
+                            }"
+                        >
+                            {{ column.label | translate }}
+                            <p-sortIcon
+                                *ngIf="column.key && !column.disableSort"
+                                [field]="column.key"
+                            ></p-sortIcon>
+                        </th>
+                    </ng-container>
+                    <th
+                        [attr.rowspan]="rowsMap.length"
+                        style="width: 8rem"
+                        *ngIf="isStatus && i == 0"
+                    >
+                        <div class="text-center">{{ labelStatus }}</div>
+                    </th>
+                    <th
+                        [attr.rowspan]="rowsMap.length"
+                        style="width: 8rem"
+                        *ngIf="isFile && i == 0"
+                    >
+                        <div class="text-center">File</div>
+                    </th>
+
+                    <th *ngIf="isError" style="width: 3rem"></th>
+                    <th
+                        [attr.rowspan]="rowsMap.length"
+                        style="width: 3rem"
+                        *ngIf="(isKebab || isKebabOvertime) && i == 0"
+                    ></th>
+                    <th
+                        style="width: 4rem"
+                        [attr.rowspan]="rowsMap.length"
+                        *ngIf="isOneAction && i == 0"
+                    >
+                        Action
+                    </th>
+                </tr>
+            </ng-container>
+        </ng-container>
+        <ng-container *ngIf="rowsMap.length == 1">
+            <tr>
+                <th style="width: 3rem" *ngIf="isSelectable">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngIf="isIndex">
+                    <div class="text-center">{{ indexLabel }}</div>
+                </th>
+                <th
+                    *ngIf="isCompanyMulti && !hideCompany"
+                    style="min-width: 15rem"
+                >
+                    <div>Company</div>
+                </th>
+                <ng-container *ngFor="let column of columMap">
+                    <th
+                        [pSortableColumn]="column.key"
+                        [pSortableColumnDisabled]="column.disableSort"
+                        [ngStyle]="{
+                            'text-align': column.isCenter && 'center',
+                            width:
+                                (column.isUpdatedSections && '264px') ||
+                                (column.isChip && '370px') ||
+                                (column.isChipObject && '370px'),
+                            'min-width': column.width ? column.width : '15rem'
+                        }"
+                    >
+                        {{ column.label | translate }}
+                        <p-sortIcon
+                            [field]="column.key"
+                            *ngIf="column.key && !column.disableSort"
+                        ></p-sortIcon>
+                    </th>
+                </ng-container>
+                <th style="width: 8rem" *ngIf="isPublishStatus">
+                    <div>Status</div>
+                </th>
+                <th style="width: 5rem" *ngIf="isReschedule">
+                    <div></div>
+                </th>
+                <th style="width: 8rem" *ngIf="isStatus">
+                    <div class="text-center">{{ labelStatus }}</div>
+                </th>
+                <th style="width: 8rem" *ngIf="isFile">
+                    <div class="text-center">File</div>
+                </th>
+                <th style="width: 3rem" *ngIf="isFlag"></th>
+                <th *ngIf="isError" style="width: 3rem"></th>
+                <th
+                    style="width: 3rem"
+                    [ngClass]="{
+                        'sticky-header': spanTableRow > 6,
+                        '': spanTableRow < 7,
+                    }"
+                    *ngIf="
+                        isKebab ||
+                        isKebabOvertime ||
+                        isKebabSettlement ||
+                        isKebabWorkflowSequence ||
+                        isKebabScoreCard
+                    "
+                ></th>
+                <th style="width: 4rem" *ngIf="isOneAction">Action</th>
+                <th
+                    style="width: 4rem"
+                    *ngIf="isKebabUser || isKebabCalibrationReviewRevoke"
+                    [ngClass]="{
+                        'sticky-header': spanTableRow > 6,
+                        '': spanTableRow < 7,
+                    }"
+                ></th>
+            </tr>
+        </ng-container>
+    </ng-template>
+    <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+        <tr
+            [pSelectableRow]="data"
+            [ngClass]="{ errBg: errors[data[dataKey]] }"
+        >
+            <td *ngIf="isSelectable">
+                <p-tableCheckbox [value]="data"></p-tableCheckbox>
+            </td>
+            <td class="text-center" style="width: 3rem" *ngIf="isIndex">
+                {{ rowIndex + 1 }}
+            </td>
+            <td *ngIf="isCompanyMulti && !hideCompany">
+                {{ data.companyName || "-" }}
+            </td>
+            <ng-container *ngFor="let itemData of columMap">
+                <td
+                    [style.cursor]="isUseClickRow ? 'pointer' : ''"
+                    [style.text-align]="itemData.isCenter ? 'center' : ''"
+                    [attr.class]="isUseClickRow ? 'hoverable' : null"
+                    (click)="isUseClickRow ? onClickRow(data, rowIndex) : null"
+                >
+                    <span
+                        *ngIf="
+                            !itemData.isDate &&
+                            !itemData.isTime &&
+                            !itemData.isDateAndTimeT &&
+                            !itemData.isDateTimezone &&
+                            !itemData.isCheckmark &&
+                            !itemData.isUpdatedSections &&
+                            !itemData.isChip &&
+                            !itemData.isChipObject &&
+                            !itemData.isColorPreview &&
+                            !itemData.isSeparator &&
+                            !itemData.isSeparatorAmount &&
+                            !itemData.isSeparatorMonthYear &&
+                            !itemData.isSeparatorList &&
+                            !itemData.isFormatedTime &&
+                            !itemData.isTimeNoSecond &&
+                            !itemData.isFormula &&
+                            !itemData.isPublishStatus &&
+                            !itemData.isList &&
+                            !itemData.isFile &&
+                            !itemData.isAmount &&
+                            !itemData.isMany &&
+                            !itemData.isManyDate &&
+                            !itemData.range &&
+                            !itemData.isYearPeriod &&
+                            !itemData.isArrOb &&
+                            !itemData.isUseClickCell &&
+                            !itemData.isURL &&
+                            !itemData.isAnnounceTo &&
+                            !itemData.isDateUTCForTimezone &&
+                            !itemData.isMonthYear &&
+                            !itemData.isAmountIdr &&
+                            !itemData.isDateAttendCorrec &&
+                            !itemData.typeApprovalSequence &&
+                            !itemData.isArrayOfObject &&
+                            !itemData.isSeparatorCustomDateRange &&
+                            !itemData.isPeriodCW &&
+                            !itemData.isPeriodPRC &&
+                            !itemData.isCustomStatus &&
+                            !itemData.isPercentage
+                        "
+                    >
+                        {{
+                            getValue(data, itemData.key, itemData) == "0"
+                                ? "0"
+                                : (getValue(data, itemData.key, itemData) || "-"
+                                  | truncate : truncate)
+                        }}
+                    </span>
+
+                    <span *ngIf="itemData.isPercentage">
+                        {{ getValue(data, itemData.key, itemData) }}%
+                    </span>
+
+                    <span *ngIf="itemData.isPeriodCW">
+                        {{ getValue(data, "periodYear", itemData) }}-{{
+                            getValue(data, "periodType", itemData)
+                        }}
+                    </span>
+
+                    <span *ngIf="itemData.isPeriodPRC">
+                        {{ getValue(data, "periodYear", itemData) }} -
+                        {{ getValue(data, "periodTypeName", itemData) }}
+                    </span>
+
+                    <span *ngIf="itemData.isCustomStatus">
+                        <ng-container *ngIf="itemData.key">
+                            {{ itemData.keyTrue }}
+                        </ng-container>
+                        <ng-container *ngIf="!itemData.key">
+                            {{ itemData.keyFalse }}
+                        </ng-container>
+                    </span>
+
+                    <span
+                        *ngIf="itemData.isMany"
+                        class="flex flex-column align-items-center"
+                    >
+                        <ng-container
+                            *ngFor="let itemKey of itemData.keys; let i = index"
+                        >
+                            {{ getValue(data, itemKey, itemData) }}
+
+                            <span
+                                class="flex align-items-center"
+                                *ngIf="itemData.range"
+                            >
+                                <ng-container
+                                    *ngFor="
+                                        let itemRange of itemData.ranges;
+                                        let i = index
+                                    "
+                                >
+                                    <span>
+                                        {{
+                                            getValue(data, itemRange, itemData)
+                                        }}
+                                    </span>
+                                    <span
+                                        *ngIf="i < itemData.ranges.length - 1"
+                                    >
+                                        -
+                                    </span>
+                                </ng-container>
+                            </span>
+                        </ng-container>
+                    </span>
+
+                    <span
+                        *ngIf="itemData.isManyDate"
+                        class="flex flex-column align-items-start"
+                    >
+                        <ng-container
+                            *ngFor="let itemKey of itemData.keys; let i = index"
+                        >
+                            {{
+                                i === 0
+                                    ? (getValue(data, itemKey, itemData)
+                                      | formatDate)
+                                    : getValue(data, itemKey, itemData)
+                            }}
+                        </ng-container>
+                    </span>
+
+                    <span
+                        *ngIf="itemData.isSeparator"
+                        class="flex align-items-center"
+                    >
+                        <ng-container
+                            *ngFor="let itemKey of itemData.keys; let i = index"
+                        >
+                            {{ getValue(data, itemKey, itemData) }}
+                            <pre *ngIf="i < itemData.keys.length - 1">{{
+                                itemData.separator
+                            }}</pre>
+                        </ng-container>
+                    </span>
+                    <span
+                        *ngIf="itemData.isSeparatorCustomDateRange"
+                        class="flex align-items-center"
+                    >
+                        <ng-container
+                            *ngFor="let itemKey of itemData.keys; let i = index"
+                        >
+                            {{
+                                getValue(data, itemKey, itemData)
+                                    | date : "dd MMM yyyy"
+                            }}
+                            <pre *ngIf="i < itemData.keys.length - 1">{{
+                                itemData.separator
+                            }}</pre>
+                        </ng-container>
+                    </span>
+                    <span
+                        *ngIf="itemData.isSeparatorAmount"
+                        class="flex align-items-center"
+                    >
+                        <ng-container
+                            *ngFor="let itemKey of itemData.keys; let i = index"
+                        >
+                            {{
+                                getValue(data, itemKey, itemData)
+                                    | currency : "IDR" : "symbol" : "3.0"
+                            }}
+                            <pre *ngIf="i < itemData.keys.length - 1">{{
+                                itemData.separator
+                            }}</pre>
+                        </ng-container>
+                    </span>
+                    <span
+                        *ngIf="itemData.isSeparatorMonthYear"
+                        class="flex align-items-center"
+                    >
+                        <ng-container
+                            *ngFor="let itemKey of itemData.keys; let i = index"
+                        >
+                            {{ getValue(data, itemKey, itemData) }}
+                            <pre *ngIf="i < itemData.keys.length - 1">{{
+                                itemData.separator
+                            }}</pre>
+                        </ng-container>
+                    </span>
+
+                    <ng-container *ngIf="itemData.isSeparatorList">
+                        <div
+                            class="white-space-nowrap"
+                            *ngFor="
+                                let el of getValue(
+                                    data,
+                                    itemData.dataList,
+                                    itemData
+                                );
+                                let idx = index
+                            "
+                            [ngClass]="{
+                                'mb-2': idx > 0
+                            }"
+                        >
+                            <ng-container
+                                *ngFor="
+                                    let itemKey of itemData.keys;
+                                    let i = index
+                                "
+                            >
+                                {{ getValue(data, itemKey, el, idx) }}
+
+                                <span *ngIf="i < itemData.keys.length - 1">{{
+                                    itemData.separator
+                                }}</span>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+
+                    <div
+                        *ngIf="itemData.isUpdatedSections"
+                        class="col-updated-sections"
+                    >
+                        <span
+                            *ngFor="
+                                let el of getValue(data, itemData.key, itemData)
+                            "
+                            >{{ el }}</span
+                        >
+                    </div>
+                    <span *ngIf="itemData.isYearPeriod">{{
+                        getValue(data, itemData.key, itemData)
+                            | formatYearPeriod
+                    }}</span>
+                    <span *ngIf="itemData.isMonthYear">{{
+                        getValue(data, itemData.key, itemData)
+                            | date : "MMM yyy"
+                    }}</span>
+                    <span *ngIf="itemData.isArrayOfObject">
+                        {{ getValue(data, itemData.key, itemData, rowIndex) }}
+                    </span>
+                    <span *ngIf="itemData.isDate">{{
+                        getValue(data, itemData.key, itemData) | formatDate
+                    }}</span>
+                    <span *ngIf="itemData.isDateAttendCorrec">
+                        {{
+                            (getValue(data, itemData.key, itemData)
+                                | date : "dd-MM-yyyy HH:mm") || "-"
+                        }}
+                        <small
+                            class="ml-0 md:ml-1 py-0 my-0"
+                            style="color: #f6cc34"
+                            *ngIf="
+                                data?.isClockInWarning ||
+                                data?.isClockOutWarning
+                            "
+                        >
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            New
+                        </small>
+                    </span>
+                    <span *ngIf="itemData.isTime">{{
+                        getValue(data, itemData.key, itemData) | formatTime
+                    }}</span>
+                    <span *ngIf="itemData.isDateTimezone">{{
+                        getValue(data, itemData.key, itemData)
+                            | formatDateTimeZone : true
+                    }}</span>
+                    <span *ngIf="itemData.isDateAndTimeT">{{
+                        getValue(data, itemData.key, itemData)
+                            | formatDate : true
+                    }}</span>
+                    <span *ngIf="itemData.isURL">
+                        <a
+                            [href]="getValue(data, itemData.key, itemData)"
+                            target="_blank"
+                            >{{ getValue(data, itemData.key, itemData) }}</a
+                        >
+                    </span>
+                    <span *ngIf="itemData.isCheckmark">
+                        <i
+                            [ngClass]="[
+                                getValue(data, itemData.key, itemData)
+                                    ? 'fas fa-check-circle'
+                                    : 'fas fa-times-circle'
+                            ]"
+                            [style]="
+                                getValue(data, itemData.key, itemData)
+                                    ? 'color: #54B486; font-size: 20px'
+                                    : 'color: #9F9F9F; font-size: 20px'
+                            "
+                        ></i>
+                        <!-- <span>{{
+                            getValue(data, itemData.key, itemData)
+                        }}</span> -->
+                    </span>
+                    <span *ngIf="itemData.isColorPreview">
+                        <input
+                            type="color"
+                            value="{{ getValue(data, itemData.key, itemData) }}"
+                            id="color-preview"
+                            style="cursor: default"
+                            disabled
+                        />
+                    </span>
+
+                    <ng-container *ngIf="itemData.isValueList">
+                        <div class="list-horizontal">
+                            <li
+                                *ngFor="
+                                    let item of data[itemData.parentKey];
+                                    let i = index
+                                "
+                            >
+                                {{ getValue(item, itemData.key, itemData, i) }}
+
+                                <i
+                                    *ngIf="
+                                        getValue(
+                                            item,
+                                            itemData.keyFlag,
+                                            itemData,
+                                            i
+                                        )
+                                    "
+                                    [class]="itemData.flag"
+                                ></i>
+                            </li>
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="itemData.isList">
+                        <div [class]="itemData.classItem">
+                            <span
+                                *ngFor="
+                                    let el of getValueList(
+                                        data,
+                                        itemData.key,
+                                        itemData
+                                    )
+                                "
+                                >{{ el }}</span
+                            >
+                        </div>
+                    </ng-container>
+                    <span *ngIf="itemData.isArray"> </span>
+                    <div
+                        class="list-chip-data flex-wrap"
+                        *ngIf="itemData.isChip"
+                    >
+                        <span
+                            *ngFor="
+                                let el of getValue(data, itemData.key, itemData)
+                            "
+                            >{{ el }}</span
+                        >
+                    </div>
+                    <div
+                        class="list-chip-data flex-wrap"
+                        *ngIf="itemData.isChipObject"
+                    >
+                        <span
+                            *ngFor="
+                                let item of data[itemData.parentKey];
+                                index as i
+                            "
+                        >
+                            {{ getValue(item, itemData.itemKey, itemData) }}
+                        </span>
+                    </div>
+                    <ng-container *ngIf="itemData.isArrOb">
+                        <p *ngFor="let item of data[itemData.parentKey]">
+                            {{ getValue(item, itemData.itemKey, itemData) }}
+                        </p>
+                    </ng-container>
+
+                    <span *ngIf="itemData.isFormatedTime">
+                        {{
+                            itemData.minutesOnly
+                                ? getValue(data, itemData.key, itemData)
+                                      .toString()
+                                      .padStart(2, "0") + " mins"
+                                : itemData.hoursOnly
+                                ? getValue(data, itemData.key, itemData)
+                                      .toString()
+                                      .padStart(2, "0") + " hr"
+                                : formatTime(
+                                      getValue(data, itemData.key, itemData)
+                                  )
+                        }}
+                    </span>
+
+                    <span *ngIf="itemData.isTimeNoSecond">
+                        {{
+                            formatTimeWithoutSecond(
+                                getValue(data, itemData.key, itemData)
+                            )
+                        }}
+                    </span>
+                    <span *ngIf="itemData.isFormula">
+                        {{
+                            getValue(data, itemData.key, itemData)
+                                | convertInputArrayToString
+                        }}
+                    </span>
+                    <span *ngIf="itemData.isAmount">
+                        <span *ngIf="itemData.key"
+                            >{{
+                                data[itemData.currName] || itemData.currCode
+                            }} </span
+                        >{{ getValue(data, itemData.key, itemData) | curr }}
+                    </span>
+                    <span *ngIf="itemData.isAmountIdr">
+                        <span *ngIf="itemData.key"
+                            >{{
+                                data[itemData.currName] || itemData.currCode
+                            }} </span
+                        >{{
+                            getValue(data, itemData.key, itemData)
+                                | currency : "IDR" : "symbol" : "3.0"
+                        }}
+                    </span>
+
+                    <span
+                        *ngIf="itemData.isPublishStatus"
+                        class="text-center mb-2"
+                        [ngClass]="getPublishStatusClass(data)"
+                    >
+                        {{ getValue(data, itemData.key, itemData) | titleCase }}
+                    </span>
+                    <span
+                        class="mb-2"
+                        *ngIf="itemData.isFile"
+                        (click)="onClickRow(data, rowIndex)"
+                        style="color: #0e8ec5; cursor: pointer"
+                    >
+                        <span style="text-decoration: underline">{{
+                            getValue(data, itemData.key, itemData)
+                        }}</span>
+                    </span>
+                    <span
+                        class="mb-2"
+                        *ngIf="itemData.isUseClickCell"
+                        (click)="onClickCell(data, rowIndex, itemData.key)"
+                        style="color: #0e8ec5; cursor: pointer"
+                    >
+                        <span style="text-decoration: underline">{{
+                            getValue(data, itemData.key, itemData)
+                        }}</span>
+                    </span>
+                    <span *ngIf="itemData.isAnnounceTo">
+                        {{
+                            getValue(data, itemData.key, itemData)
+                                ? "All Employees"
+                                : "Job Attribute"
+                        }}
+                    </span>
+                    <span *ngIf="itemData.isDateUTCForTimezone">
+                        {{
+                            formatUTCDateForTimezone(
+                                getValue(data, itemData.key, itemData)
+                            )
+                        }}
+                    </span>
+                    <span *ngIf="itemData.typeApprovalSequence">
+                        {{
+                            getValue(data, itemData.key, itemData)
+                                ? "Approver"
+                                : "Reader"
+                        }}
+                    </span>
+                </td>
+            </ng-container>
+            <td *ngIf="isPublishStatus" class="text-center">
+                <span class="mb-2" [ngClass]="getPublishStatusClass(data)">
+                    {{ publishStatusLabel || "-" | titleCase }}
+                </span>
+            </td>
+
+            <td *ngIf="isReschedule" class="text-center">
+                <span class="mb-2">
+                    <i
+                        *ngIf="
+                            kebabOption.isRescheduled &&
+                            data.trxCodeName?.toLowerCase() ===
+                                'loan request rescheduling'
+                        "
+                        class="fa-solid fa-hourglass-half"
+                        style="color: #9f9f9f"
+                    ></i>
+                </span>
+            </td>
+
+            <td *ngIf="isStatus" class="text-center">
+                <span class="mb-2" [ngClass]="getStatusClass(data)">
+                    {{ statusLabel || "-" | titleCase }}
+                </span>
+            </td>
+            <td
+                *ngIf="isFile"
+                class="flex align-self-center justify-content-center"
+                style="color: #0e8ec5; cursor: pointer"
+            >
+                <span class="mb-2">
+                    <i class="fas fa-eye mr-1"></i>
+                    <span
+                        style="text-decoration: underline"
+                        (click)="onShowFile(data, rowIndex)"
+                        >View</span
+                    >
+                </span>
+            </td>
+            <td *ngIf="isFlag">
+                <i
+                    *ngIf="data.flag?.toLowerCase() == 'revision'"
+                    class="fa-solid fa-triangle-exclamation"
+                    style="color: #f6cc34"
+                    pTooltip="Revision"
+                    [tooltipOptions]="tooltipOptions"
+                ></i>
+                <i
+                    *ngIf="data.flag?.toLowerCase() == 'extension'"
+                    class="fa-solid fa-arrows-left-right"
+                    style="color: #0e8ec5; background-color: #e8f2ff"
+                    pTooltip="Extension"
+                    [tooltipOptions]="tooltipOptions"
+                ></i>
+            </td>
+            <td *ngIf="isError">
+                <button
+                    *ngIf="errors[data[dataKey]]"
+                    pButton
+                    icon="fa-solid fa-triangle-exclamation"
+                    class="btn-error-square"
+                    pTooltip="{{ arrToString(errors[data[dataKey]].message) }}"
+                    [tooltipOptions]="tooltipOptions"
+                ></button>
+            </td>
+            <td
+                [ngClass]="{
+                    'sticky-body': spanTableRow > 6,
+                    '': spanTableRow < 7
+                }"
+                *ngIf="isKebab"
+            >
+                <p-overlayPanel styleClass="action-overlay" #op>
+                    <ul class="action-menu">
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption.isDetail"
+                            (click)="onKebab('detail', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-eye"></i
+                            ><span>{{ labelKebabDetail }}</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption.isEdit"
+                            (click)="onKebab('edit', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-edit"></i><span>Edit</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption.isDuplicate"
+                            (click)="onKebab('duplicate', data, op, rowIndex)"
+                        >
+                            <i class="fa-solid fa-copy"></i
+                            ><span>Duplicate</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption.isPublish"
+                            (click)="onKebab('publish', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-paper-plane publish"></i>
+                            <span>Publish</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption.isDelete"
+                            (click)="onKebab('delete', data, op, rowIndex)"
+                        >
+                            <i class="fa-solid fa-trash-can delete"></i>
+                            <span>Delete</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption.isExport"
+                            (click)="onKebab('export', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-print"></i><span>Print</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="
+                                kebabOption.isApprove &&
+                                data.status.toLowerCase() === 'pending'
+                            "
+                            (click)="onKebab('approve', data, op, rowIndex)"
+                        >
+                            <i
+                                class="fas fa-check"
+                                style="color: var(--primary-green)"
+                            ></i
+                            ><span>Approve</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="
+                                kebabOption.isReject &&
+                                data.status.toLowerCase() === 'pending'
+                            "
+                            (click)="onKebab('reject', data, op, rowIndex)"
+                        >
+                            <i
+                                class="fas fa-times"
+                                style="color: var(--primary-red)"
+                            ></i
+                            ><span>Reject</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption.isDataTrustee"
+                            (click)="
+                                onKebab('data trustee', data, op, rowIndex)
+                            "
+                        >
+                            <i class="fa-solid fa-user-lock"></i
+                            ><span>Data Trustee</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption.isMenuAccessibility"
+                            (click)="
+                                onKebab(
+                                    'menu accessibility',
+                                    data,
+                                    op,
+                                    rowIndex
+                                )
+                            "
+                        >
+                            <i class="fa-solid fa-key"></i
+                            ><span>Menu Accessibility</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="
+                                kebabOption.isRescheduled &&
+                                data.trxCodeName?.toLowerCase() !==
+                                    'loan request rescheduling'
+                            "
+                            (click)="onKebab('edit', data, op, rowIndex)"
+                        >
+                            <i class="fa-regular fa-pen-to-square"></i
+                            ><span>Reschedule Loan</span>
+                        </li>
+
+                        <li
+                            class="action-menu__item"
+                            *ngIf="
+                                kebabOption.isDeleteDraft &&
+                                data.status?.toLowerCase() === 'draft'
+                            "
+                            (click)="onKebab('delete', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-times delete"></i>
+                            <span>Delete</span>
+                        </li>
+
+                        <li
+                            class="action-menu__item"
+                            *ngIf="
+                                kebabOption.isEditDraft &&
+                                data.status?.toLowerCase() === 'draft'
+                            "
+                            (click)="onKebab('edit', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-edit"></i>
+                            <span>Edit</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="
+                                (kebabOption.isDetailOpen &&
+                                    data.status?.toLowerCase() === 'open') ||
+                                data.status?.toLowerCase() === 'closed'
+                            "
+                            (click)="onKebab('detail', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-eye"></i>
+                            <span>Detail</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="
+                                kebabOption.isEditPending &&
+                                data.status?.toLowerCase() === 'pending'
+                            "
+                            (click)="onKebab('edit', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-edit"></i>
+                            <span>Edit</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="
+                                kebabOption.isEditUnpaid &&
+                                data.transferStatus?.toLowerCase() === 'unpaid'
+                            "
+                            (click)="onKebab('edit', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-edit"></i>
+                            <span>Edit</span>
+                        </li>
+
+                        <li
+                            class="action-menu__item"
+                            *ngIf="
+                                kebabOption.isCancelRequest &&
+                                data.status?.toLowerCase() === 'approved'
+                            "
+                            (click)="
+                                onKebab('cancel-request', data, op, rowIndex)
+                            "
+                        >
+                            <i class="fas fa-times"></i>
+                            <span>Cancel Request</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption.isCreateInstallment"
+                            (click)="onKebab('edit', data, op, rowIndex)"
+                        >
+                            <i class="fa-regular fa-pen-to-square"></i
+                            ><span>Create Installment</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption.isDownload"
+                            (click)="onKebab('export', data, op, rowIndex)"
+                        >
+                            <i class="fa-regular fa-circle-down"></i
+                            ><span>Download</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption.isViewLearningEvents"
+                            (click)="
+                                onKebab(
+                                    'view-learning-events',
+                                    data,
+                                    op,
+                                    rowIndex
+                                )
+                            "
+                        >
+                            <i class="fa-regular fa-calendar-check"></i
+                            ><span>View Learning Events</span>
+                        </li>
+                    </ul>
+                </p-overlayPanel>
+                <p-button
+                    icon="fas fa-ellipsis-v"
+                    styleClass="p-button-rounded p-button-secondary p-button-text"
+                    (click)="op.toggle($event)"
+                ></p-button>
+            </td>
+            <td
+                [ngClass]="{
+                    'sticky-body': spanTableRow > 6,
+                    '': spanTableRow < 7
+                }"
+                *ngIf="isKebabCW"
+            >
+                <p-overlayPanel styleClass="action-overlay" #op>
+                    <ul class="action-menu">
+                        <li
+                            class="action-menu__item"
+                            *ngIf="
+                                kebabOption.isEdit &&
+                                (data.isNew || data.isDefault)
+                            "
+                            (click)="onKebab('edit', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-edit"></i><span>Edit</span>
+                        </li>
+
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption.isDelete && data.isNew"
+                            (click)="onKebab('delete', data, op, rowIndex)"
+                        >
+                            <i class="fa-solid fa-trash-can delete"></i>
+                            <span>Delete</span>
+                        </li>
+                    </ul>
+                </p-overlayPanel>
+                <p-button
+                    icon="fas fa-ellipsis-v"
+                    styleClass="p-button-rounded p-button-secondary p-button-text"
+                    (click)="op.toggle($event)"
+                ></p-button>
+            </td>
+            <td *ngIf="isKebabOvertime">
+                <p-overlayPanel styleClass="action-overlay" #op>
+                    <ul class="action-menu">
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption.isDetail"
+                            (click)="onKebab('detail', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-eye"></i
+                            ><span>{{ labelKebabDetail }}</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="
+                                kebabOption.isEdit &&
+                                data.status.toLowerCase() == 'draft' &&
+                                !data?.flag
+                            "
+                            (click)="onKebab('edit', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-edit"></i><span>Edit</span>
+                        </li>
+
+                        <li
+                            class="action-menu__item"
+                            *ngIf="
+                                data.status.toLowerCase() == 'rejected' &&
+                                data?.flag?.toLowerCase() == 'revision'
+                            "
+                            (click)="onKebab('revise', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-edit"></i><span>Revision</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="
+                                kebabOption.isApprove &&
+                                data.status.toLowerCase() === 'pending'
+                            "
+                            (click)="onKebab('approve', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-check green-icon"></i
+                            ><span>Approve</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="
+                                kebabOption.isReject &&
+                                data.status.toLowerCase() === 'pending'
+                            "
+                            (click)="onKebab('reject', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-times red-icon"></i
+                            ><span>Reject</span>
+                        </li>
+                    </ul>
+                </p-overlayPanel>
+                <p-button
+                    icon="fas fa-ellipsis-v"
+                    styleClass="p-button-rounded p-button-secondary p-button-text"
+                    (click)="op.toggle($event)"
+                ></p-button>
+            </td>
+            <td
+                [ngClass]="{
+                    'sticky-body': spanTableRow > 6,
+                    '': spanTableRow < 7
+                }"
+                *ngIf="isKebabSettlement"
+            >
+                <p-overlayPanel styleClass="action-overlay" #op>
+                    <ul class="action-menu">
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption.isDetail"
+                            (click)="onKebab('detail', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-eye"></i
+                            ><span>{{ labelKebabDetail }}</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="
+                                kebabOption.isEdit &&
+                                data.status.toLowerCase() === 'draft'
+                            "
+                            (click)="onKebab('edit', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-edit"></i><span>Edit</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="
+                                kebabOption.isApprove &&
+                                data.status.toLowerCase() === 'pending'
+                            "
+                            (click)="onKebab('approve', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-check green-icon"></i
+                            ><span>Approve</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="
+                                kebabOption.isReject &&
+                                data.status.toLowerCase() === 'pending'
+                            "
+                            (click)="onKebab('reject', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-times red-icon"></i
+                            ><span>Reject</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="
+                                kebabOption.isDeleteDraft &&
+                                data.status?.toLowerCase() === 'draft'
+                            "
+                            (click)="onKebab('delete', data, op, rowIndex)"
+                        >
+                            <i class="fa-solid fa-trash-can delete"></i>
+                            <span>Delete</span>
+                        </li>
+                    </ul>
+                </p-overlayPanel>
+                <p-button
+                    icon="fas fa-ellipsis-v"
+                    styleClass="p-button-rounded p-button-secondary p-button-text"
+                    (click)="op.toggle($event)"
+                ></p-button>
+            </td>
+            <td
+                *ngIf="isKebabUser"
+                [ngClass]="{
+                'sticky-body': spanTableRow > 6,
+                '': spanTableRow < 7,
+            }"
+            >
+                <p-overlayPanel styleClass="action-overlay" #op>
+                    <ul class="action-menu">
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption?.isDetail"
+                            (click)="onKebab('detail', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-eye"></i><span>Detail</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            style="color: #0e8ec5"
+                            *ngIf="kebabOption?.isResetDevice"
+                            (click)="
+                                onKebab('reset device', data, op, rowIndex)
+                            "
+                        >
+                            <i class="fa-solid fa-rotate"></i
+                            ><span>Reset Device</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            style="color: #54b486"
+                            *ngIf="
+                                kebabOption?.isActive &&
+                                data.status === 'Inactive'
+                            "
+                            (click)="onKebab('active', data, op, rowIndex)"
+                        >
+                            <i class="fa-solid fa-check"></i><span>Active</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            style="color: #d85454"
+                            *ngIf="
+                                kebabOption?.isInactive &&
+                                data.status === 'Active'
+                            "
+                            (click)="onKebab('inactive', data, op, rowIndex)"
+                        >
+                            <i class="fa-solid fa-xmark"></i
+                            ><span>Inactive</span>
+                        </li>
+                    </ul>
+                </p-overlayPanel>
+
+                <p-button
+                    icon="fas fa-ellipsis-v"
+                    styleClass="p-button-rounded p-button-secondary p-button-text"
+                    (click)="op.toggle($event)"
+                ></p-button>
+            </td>
+            <td *ngIf="isKebabCalibrationReviewRevoke">
+                <p-overlayPanel
+                    [ngClass]="{
+                        'cannot-reassign': data.isReassign,
+                        'can-reassign': !data.isReassign,
+                    }"
+                    styleClass="action-overlay"
+                    #op
+                >
+                    <ul class="action-menu">
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption?.isReAssign && !data.isReassign"
+                            (click)="onKebab('reAssign', data, op, rowIndex)"
+                        >
+                            <i class="fa-solid fa-scroll"></i
+                            ><span>Re-Assign</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption?.isDetail"
+                            (click)="onKebab('detail', data, op, rowIndex)"
+                        >
+                            <i class="fas fa-eye"></i><span>Details</span>
+                        </li>
+                    </ul>
+                </p-overlayPanel>
+
+                <p-button
+                    icon="fas fa-ellipsis-v"
+                    styleClass="p-button-rounded p-button-secondary p-button-text"
+                    (click)="op.toggle($event)"
+                ></p-button>
+            </td>
+            <td
+                [ngClass]="{
+                    'sticky-body': spanTableRow > 6,
+                    '': spanTableRow < 7
+                }"
+                *ngIf="isKebabWorkflowSequence"
+            >
+                <p-overlayPanel styleClass="action-overlay" #op>
+                    <ul class="action-menu">
+                        <li
+                            class="action-menu__item"
+                            (click)="onKebab('edit', data, op, rowIndex)"
+                            *ngIf="kebabOption.isEdit"
+                        >
+                            <i class="fa-solid fa-pen-to-square"></i
+                            ><span>Edit</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            (click)="
+                                onKebab('finalApprove', data, op, rowIndex)
+                            "
+                            *ngIf="kebabOption.isSetFinalApprover"
+                        >
+                            <i class="fa-solid fa-circle-check"></i
+                            ><span>Set as Final Approve</span>
+                        </li>
+                    </ul>
+                </p-overlayPanel>
+
+                <p-button
+                    icon="fas fa-ellipsis-v"
+                    styleClass="p-button-rounded p-button-secondary p-button-text"
+                    (click)="op.toggle($event)"
+                ></p-button>
+            </td>
+            <td
+                *ngIf="isKebabScoreCard"
+                [ngClass]="{
+                'sticky-body': spanTableRow > 6,
+                '': spanTableRow < 7,
+            }"
+            >
+                <p-overlayPanel styleClass="action-overlay" #op>
+                    <ul class="action-menu">
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption?.isTree"
+                            (click)="onKebab('tree', data, op, rowIndex)"
+                        >
+                            <i class="fa-solid fa-sitemap"></i
+                            ><span>Logic Tree</span>
+                        </li>
+                        <li
+                            class="action-menu__item"
+                            *ngIf="kebabOption?.isDetail"
+                            (click)="onKebab('detail', data, op, rowIndex)"
+                        >
+                            <i class="fa-solid fa-chart-line"></i
+                            ><span>View Performance</span>
+                        </li>
+                    </ul>
+                </p-overlayPanel>
+
+                <p-button
+                    icon="fas fa-ellipsis-v"
+                    styleClass="p-button-rounded p-button-secondary p-button-text"
+                    (click)="op.toggle($event)"
+                ></p-button>
+            </td>
+            <td *ngIf="isOneAction && !isOneActionShowHide">
+                <button
+                    pButton
+                    pRipple
+                    icon="fas fa-pen"
+                    class="mini-button-edit"
+                    (click)="onOneAction('edit', data, rowIndex)"
+                ></button>
+            </td>
+            <td *ngIf="isOneAction && isOneActionShowHide">
+                <button
+                    *ngIf="
+                        data[isOneActionConditionKey] ===
+                        isOneActionConditionValue
+                    "
+                    pButton
+                    pRipple
+                    icon="fas fa-pen"
+                    class="mini-button-edit-orange"
+                    (click)="onOneAction('edit', data, rowIndex)"
+                ></button>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td class="text-center" [attr.colspan]="spanTableRow">
+                <span
+                    *ngIf="!useCustomEmptyMessage"
+                    class="font-italic"
+                    style="color: #9f9f9f"
+                    >{{ emptyMessage }}</span
+                >
+                <ng-content
+                    *ngIf="useCustomEmptyMessage"
+                    select="[emptyMessage]"
+                ></ng-content>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="loadingbody">
+        <tr>
+            <td class="text-center" [attr.colspan]="spanTableRow">
+                Loading data. Please wait.
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+<p-dialog
+    class="custom-dialog"
+    *ngIf="isShowReject"
+    [visible]="isShowReject"
+    [modal]="true"
+    [style]="{ width: '500px' }"
+    [baseZIndex]="10000"
+    [draggable]="false"
+    [resizable]="false"
+    [closable]="false"
+>
+    <ng-template pTemplate="header">
+        <div class="flex flex-column">
+            <label class="text-xl font-bold required">{{
+                "rejectRequest" | translate
+            }}</label>
+            <label class="text-left font-italic text-sm pt-1">{{
+                "rejectThisRequest" | translate
+            }}</label>
+        </div>
+    </ng-template>
+    <div class="grid">
+        <div class="col-12">
+            <textarea
+                class="custom-input"
+                style="width: 100%; max-width: 100%"
+                placeholder="{{ 'enter' | translate }} rejection notes"
+                rows="4"
+                cols="55"
+                pInputTextarea
+                autoResize="autoResize"
+                [(ngModel)]="notes"
+            ></textarea>
+        </div>
+    </div>
+    <p-footer>
+        <button
+            pButton
+            class="btn-cancel ml-2"
+            icon="fas fa-times"
+            (click)="isShowReject = false"
+            label="{{ 'cancel' | translate }}"
+        ></button>
+        <button
+            pButton
+            class="btn-reject-outlined px-4 mr-2"
+            (click)="onReject()"
+            label="Reject"
+        ></button>
+    </p-footer>
+</p-dialog>
+<p-dialog
+    *ngIf="isShowApprove"
+    class="custom-dialog"
+    header="Approve Request"
+    [visible]="isShowApprove"
+    [modal]="true"
+    [style]="{ width: '500px' }"
+    [baseZIndex]="10000"
+    [draggable]="false"
+    [resizable]="false"
+    [closable]="false"
+>
+    <ng-template pTemplate="header">
+        <div class="flex flex-column">
+            <label class="text-xl font-bold required">{{
+                "approveRequest" | translate
+            }}</label>
+            <label class="text-left font-italic text-sm pt-1">{{
+                "approveThisRequest" | translate
+            }}</label>
+        </div>
+    </ng-template>
+    <div class="grid">
+        <div class="col-12">
+            <textarea
+                class="custom-input"
+                style="width: 100%; max-width: 100%"
+                placeholder="{{ 'enter' | translate }} Approval notes"
+                rows="4"
+                cols="55"
+                pInputTextarea
+                autoResize="autoResize"
+                [(ngModel)]="notes"
+            ></textarea>
+        </div>
+    </div>
+    <p-footer>
+        <button
+            pButton
+            class="btn-cancel ml-2"
+            icon="fas fa-times"
+            (click)="isShowApprove = false"
+            label="{{ 'cancel' | translate }}"
+        ></button>
+        <button
+            pButton
+            class="btn-approve px-4 mr-2"
+            (click)="onApprove()"
+            label="{{ 'approve' | translate }}"
+        ></button>
+    </p-footer>
+</p-dialog>

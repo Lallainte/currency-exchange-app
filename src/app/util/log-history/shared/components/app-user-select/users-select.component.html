@@ -1,0 +1,61 @@
+<div class="w-full">
+    <div class="p-inputgroup cursor-pointer" (click)="showDialog()">
+        <input
+            id="employee"
+            type="text"
+            placeholder="{{ 'all' | translate }} Users"
+            pInputText
+            readonly
+        />
+        <button
+            type="button"
+            (click)="showDialog()"
+            class="p-inputgroup-addon user-select cursor-pointer"
+        >
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+</div>
+
+<p-dialog
+    [(visible)]="visible"
+    [modal]="true"
+    [style]="{ width: '85vw' }"
+    [contentStyle]="{ padding: '0 1.5rem' }"
+    (onHide)="onCancel()"
+    [draggable]="false"
+    [resizable]="false"
+    styleClass="dialog-user-select custom-gutter"
+    contentStyleClass="relative"
+>
+    <ng-template pTemplate="header">
+        <span class="text-xl font-bold" style="color: #656565"
+            >{{ "select" | translate }} User</span
+        >
+    </ng-template>
+    <div class="grid no-pad custom-gutter">
+        <div class="col-8 pb-0">
+            <app-search
+                [isFilter]="false"
+                (search)="onSearch($event)"
+            ></app-search>
+        </div>
+        <div class="col-4 pb-0 text-right">
+            <btn-cancel
+                (onClick)="onCancel()"
+                [isNeedConfirmation]="false"
+            ></btn-cancel>
+        </div>
+        <div class="col-12">
+            <app-table
+                #TableComponent
+                [isSelectable]="isSelectable"
+                isStatus="true"
+                [columMap]="columnMap"
+                (selected)="onSelected($event)"
+                [uri]="uri"
+            ></app-table>
+        </div>
+    </div>
+    <ng-template pTemplate="footer"></ng-template>
+</p-dialog>

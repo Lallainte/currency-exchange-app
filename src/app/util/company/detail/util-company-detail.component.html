@@ -1,0 +1,370 @@
+<div class="card">
+    <div class="grid field">
+        <div class="col-6 mt-2">
+            <h5>Perusahaan - Detil</h5>
+        </div>
+
+        <div class="col-6">
+            <div class="field text-right hide-mobile">
+                <btn-kembali routeUrl="util/company"></btn-kembali>
+                <btn-multi-action [haveEdit]="true" [haveExtend]="true" [haveTerminate]="true" [multiple]="false"
+                    (onClick)="click($event)"></btn-multi-action>
+            </div>
+            <div class="field text-right hide-desktop">
+                <btn-multi-action [haveEdit]="true" [haveExtend]="true" [haveTerminate]="true" [multiple]="false"
+                    (onClick)="click($event)"></btn-multi-action>
+            </div>
+        </div>
+    </div>
+    <div class="grid field">
+        <div class="col-12 border-bottom-1 mt-2">
+            <h6>Detil Perusahaan</h6>
+        </div>
+    </div>
+    <ng-container [formGroup]="formGroup">
+        <div class="grid p-fluid" *ngIf="!loading else skel">
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label for="code">Kode</label>
+                    <div>
+                        <input id="code" type="text" formControlName="code" pInputText>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="name">Nama Perusahaan</label>
+                    <div>
+                        <input id="name" type="text" formControlName="name" pInputText [ngClass]="{'ng-dirty ng-invalid' : (formGroup.get('name').touched || formGroup.get('name').dirty ) &&
+                        !formGroup.get('name').valid}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="name">Jenis Usaha</label>
+                    <div>
+                        <input id="name" type="text" disabled [value]="formGroup.value.companyType.valData" pInputText
+                            [ngClass]="{'ng-dirty ng-invalid' : (formGroup.get('name').touched || formGroup.get('name').dirty ) &&
+                        !formGroup.get('name').valid}">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="effBegin">Bergabung</label>
+                    <div>
+                        <p-calendar id="effBegin" dateFormat="dd-mm-yy" appendTo="body" formControlName="effBegin"
+                            [showIcon]="true">
+                        </p-calendar>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="effEnd">Berlaku Sampai</label>
+                    <div>
+                        <p-calendar id="effEnd" dateFormat="dd-mm-yy" appendTo="body" formControlName="effEnd"
+                            [showIcon]="true">
+                        </p-calendar>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="address">Alamat Perusahaan</label>
+                    <div>
+                        <textarea id="address" class="custom-input" formControlName="address" rows="4" cols="33"
+                            pInputTextarea autoResize="autoResize" [ngClass]="{'ng-dirty ng-invalid' : (formGroup.get('address').touched || formGroup.get('address').dirty ) &&
+                        !formGroup.get('address').valid}"></textarea>
+                    </div>
+                </div>
+
+                <div class="field" *ngIf="isNpwp">
+                    <label for="companyTaxNumber">No. NPWP</label>
+                    <div>
+                        <p-inputMask styleClass="label-custom-form custom-input" formControlName="companyTaxNumber"
+                            unmask="true" mask="99.999.999.9-999-999"
+                            [ngClass]="{'ng-dirty ng-invalid' : (formGroup.get('companyTaxNumber').touched || formGroup.get('companyTaxNumber').dirty ) && !formGroup.get('companyTaxNumber').valid}">
+                        </p-inputMask>
+                        <app-error-field-helper [formControlKey]="formGroup.get('companyTaxNumber')">
+                        </app-error-field-helper>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label for="scale">Jumlah Karyawan</label>
+                    <div>
+                        <input id="scale" type="text" formControlName="scale" pInputText [ngClass]="{'ng-dirty ng-invalid' : (formGroup.get('scale').touched || formGroup.get('scale').dirty ) &&
+                        !formGroup.get('scale').valid}">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="phone">Telpon</label>
+                    <div>
+                        <input id="phone" type="text" formControlName="phone" pInputText [ngClass]="{'ng-dirty ng-invalid' : (formGroup.get('phone').touched || formGroup.get('phone').dirty ) &&
+                        !formGroup.get('phone').valid}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="fax">Fax</label>
+                    <div>
+                        <input id="fax" type="text" formControlName="fax" pInputText [ngClass]="{'ng-dirty ng-invalid' : (formGroup.get('fax').touched || formGroup.get('fax').dirty ) &&
+                        !formGroup.get('fax').valid}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="email">Email</label>
+                    <div>
+                        <input id="email" type="text" formControlName="email" pInputText [ngClass]="{'ng-dirty ng-invalid' : (formGroup.get('email').touched || formGroup.get('email').dirty ) &&
+                        !formGroup.get('email').valid}">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="logo">Logo</label>
+                    <div>
+                        <img [src]="imgSrc" style='width: 75%' />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid field">
+            <div class="col-12 border-bottom-1 mt-2">
+                <h6>{{ isNpwp === true ? 'Detil Admin' : 'Detil Pemilik'}}</h6>
+            </div>
+        </div>
+        <div class="grid p-fluid" formGroupName="owner" *ngIf="!loading else skel">
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label for="numberId">No. KTP</label>
+                    <div>
+                        <input id="numberId" type="text" formControlName="numberId" pInputText>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="own-name">Nama</label>
+                    <div>
+                        <input id="own-name" type="text" formControlName="name" pInputText>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="birthDate">Tanggal Lahir</label>
+                    <div>
+
+                        <p-calendar id="birthDate" dateFormat="dd-mm-yy" appendTo="body" formControlName="birthDate"
+                            [showIcon]="true">
+                        </p-calendar>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="own-address">Alamat</label>
+                    <div>
+                        <textarea id="own-address" class="custom-input" formControlName="address" rows="4" cols="33"
+                            pInputTextarea autoResize="autoResize"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label for="gender">Jenis Kelamin</label>
+                    <div>
+                        <input id="gender" type="text" formControlName="gender" pInputText>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="religion">Agama</label>
+                    <div>
+                        <input id="religion" type="text" formControlName="religion" pInputText>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="own-email">Email</label>
+                    <div>
+                        <input id="own-email" type="text" formControlName="email" pInputText>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid field mt-2">
+            <div class="col-6">
+                <h6>Daftar Bank Perusahaan</h6>
+            </div>
+            <div class="col-6">
+                <div class="field text-right hide-mobile">
+                    <btn-delete [selected]="selected" (onClick)="onDelete()"></btn-delete>
+                    <btn-add (onClick)="onAdd()"></btn-add>
+                </div>
+                <div class="field text-right hide-desktop">
+                    <btn-multi-action [haveAdd]="true" [haveDel]="true" [selected]="selected" (onClick)="click($event)">
+                    </btn-multi-action>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <p-table [value]="formGroup.value.companyBank" [(selection)]="selected" styleClass="p-datatable-gridlines"
+                responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3em">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                No
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Nama Bank
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Nama Akun
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Nomor Akun
+                            </div>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+                    <tr [pSelectableRow]="data">
+                        <td>
+                            <p-tableCheckbox [value]="data"></p-tableCheckbox>
+                        </td>
+                        <td style="width: 3rem;">
+                            {{rowIndex+1}}
+                        </td>
+                        <td style="min-width: 12rem;">
+                            {{data.bankName}}
+                        </td>
+                        <td style="min-width: 12rem;">
+                            {{data.accountName}}
+                        </td>
+                        <td style="min-width: 12rem;">
+                            {{data.accountNumber}}
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td class="text-center" colspan="5">No data found.</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="loadingbody">
+                    <tr>
+                        <td class="text-center" colspan="5">Loading data. Please wait.</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </ng-container>
+    <ng-template #skel>
+        <div class="custom-skeleton p-4">
+            <p-skeleton width="100%" height="150px"></p-skeleton>
+        </div>
+    </ng-template>
+</div>
+
+<p-dialog header="Tambah Bank" [(visible)]="isShow" modal="modal" showEffect="fade" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 
+'max-height': '80vh','min-height':'250px'}" [style]="{width: '45vw'}" [breakpoints]="{'960px': '75vw'}">
+    <div class="grid p-fluid" [formGroup]="bankForm">
+        <div class="col-12 md:col-6">
+            <div class="field">
+                <label for="bankName" class="required">Nama Bank</label>
+                <div>
+                    <input id="bankName" type="text" formControlName="bankName" placeholder="Isi Nama Bank" pInputText
+                        [ngClass]="{'ng-dirty ng-invalid' : (bankForm.get('bankName').touched || bankForm.get('bankName').dirty ) &&
+                        !bankForm.get('bankName').valid}">
+                    <app-error-field-helper [formControlKey]="bankForm.get('bankName')"></app-error-field-helper>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="accountName" class="required">Nama Akun</label>
+                <div>
+                    <input id="accountName" type="text" formControlName="accountName" placeholder="Isi Nama Akun"
+                        pInputText [ngClass]="{'ng-dirty ng-invalid' : (bankForm.get('accountName').touched || bankForm.get('accountName').dirty ) &&
+                        !bankForm.get('accountName').valid}">
+                    <app-error-field-helper [formControlKey]="bankForm.get('accountName')"></app-error-field-helper>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="accountNumber" class="required">No Akun</label>
+                <div>
+                    <input id="accountNumber" numberOnly type="text" formControlName="accountNumber"
+                        placeholder="Isi Nomor Akun" pInputText [ngClass]="{'ng-dirty ng-invalid' : (bankForm.get('accountNumber').touched || bankForm.get('accountNumber').dirty ) &&
+                        !bankForm.get('accountNumber').valid}">
+                    <app-error-field-helper [formControlKey]="bankForm.get('accountNumber')"></app-error-field-helper>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <btn-save (onClick)="onSave()"></btn-save>
+    </ng-template>
+</p-dialog>
+
+<p-dialog header="Perpanjang" [(visible)]="isShowExtend" *ngIf="isShowExtend" modal="modal" showEffect="fade"
+    [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 
+'max-height': '80vh','min-height':'250px'}" [style]="{width: '50vw'}" [breakpoints]="{'960px': '75vw'}">
+    <div [formGroup]="form">
+        <div class="grid p-fluid">
+            <div class="col-12 md:col-6 ">
+                <div class="field">
+                    <label for="extDate" class="required">Sampai Tanggal</label>
+                    <div>
+                        <p-calendar id="extDate" dateFormat="dd-mm-yy" appendTo="body"
+                            [minDate]="formGroup.get('effEnd').value" formControlName="date" [showIcon]="true"
+                            [ngClass]="{'ng-dirty ng-invalid' : (form.get('date').touched || form.get('date').dirty ) &&
+                            !form.get('date').valid}">
+                        </p-calendar>
+                        <app-error-field-helper [formControlKey]="form.get('date')"></app-error-field-helper>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6 ">
+                <div class="field">
+                    <label for="companySubscription" class="required">Status Berlangganan</label>
+                    <div>
+                        <app-lov id="companySubscription" label="Pilih Status Berlangganan" appendTo="body"
+                            (selected)="selectCompSubs($event)"
+                            [ngClass]="{'ng-dirty ng-invalid' : (form.get('companySubscription').touched || form.get('companySubscription').dirty ) && !form.get('companySubscription').valid}"
+                            uri="lov/company-subscriptions">
+                        </app-lov>
+                        <app-error-field-helper [formControlKey]="form.get('companySubscription')">
+                        </app-error-field-helper>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <btn-save (onClick)="onSaveExtend()"></btn-save>
+    </ng-template>
+</p-dialog>
+
+
+<p-dialog header="Berhentikan" [(visible)]="isShowTermit" *ngIf="isShowTermit" modal="modal" showEffect="fade"
+    [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 
+'max-height': '80vh','min-height':'250px'}" [style]="{width: '30vw'}" [breakpoints]="{'960px': '75vw'}">
+    <div [formGroup]="form">
+        <div class="grid p-fluid">
+            <div class="col-12">
+                <div class="field">
+                    <label for="extDate" class="required">Tanggal Berhenti</label>
+                    <div>
+                        <p-calendar id="extDate" dateFormat="dd-mm-yy" appendTo="body" [ngClass]="{'ng-dirty ng-invalid' : (form.get('date').touched || form.get('date').dirty ) &&
+                        !form.get('date').valid}" formControlName="date" [showIcon]="true">
+                        </p-calendar>
+                        <app-error-field-helper [formControlKey]="form.get('date')"></app-error-field-helper>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <btn-save (onClick)="onSaveTermit()"></btn-save>
+    </ng-template>
+</p-dialog>

@@ -1,0 +1,7 @@
+
+<button *ngIf="!isSmall" pButton pRipple label="{{ 'Remind' | translate}}" [disabled]="disabled" class="mb-2 ml-2 btn-cancel" (click)="click()" icon="fas fa-bell"></button>
+
+<button *ngIf="isSmall" pButton pRipple [disabled]="disabled" class="mb-2 ml-2 mini-button-download" (click)="click()" icon="fas fa-bell"></button>
+
+<p-confirmDialog [hidden]="!isShow" [style]="{width: '500px'}" [breakpoints]="{'960px': '85vw'}" [baseZIndex]="10000"
+  [closable]="true" [acceptIcon]="false" [rejectIcon]="false" class="remind-dialog"></p-confirmDialog>

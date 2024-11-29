@@ -1,0 +1,19 @@
+.user-select {
+    background-color: #e8f2ff !important;
+    border: none !important;
+
+    i {
+        color: #0e8ec5;
+        font-size: 18px;
+    }
+}
+
+.dialog-user-select {
+    overflow: hidden !important;
+}
+
+.dialog-user-select__content {
+    height: 350px !important;
+    overflow-y: auto !important;
+    margin: 14px 0 !important;
+}

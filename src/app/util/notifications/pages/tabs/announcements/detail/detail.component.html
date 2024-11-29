@@ -1,0 +1,81 @@
+<div class="layout-menubar-ess flex" id="layout-menubar-ess" style="gap: 8px">
+    <a
+        routerLink="/{{ web }}/notifications/list/announcements"
+        class="font-medium text-red"
+        >{{ "notif&announ" | translate }}</a
+    >
+    <i
+        class="fa-solid fa-angle-right text-sm"
+        style="color: #9f9f9f; padding-top: 3px"
+    ></i>
+    <span class="font-semibold text-grey">Detail</span>
+</div>
+
+<div class="card px-5" *ngIf="!loadData && detailData">
+    <div class="grid no-pad">
+        <div class="col-12 px-0" *ngIf="!noBanner">
+            <img
+                [src]="base64toUrl(detailData.bannerFile.file.base)"
+                [alt]="detailData.title"
+                class="w-full h-12rem"
+                style="
+                    object-fit: cover;
+                    object-position: center;
+                    border-radius: 6px;
+                "
+            />
+        </div>
+        <div [class.pt-3]="!noBanner" class="col-12 px-0 border-line">
+            <span class="font-card-title">{{ detailData.title }}</span>
+        </div>
+        <div class="col-12 px-0 pt-4">
+            <div class="w-full" [innerHTML]="detailData.message || '-'"></div>
+        </div>
+        <ng-container *ngIf="attach.length">
+            <div class="col-12 px-0 pt-4">
+                <div
+                    class="flex align-items-center px-3 py-2 w-10rem"
+                    style="
+                        gap: 8px;
+                        border-radius: 50px;
+                        background-color: #e8f2ff;
+                        color: #0e8ec5;
+                    "
+                >
+                    <i class="fa-solid fa-paperclip"></i>
+                    Attachment&nbsp;({{ attach.length }})
+                </div>
+            </div>
+            <div class="col-12 px-0">
+                <div class="grid no-pad">
+                    <ng-container *ngFor="let att of attach">
+                        <div class="col-12 md:col-4">
+                            <div class="attach-wrap">
+                                <img
+                                    src="assets/icon/icon-file-pdf-reader.svg"
+                                />
+                                <div
+                                    class="flex flex-column align-items-start"
+                                    style="gap: 2px"
+                                >
+                                    <p
+                                        class="m-0 text-sm"
+                                        style="color: #656565"
+                                    >
+                                        {{ att.fileName }}
+                                    </p>
+                                    <p
+                                        class="m-0 text-sm"
+                                        style="color: #9f9f9f"
+                                    >
+                                        {{ formatBytes(att.fileSize) }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>

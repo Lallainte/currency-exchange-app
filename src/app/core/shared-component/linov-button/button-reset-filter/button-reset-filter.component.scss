@@ -1,0 +1,8 @@
+::ng-deep {
+    @media (max-width: 576px) {
+        #btnResponsive {
+            width: 100% !important;
+            margin: 0 !important;
+        }
+    }
+}

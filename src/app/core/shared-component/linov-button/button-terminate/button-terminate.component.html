@@ -1,0 +1,13 @@
+<button [disabled]="disabled" pButton class="btn-terminate ml-2 mb-2" icon="fas fa-ban" (click)="check()"
+    label="Stop"></button>
+<p-confirmDialog [hidden]="!isShow" [style]="{width: '500px'}" [breakpoints]="{'960px': '85vw'}" [baseZIndex]="10000"
+    [closable]="false" [acceptIcon]="false" [rejectIcon]="false"></p-confirmDialog>
+<p-dialog [(visible)]="isShowNoData" [modal]="true" [style]="{width: '500px'}" [breakpoints]="{'960px': '85vw'}"
+    [baseZIndex]="10000" [draggable]="false" [resizable]="false" header="Berhenti">
+    <div class="text-center">
+        Harap pilih data
+    </div>
+    <p-footer>
+        <button pButton class="btn-save" (click)="isShowNoData = false" label="Ok"></button>
+    </p-footer>
+</p-dialog>

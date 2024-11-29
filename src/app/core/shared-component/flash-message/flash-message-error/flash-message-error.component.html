@@ -1,0 +1,45 @@
+<p-dialog class="message-error" [(visible)]="isVisible" [style]="{ width: '476px' }">
+    <div class="c-icons error-icon"></div>
+    <!-- <span class="span-message">{{ message }}</span> -->
+    <div class="text-center">
+        <p class="text-xl font-bold mb-2" style="color:var(--surface-700);margin:0;">{{title}}</p>
+        <p class="text-base font-normal" style="color:var(--surface-500)">{{ message |titlecase}}</p>
+    </div>
+    <p class="link_report font-semibold" (click)="clickReport()">Report error</p>
+
+    <ng-template pTemplate="footer">
+        <button type="button" pButton label="OK" (click)="clickBack()" [style]="{ width: '134px' }"></button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog header="Report Error" [(visible)]="reportError" [style]="{ width: '500px' }" class="error-report">
+    <ng-template pTemplate="header">
+        <div class="text-left col-6">
+            <i class="fas fa-flag" [style]="{ color: '#0E8EC5' }"></i>
+            <span class="ml-2 text-xl font-bold">Report Error</span>
+        </div>
+    </ng-template>
+
+    <div class="grid">
+        <div class="col-3">
+            <label for="description" class="required">Issue</label>
+        </div>
+        <div class="col-9">
+            <input id="issue" type="text" pInputText placeholder="Enter Issue" />
+        </div>
+    </div>
+    <div class="grid">
+        <div class="col-3">
+            <label for="description">Description</label>
+        </div>
+        <div class="col-9">
+            <textarea id="description" placeholder="Enter description" rows="4" cols="33" pInputTextarea></textarea>
+        </div>
+    </div>
+    <div class="mt-5 text-right border-top">
+        <button pButton pRipple icon="fas fa-times" (click)="reportError = false" label="Cancel"
+            class="mb-2 ml-2 btn-cancel"></button>
+        <button pButton pRipple icon="fas fa-paper-plane fa-xs" (click)="reportError = false" label="Submit"
+            class="mb-2 ml-2 btn-process"></button>
+    </div>
+</p-dialog>

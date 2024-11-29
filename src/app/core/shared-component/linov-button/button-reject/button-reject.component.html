@@ -1,0 +1,59 @@
+<button
+    [disabled]="disabled"
+    pButton
+    class="btn-reject mr-3"
+    (click)="click()"
+    label="{{ label | translate }}"
+></button>
+
+<p-dialog
+    *ngIf="isNeedDialogComponent"
+    class="custom-dialog"
+    [visible]="isShow"
+    [modal]="true"
+    [style]="{ width: '500px' }"
+    [baseZIndex]="10000"
+    [draggable]="false"
+    [resizable]="false"
+    [closable]="false"
+>
+    <ng-template pTemplate="header">
+        <div class="flex flex-column">
+            <label class="text-xl font-bold required">{{
+                "rejectRequest" | translate
+            }}</label>
+            <label class="text-left font-italic text-sm pt-1">{{
+                "rejectThisRequest" | translate
+            }}</label>
+        </div>
+    </ng-template>
+    <div class="grid">
+        <div class="col-12">
+            <textarea
+                class="custom-input"
+                placeholder="{{ 'enter' | translate }} rejection notes"
+                rows="4"
+                cols="55"
+                pInputTextarea
+                autoResize="autoResize"
+                [(ngModel)]="notes"
+            ></textarea>
+        </div>
+    </div>
+    <p-footer>
+        <button
+            pButton
+            class="btn-cancel ml-2"
+            icon="fas fa-times"
+            (click)="isShow = false"
+            label="{{ 'cancel' | translate }}"
+        ></button>
+        <button
+            pButton
+            class="btn-reject-outlined px-4 mr-2"
+            icon="fas fa-check"
+            (click)="onReject()"
+            label="Reject"
+        ></button>
+    </p-footer>
+</p-dialog>

@@ -1,0 +1,616 @@
+<div class="layout-topbar">
+    <a
+        class="p-link layout-topbar-button"
+        href="#"
+        (click)="appMain.toggleMenu($event)"
+    >
+        <i class="fas fa-bars i-top"></i>
+    </a>
+
+    <a class="layout-topbar-logo" routerLink="">
+        <img class="logo" src="assets/logo/BSS-logo.svg" alt="logo" />
+    </a>
+    <div class="layout-topbar-search">
+        <span class="p-input-icon-right">
+            <i class="fas fa-search" style="z-index: 1"></i>
+            <p-autoComplete
+                placeholder="Search Menu"
+                [suggestions]="suggestions"
+                (onSelect)="select($event)"
+                (completeMethod)="search($event)"
+                [(ngModel)]="selectedItem"
+                field="label"
+            ></p-autoComplete>
+        </span>
+    </div>
+    <div></div>
+    <a
+        class="p-link layout-topbar-menu-button layout-topbar-button"
+        href="#"
+        (click)="appMain.toggleTopMenu($event)"
+    >
+        <i class="fas fa-ellipsis-v i-top"></i>
+    </a>
+
+    <div class="layout-topbar-icon relative">
+        <!-- <p-multiSelect [options]="cities" placeholder="PT. Kramayudha Ratu Motor" optionLabel="name"
+            styleClass="p-multiSelect-topbar mr-2" dropdownIcon="fas fa-caret-down"></p-multiSelect> -->
+        <!-- <app-lov uri="lovs/companies?isActive=true" label="Select Company" ></app-lov> -->
+
+        <p-dropdown
+            [options]="language"
+            [(ngModel)]="selectedLang"
+            s
+            (onChange)="changeLang(selectedLang)"
+            styleClass="p-dropdown-topbar"
+            dropdownIcon="fas fa-caret-down"
+        ></p-dropdown>
+        <a
+            (click)="appMain.toggleNotifications($event)"
+            class="p-link layout-topbar-button"
+        >
+            <i class="fas fa-bell i-top" style="font-size: 20px"></i>
+        </a>
+        <p-badge
+            *ngIf="notifTotalUnread !== '0' && notifTotalUnread !== ''"
+            (click)="appMain.toggleNotifications($event)"
+            [value]="notifTotalUnread"
+            styleClass="badge-notif__bell cursor-pointer"
+        ></p-badge>
+        <a
+            class="p-link layout-topbar-button"
+            (click)="appMain.toggleTopMenu($event)"
+        >
+            <i class="fas fa-user i-top"></i>
+        </a>
+    </div>
+
+    <div
+        class="layout-topbar-menu notif-panel pt-0"
+        [ngClass]="{
+            'layout-topbar-menu-mobile-active': appMain.menuActiveNotification
+        }"
+    >
+        <div class="flex flex-column" style="width: 30rem">
+            <p-tabView [scrollable]="false">
+                <p-tabPanel header="Notifications">
+                    <ng-container *ngIf="notifListBel.length">
+                        <ng-container *ngFor="let item of notifListBel">
+                            <div
+                                class="flex align-items-start justify-content-between list-item__notification"
+                                [class.unread]="!item.isRead"
+                                (click)="handleClickNotif(item)"
+                            >
+                                <div
+                                    class="flex align-items-center"
+                                    style="gap: 14px"
+                                >
+                                    <!-- JIKA TERDAPAT PHOTO SENDER -->
+                                    <!-- <ng-container
+                                        *ngIf="
+                                            item.sender?.person?.employeeId
+                                                | employeePhoto
+                                                | async as photo;
+                                            else loading
+                                        "
+                                    >
+                                        <img
+                                            [src]="photo"
+                                            class="w-3rem h-3rem border-circle custom-profile-image"
+                                        />
+                                    </ng-container> -->
+                                    <ng-template #loading>
+                                        <p-skeleton
+                                            shape="circle"
+                                            size="4rem"
+                                        ></p-skeleton>
+                                    </ng-template>
+                                    <!-- JIKA TIDAK TERDAPAT PHOTO SENDER -->
+                                    <!-- <div class="notif__img-avatar">
+                                        <i class="fa-solid fa-user-large"></i>
+                                    </div> -->
+
+                                    <div
+                                        class="flex flex-column"
+                                        style="gap: 2px"
+                                    >
+                                        <p
+                                            class="no-pad"
+                                            style="
+                                                font-weight: 700;
+                                                font-size: 14px;
+                                                color: #656565;
+                                            "
+                                        >
+                                            {{
+                                                item.sender?.person.fullName ||
+                                                    "Admin"
+                                            }}
+                                        </p>
+                                        <p
+                                            class="no-pad"
+                                            style="
+                                                font-weight: 400;
+                                                font-size: 14px;
+                                                color: #9f9f9f;
+                                            "
+                                        >
+                                            {{ item.messageTitle }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <p
+                                    class="no-pad"
+                                    style="
+                                        font-weight: 400;
+                                        font-size: 12px;
+                                        color: #9f9f9f;
+                                    "
+                                >
+                                    {{
+                                        formatDateNotifAnnounce(item?.sentDate)
+                                    }}
+                                </p>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                    <div
+                        class="flex flex-column align-items-center py-4 px-6"
+                        *ngIf="!notifListBel.length"
+                        style="gap: 12px"
+                    >
+                        <div
+                            class="w-4rem h-4rem flex align-items-center justify-content-center"
+                            style="
+                                background-color: #f5f6fa;
+                                border-radius: 50%;
+                            "
+                        >
+                            <i
+                                class="fa-solid fa-envelope-open-text text-4xl"
+                                style="color: #da241c"
+                            ></i>
+                        </div>
+
+                        <p
+                            class="no-pad text-center"
+                            style="
+                                font-weight: 400;
+                                font-size: 13px;
+                                color: #9f9f9f;
+                            "
+                        >
+                            There is no notification at the moment. Please come
+                            back later to check!
+                        </p>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel header="Announcements">
+                    <ng-container *ngIf="announceListBel.length">
+                        <ng-container *ngFor="let item of announceListBel">
+                            <div
+                                class="flex align-items-start justify-content-between list-item__notification"
+                                [class.unread]="!item.isRead"
+                                (click)="handleClickAnnounce(item)"
+                            >
+                                <div
+                                    class="flex align-items-center"
+                                    style="gap: 14px"
+                                >
+                                    <!-- JIKA TERDAPAT PHOTO SENDER -->
+                                    <!-- <img src="" alt="" /> -->
+                                    <!-- JIKA TIDAK TERDAPAT PHOTO SENDER -->
+                                    <div class="announce__img-avatar">
+                                        <img [src]="getImageUrl(item)" />
+                                    </div>
+
+                                    <div
+                                        class="flex flex-column"
+                                        style="gap: 2px"
+                                    >
+                                        <p
+                                            class="no-pad"
+                                            style="
+                                                font-weight: 400;
+                                                font-size: 14px;
+                                                color: #9f9f9f;
+                                            "
+                                        >
+                                            {{ item.title }}
+                                        </p>
+                                        <p
+                                            class="no-pad"
+                                            style="
+                                                font-weight: 700;
+                                                font-size: 14px;
+                                                color: #656565;
+                                            "
+                                        >
+                                            {{ item.lovTypeAnnouncementName }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <p
+                                    class="no-pad"
+                                    style="
+                                        font-weight: 400;
+                                        font-size: 12px;
+                                        color: #9f9f9f;
+                                    "
+                                >
+                                    {{
+                                        formatDateNotifAnnounce(
+                                            item.effectiveDateStart
+                                        )
+                                    }}
+                                </p>
+                            </div>
+                        </ng-container></ng-container
+                    >
+                    <div
+                        class="flex flex-column align-items-center py-4 px-6"
+                        *ngIf="!announceListBel.length"
+                        style="gap: 12px"
+                    >
+                        <div
+                            class="w-4rem h-4rem flex align-items-center justify-content-center"
+                            style="
+                                background-color: #f5f6fa;
+                                border-radius: 50%;
+                            "
+                        >
+                            <i
+                                class="fa-solid fa-bullhorn text-4xl"
+                                style="color: #da241c"
+                            ></i>
+                        </div>
+
+                        <p
+                            class="no-pad text-center"
+                            style="
+                                font-weight: 400;
+                                font-size: 13px;
+                                color: #9f9f9f;
+                            "
+                        >
+                            There is no announcement at the moment. Please come
+                            back later to check!
+                        </p>
+                    </div>
+                </p-tabPanel>
+            </p-tabView>
+            <div class="px-4 py-3 border-top-1 border-200 text-center">
+                <a (click)="onShowNotif()" class="cursor-pointer"
+                    >View all notifications</a
+                >
+            </div>
+        </div>
+    </div>
+
+    <div
+        class="layout-topbar-menu"
+        [ngClass]="{
+            'layout-topbar-menu-mobile-active': appMain.topMenuActive
+        }"
+    >
+        <!-- <span class="p-link layout-topbar-button-user">
+            <i class="fas fa-user"></i>
+            <span>
+                {{ session?.user?.name ? session?.user?.name : "Username" }}
+            </span>
+        </span>
+        //todo pasang switch untuk routting admin/ess/mss
+        <div class="layout-topbar-button-lov" *ngIf="session?.user?.isSa">
+            <app-lov id="changeComp" [customOption]="session?.user?.tenant?.companies"
+                [value]="session?.selectedCompanyId" (selected)="selectCompany($event)"></app-lov>
+        </div>
+        <a (click)="doLogout(); appMain.toggleTopMenu($event)" class="p-link layout-topbar-button-user">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </a> -->
+        <div class="account-menu">
+            <div class="flex align-items-center mb-1 ml-3">
+                <!-- <img
+                    [src]="session?.id | employeePhoto | async"
+                    style="width: 4rem; height: 4rem; border-radius: 50%"
+                /> -->
+                <div class="flex-column ml-4">
+                    <span class="span-username">{{
+                        (session?.fullName
+                            ? session?.fullName
+                            : session?.username
+                        ) | truncate : 20
+                    }}</span>
+                    <p class="mb-1" *ngIf="!isSuperAdmin">
+                        {{
+                            (session?.jobPositionName
+                                ? session?.jobPositionName
+                                : session?.roleName
+                                ? session?.roleName
+                                : "Job"
+                            ) | truncate : 20
+                        }}
+                    </p>
+                    <button
+                        *ngIf="
+                            (appInfo?.hasEssAccess || appInfo?.hasMssAccess) &&
+                            !isSuperAdmin
+                        "
+                        pButton
+                        pRipple
+                        label="View Profile"
+                        class="btn-view-profile"
+                        (click)="
+                            onChangeWeb(
+                                'ess/profile/person/personal-information'
+                            )
+                        "
+                    ></button>
+                </div>
+            </div>
+            <ul>
+                <li
+                    *ngIf="appInfo?.hasEssAccess && !isSuperAdmin"
+                    style="border-top: 1px solid var(--surface-200)"
+                    (click)="onChangeWeb('ess')"
+                >
+                    <i class="fas fa-repeat"></i>
+                    <a>Switch to Web ESS</a>
+                </li>
+                <li
+                    *ngIf="appInfo?.hasMssAccess && !isSuperAdmin"
+                    (click)="onChangeWeb('mss')"
+                >
+                    <i class="fas fa-repeat"></i>
+                    <a>Switch to Web MSS</a>
+                </li>
+                <li
+                    *ngIf="
+                        appInfo?.hasAdminAccess && appInfo?.current !== 'admin'
+                    "
+                    (click)="onChangeWeb('admin')"
+                >
+                    <i class="fas fa-repeat"></i>
+                    <a>Switch to Web Admin</a>
+                </li>
+                <!-- <li>
+                    <i class="fas fa-user-gear"></i>
+                    <a href="#">Account Settings</a>
+                </li> -->
+                <li
+                    (click)="doLogout(); appMain.toggleTopMenu($event)"
+                    style="
+                        border-top: 1px solid var(--surface-200);
+                        border-bottom-left-radius: 6px;
+                        border-bottom-right-radius: 6px;
+                    "
+                >
+                    <i
+                        class="fas fa-arrow-right-from-bracket"
+                        style="
+                            color: var(--primary-red);
+                            font-size: 1.3rem;
+                            font-weight: 700;
+                        "
+                    ></i>
+                    <a
+                        href="#"
+                        style="color: var(--primary-red); font-weight: 500"
+                        >Log Out</a
+                    >
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="layout-menubar" id="layout-menubar">
+    <p-menubar [model]="items"> </p-menubar>
+</div> -->
+
+<!-- Pop Up Flash Banner -->
+<p-dialog
+    header="Header"
+    [(visible)]="visibleFlash"
+    [modal]="true"
+    [style]="{ width: '50vw', overflow: 'hidden' }"
+    [draggable]="false"
+    [resizable]="false"
+    [closable]="false"
+    styleClass="pop-up__flash-banner"
+    maskStyleClass="pop-up__flash-banner__mask"
+>
+    <p-carousel
+        [value]="flashBannerList"
+        [numVisible]="1"
+        [numScroll]="1"
+        [circular]="true"
+        autoPlayInterval="3000"
+        [showIndicators]="true"
+        (onPage)="onPageChangeFlashBanner($event)"
+        [page]="pageFlashBanner"
+    >
+        <ng-template pTemplate="header">
+            <button
+                (click)="onHideFlash.show()"
+                class="icon__close-popup-flashbanner shadow-5"
+            >
+                <i class="fa-solid fa-circle-xmark"></i>
+            </button>
+        </ng-template>
+
+        <ng-template let-item let-index="index" pTemplate="item">
+            <div class="flex flex-column relative">
+                <p-carousel
+                    *ngIf="item.attachments || item.attachments.length"
+                    [value]="item.attachments"
+                    [numVisible]="1"
+                    [numScroll]="1"
+                    autoPlayInterval="3000"
+                    [showIndicators]="true"
+                    [showNavigators]="false"
+                    indicatorsContentClass="flashbanner-indicator-subcarousel"
+                    indicatorStyleClass="shadow-5"
+                >
+                    <ng-template let-data let-index="index" pTemplate="item">
+                        <div
+                            class="w-full h-full bg-white"
+                            style="border-radius: 8px 8px 0 0"
+                        >
+                            <img
+                                class="image__flash-banner"
+                                [src]="getImageUrl(data, true)"
+                            />
+                        </div>
+                    </ng-template>
+                </p-carousel>
+
+                <img
+                    *ngIf="!item.attachments || !item.attachments.length"
+                    class="image__flash-banner"
+                    src="assets/images/no-image-announcement.png"
+                    [alt]="item.title"
+                />
+
+                <div class="pop-up__flash-banner--body">
+                    <p>{{ item.title }}</p>
+                </div>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="previousicon">
+            <i class="fa-solid fa-chevron-left"></i>
+        </ng-template>
+
+        <ng-template pTemplate="nexticon">
+            <i class="fa-solid fa-chevron-right"></i>
+        </ng-template>
+    </p-carousel>
+</p-dialog>
+
+<!-- Pop Up Announcement -->
+<p-dialog
+    *ngIf="visibleAnn"
+    [visible]="visibleAnn"
+    @customDialogAnnouncementAnimations
+    position="bottomright"
+    [style]="{ width: '75vw', overflow: 'hidden' }"
+    [breakpoints]="{ '960px': '100vw' }"
+    [draggable]="false"
+    [resizable]="false"
+    [closable]="false"
+    styleClass="announcement__dialog"
+    maskStyleClass="announcement__dialog__mask"
+>
+    <ng-template pTemplate="header">
+        <p-button
+            (onClick)="onHideAnnounce()"
+            icon="fa-solid fa-xmark font-bold text-xl"
+            [rounded]="true"
+            size="small"
+            [text]="true"
+            styleClass="btn__close-announcement-popup"
+        ></p-button>
+    </ng-template>
+    <p-carousel
+        [value]="announceList"
+        [numVisible]="1"
+        [numScroll]="1"
+        [circular]="true"
+        autoPlayInterval="3000"
+        [showIndicators]="false"
+    >
+        <ng-template let-item let-rowIndex="index" pTemplate="item">
+            <div class="grid no-pad p-fluid">
+                <div class="col-12 md:col-4">
+                    <div class="flex align-items-center w-full h-full">
+                        <img
+                            class="image__announcement"
+                            [src]="getImageUrl(item)"
+                            [alt]="item.title"
+                        />
+                    </div>
+                </div>
+                <div
+                    class="col-12 md:col-8 flex justify-content-center flex-column"
+                    style="gap: 6px"
+                >
+                    <span
+                        >{{ getPageAnnouncement(item) }}/{{
+                            announceList.length
+                        }}</span
+                    >
+                    <h4 class="font-bold text-800 no-pad">{{ item.title }}</h4>
+                    <p
+                        class="no-pad"
+                        [innerHTML]="item.message | truncate : 255"
+                    ></p>
+                    <button
+                        class="flex align-items-center btn__view-more-announcement"
+                        style="gap: 6px"
+                        (click)="redirectToAnnouncement(item)"
+                    >
+                        <span class="font-bold text-base underline"
+                            >View More</span
+                        ><i class="fa-solid fa-angle-right pt-1"></i>
+                    </button>
+                </div>
+            </div>
+        </ng-template>
+    </p-carousel>
+</p-dialog>
+
+<!-- Validation close flash banner -->
+<p-dialog
+    header="Close Flash Banners"
+    [(visible)]="isShowConfirm"
+    [modal]="true"
+    [style]="{ width: '30vw', overflow: 'hidden' }"
+    [draggable]="false"
+    [resizable]="false"
+    [closable]="false"
+    styleClass="confirm-dialog__flash-banner"
+    maskStyleClass="confirm-dialog__flash-banner__mask"
+>
+    <div class="grid no-pad" *ngIf="isShowConfirm">
+        <div class="col-12">
+            <label for="announceTo"
+                >Are you sure you want to close flash banner
+                announcements?</label
+            >
+        </div>
+
+        <!-- <div class="col-12">
+            <div class="flex align-items-center p-0">
+                <p-checkbox
+                    [(ngModel)]="checkedDontShowAgain"
+                    [binary]="true"
+                    inputId="checkedDontShowAgain"
+                ></p-checkbox>
+
+                <label for="checkedDontShowAgain" class="ml-2"
+                    >Don’t show flash banners anymore until there’s a new
+                    announcement</label
+                >
+            </div>
+        </div> -->
+    </div>
+
+    <ng-template pTemplate="footer">
+        <button
+            pButton
+            pRipple
+            label="{{ 'no' | translate }}"
+            class="btn-cancel"
+            (click)="onHideFlash.reject()"
+        ></button>
+
+        <button
+            pButton
+            pRipple
+            label="{{ 'yes' | translate }}"
+            class="btn-save"
+            (click)="onHideFlash.accept()"
+        ></button>
+    </ng-template>
+</p-dialog>

@@ -1,0 +1,92 @@
+<p-dropdown
+    *ngIf="!isMulti"
+    [id]="id"
+    [(ngModel)]="selectedData"
+    (onChange)="onChange($event.value)"
+    [options]="list"
+    [disabled]="disabled"
+    [filter]="filter"
+    [readonly]="readonly"
+    [showClear]="showClear"
+    (onClear)="onClear($event)"
+    [optionLabel]="optLabel"
+    filterBy="name"
+    placeholder="{{ label }}"
+    [appendTo]="appendTo"
+    [ngClass]="ngClass"
+    dropdownIcon="fas fa-caret-down"
+    [styleClass]="styleClass"
+>
+    <ng-template pTemplate="selectedItem">
+        <span *ngIf="isTaxObject">
+            {{ "({{selectedData?.code}}) {{ selectedData?.name }}" }}
+        </span>
+        <span *ngIf="isPeriodCW">
+            {{ selectedData?.periodYear }}
+            {{
+                selectedData?.lovPeriodTypeName.toLowerCase().includes("year")
+                    ? ""
+                    : " - " + selectedData?.lovPeriodTypeName
+            }}
+        </span>
+        <span *ngIf="!isTaxObject && !isPeriodCW">
+            {{ selectedData?.[optLabel] | truncate : truncate }}
+        </span>
+    </ng-template>
+
+    <ng-template let-data pTemplate="item">
+        <span class="is-tax-object--element" *ngIf="isTaxObject">
+            {{ "({{data?.code}}) {{ data?.name }}" | truncate : truncate }}
+        </span>
+        <span *ngIf="isPeriodCW" class="is-tax-object--element">
+            {{ data?.periodYear }}
+            {{
+                (data.lovPeriodTypeName.toLowerCase().includes("year")
+                    ? null
+                    : " - " + data?.lovPeriodTypeName
+                ) | truncate : truncate
+            }}
+        </span>
+        <span *ngIf="!isTaxObject && !isPeriodCW">
+            {{ data?.[optLabel] | truncate : truncate }}
+        </span>
+    </ng-template>
+
+    <ng-template let-country pTemplate="empty">
+        <p-progressBar
+            [style]="{ height: '4px' }"
+            mode="indeterminate"
+            *ngIf="loading; else normal"
+        ></p-progressBar>
+    </ng-template>
+</p-dropdown>
+
+<p-multiSelect
+    #multiLovs
+    *ngIf="isMulti"
+    [(ngModel)]="selectedDatas"
+    [showToggleAll]="showToggleAll"
+    (onChange)="onChange($event.value)"
+    [options]="list"
+    [disabled]="disabled"
+    [filter]="filter"
+    [readonly]="readonly"
+    [optionLabel]="optLabel"
+    placeholder="{{ label }}"
+    [ngClass]="ngClass"
+    [display]="useChip ? 'chip' : 'comma'"
+    [appendTo]="appendTo"
+    dropdownIcon="fas fa-caret-down"
+    [styleClass]="styleClass"
+    (onPanelHide)="onHide()"
+>
+    <ng-template let-country pTemplate="empty">
+        <p-progressBar
+            [style]="{ height: '4px' }"
+            mode="indeterminate"
+            *ngIf="loading; else normal"
+        ></p-progressBar>
+    </ng-template>
+</p-multiSelect>
+
+<ng-template #normal>No Data</ng-template>

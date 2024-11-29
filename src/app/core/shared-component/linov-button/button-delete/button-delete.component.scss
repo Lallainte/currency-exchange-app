@@ -1,0 +1,13 @@
+:host ::ng-deep .delete-dialog {
+    .p-dialog .p-dialog-header .p-dialog-title::before {
+      content: '\f2ed' !important;
+      font-weight: 900 !important;
+      font-size: 1.5rem !important;
+      font-family: 'Font Awesome 5 Free' !important;
+      color: var(--primary-red);
+    }
+    .p-dialog .p-dialog-content{
+      border-bottom-right-radius:0;
+      border-bottom-left-radius:0;
+  }
+  }

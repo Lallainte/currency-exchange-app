@@ -1,0 +1,34 @@
+:host ::ng-deep .p-element{
+    margin-right: 0.7em;
+    margin-bottom: 0.7em;
+}
+
+:host ::ng-deep .p-element.p-icon-wrapper{
+    margin-right: unset;
+    margin-bottom: unset;
+}
+
+:host ::ng-deep .p-checkbox-box{
+    width: 20px;
+    height: 20px;
+    border: 1px solid #9F9F9F;
+    border-radius: 3px;
+}
+
+:host ::ng-deep .p-checkbox-label{
+    font-size: 14px;
+    font-weight: 400;
+    color: #656565;
+    margin-left: 0.1em;
+}
+
+div.horizontal{
+    display: flex;
+    flex-direction: row;
+}
+
+div.vertical{
+    display: flex;
+    flex-direction: column;
+}
+

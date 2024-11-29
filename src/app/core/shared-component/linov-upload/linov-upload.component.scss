@@ -1,0 +1,107 @@
+.btn-cls {
+    position: absolute;
+    z-index: 1;
+    right: 20px;
+}
+
+.image-view--wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.image-view--card {
+    background-color: var(--surface-0);
+    border: 1px solid #eeeeee;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    padding: 4px;
+    gap: 16px;
+    width: 100%;
+}
+
+.image-view--info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .image-name {
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 16.37px;
+        color: #656565;
+    }
+
+    .image-size {
+        font-weight: 400;
+        font-size: 11px;
+        line-height: 15px;
+    }
+}
+
+.btn-clear--image {
+    width: 33px !important;
+    height: 33px !important;
+    background-color: #ffe8e8;
+    border-radius: 4px;
+}
+
+.file-view--card {
+    background-color: var(--surface-0);
+    border: 1px solid var(--secondary-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 4px;
+    padding: 8px 16px;
+    gap: 16px;
+    width: 100%;
+
+    .icon-docs {
+        font-size: 16px;
+        color: var(--secondary-color);
+    }
+
+    .icon-clear {
+        font-size: 16px;
+        color: var(--secondary-color);
+        font-weight: bolder;
+        cursor: pointer;
+    }
+
+    .file-view--info {
+        width: 100%;
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 16.37px;
+        color: var(--general-grey);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.image-view--wrapper {
+    width: 100%;
+}
+
+.inline-upload {
+    height: 28px;
+    width: 28px;
+    display: flex;
+    border: 1px solid #0e8ec5;
+    border-radius: 4px;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: #0e8ec5;
+    cursor: pointer;
+    transition: background 0.25s ease-in-out, boder-color 0.25s ease-in-out;
+
+    &:hover {
+        border-color: darken(#0e8ec5, 8%);
+        background: darken(#0e8ec5, 8%);
+    }
+}
