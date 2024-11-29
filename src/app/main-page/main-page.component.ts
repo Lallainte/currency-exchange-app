@@ -1,12 +1,10 @@
-import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { TableComponent } from '@core/shared-component/table/table.component';
-import { CurrencyConversionService } from './services/main-page.services';
-import { MessageBoxService } from '@core/service/message-box.service';
-import { LovComponent } from '@core/shared-component/lov/lov.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Currency, ResultOfConversion } from './models/main-page.model';
-
-declare let particlesJS: any;
+import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { CurrencyConversionService } from './services/main-page.services';
+import { LovComponent } from '@core/shared-component/lov/lov.component';
+import { TableComponent } from '@core/shared-component/table/table.component';
+import { MessageBoxService } from '@core/service/message-box.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-currency-conversion',
@@ -59,43 +57,8 @@ export class MainPageComponent {
         }
     }
 
-    onInputNumber(e): void {
-        if (this.formConversion.valid) {
-            this.calculateCurrency();
-        } else {
-            this.formConversion.markAllAsTouched();
-        }
-    }
 
-    swapCurrency(): void {
-        const currencyFirst = this.formConversion
-            .get('currencyFirst')
-            .getRawValue();
-        this.formConversion
-            .get('currencyFirst')
-            .patchValue(
-                this.formConversion.get('currencySecond').getRawValue()
-            );
-        this.formConversion.get('currencySecond').patchValue(currencyFirst);
-        if (this.formConversion.valid) {
-            this.calculateCurrency();
-        } else {
-            this.formConversion.markAllAsTouched();
-        }
-    }
-
-    onClickConvert(): void {
-        if (this.formConversion.valid) {
-            this.calculateCurrency();
-            this.showResultConversion = true;
-            this.showButtonConvert = false;
-        } else {
-            this.formConversion.markAllAsTouched();
-            this.messageBoxService.showInfo("The Form Can't Empty");
-        }
-    }
-
-    calculateCurrency(): void {
+    calculateCurrencies(): void {
         const conversionData = this.formConversion.getRawValue();
         const beforeConversion = `${conversionData.amount.toLocaleString('en', {
             minimumFractionDigits: 2,
@@ -128,7 +91,7 @@ export class MainPageComponent {
     onSelectedCurrencyFirst(e): void {
         this.formConversion.get('currencyFirst').patchValue(e);
         if (this.formConversion.valid) {
-            this.calculateCurrency();
+            this.calculateCurrencies();
         } else {
             this.formConversion.markAllAsTouched();
         }
@@ -137,11 +100,49 @@ export class MainPageComponent {
     onSelectedCurrencySecond(e): void {
         this.formConversion.get('currencySecond').patchValue(e);
         if (this.formConversion.valid) {
-            this.calculateCurrency();
+            this.calculateCurrencies();
         } else {
             this.formConversion.markAllAsTouched();
         }
     }
+
+    onInputNumber(e): void {
+        if (this.formConversion.valid) {
+            this.calculateCurrencies();
+        } else {
+            this.formConversion.markAllAsTouched();
+        }
+    }
+
+
+    onClickConvert(): void {
+        if (this.formConversion.valid) {
+            this.calculateCurrencies();
+            this.showResultConversion = true;
+            this.showButtonConvert = false;
+        } else {
+            this.formConversion.markAllAsTouched();
+            this.messageBoxService.showInfo("The Form Can't Empty");
+        }
+    }
+    swapCurrencies(): void {
+        const currencyFirst = this.formConversion
+            .get('currencyFirst')
+            .getRawValue();
+        this.formConversion
+            .get('currencyFirst')
+            .patchValue(
+                this.formConversion.get('currencySecond').getRawValue()
+            );
+        this.formConversion.get('currencySecond').patchValue(currencyFirst);
+        if (this.formConversion.valid) {
+            this.calculateCurrencies();
+        } else {
+            this.formConversion.markAllAsTouched();
+        }
+    }
+
+
 
     getCurrenciesApi(): void {
         this.currenciesService.getCurrencies().subscribe({

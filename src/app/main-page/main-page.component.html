@@ -4,7 +4,7 @@
         [formGroup]="formConversion"
     >
         <div class="col-12 md:mb-6" >
-            <h1 class="font-bold text-center m-0 md:text-6xl"  >
+            <h1 class="font-bold text-center  md:text-6xl"  >
                 Currency Exchange App
             </h1>
         </div>
@@ -22,9 +22,9 @@
             </p-inputNumber>
         </div>
         <div
-            class="col-12 grid md:col-9 p-0 m-0 align-items-center  md:pl-6"
+            class="col-12 grid md:col-9  align-items-center  md:pl-6"
         >
-            <div id="lovFirst" class="col-12 p-fluid p-2 m-0 sm:col-5">
+            <div id="lovFirst" class="col-12 p-fluid p-2  sm:col-5">
                 <app-lov
                     *ngIf="dataCurrencies?.length > 0"
                     #LovComponent
@@ -37,15 +37,15 @@
                 </app-lov>
             </div>
             <div
-                class="col-12 flex justify-content-center align-items-center p-0 sm:col-2"
+                class="col-12 flex justify-content-center align-items-center sm:col-2"
                 style="height: fit-content"
                 id="btnSwap"
             >
-                <p-button (onClick)="swapCurrency()" class="">
-                    <span class="w-1rem p-2 m-0 exchange-icon"> </span>
+                <p-button (onClick)="swapCurrencies()" class="">
+                    <span class="w-1rem p-2  exchange-icon"> </span>
                 </p-button>
             </div>
-            <div id="lovSecond" class="col-12 p-fluid p-2 m-0 sm:col-5">
+            <div id="lovSecond" class="col-12 p-fluid p-2  sm:col-5">
                 <app-lov
                     *ngIf="dataCurrencies?.length > 0"
                     #LovComponent
@@ -58,24 +58,24 @@
                 </app-lov>
             </div>
         </div>
-        <div class="col-12 flex flex-column md:mt-5 p-2 m-0">
+        <div class="col-12 flex flex-column md:mt-5 p-2 ">
             <div *ngIf="showResultConversion">
-                <p class="font-bold md:text-lg m-0">
+                <p class="font-bold md:text-lg ">
                     {{ resultConversionData?.beforeConversion }}
                 </p>
-                <p class="text-3xl md:text-5xl lg:text-6xl font-bold m-0 mb-3">
+                <p class="text-3xl md:text-5xl lg:text-6xl font-bold  mb-3">
                     {{ resultConversionData?.resultConversion }}
                 </p>
-                <p class="m-0 md:text-md">
+                <p class=" md:text-md">
                     {{ resultConversionData?.rateCurrencyFirst }}
                 </p>
-                <p class="m-0 md:text-md">
+                <p class=" md:text-md">
                     {{ resultConversionData?.rateCurrencySecond }}
                 </p>
             </div>
 
             <div
-                class="col-12 sm:col-3 md:col-2 p-fluid  p-0"
+                class="col-12 sm:col-3 md:col-2 p-fluid "
                 style="border-radius: 16rem; align-self: end"
                 *ngIf="showButtonConvert"
                 id="btnConvert"

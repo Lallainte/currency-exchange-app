@@ -76,3 +76,5 @@ projects-ess/time_attendance/
 marulam
 build-*
 pull-*
+
+.vercel
