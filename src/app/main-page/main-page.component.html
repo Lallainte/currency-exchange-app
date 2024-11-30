@@ -1,16 +1,16 @@
-<main class="flex flex-column overflow-hidden" style="gap: 3rem">
-    <div
-        class="grid m-4  justify-content-between main-content"
-        [formGroup]="formConversion"
-    >
-        <div class="col-12 md:mb-6" >
-            <h1 class="font-bold text-center  md:text-6xl"  >
+<div class="particles-container" id="particles-js"></div>
+
+<main class="flex flex-column overflow-hidden relative" style="gap: 3rem; min-height: 100vh;">
+    <div class="grid m-4 justify-content-between main-content" [formGroup]="conversionForm">
+        <div class="col-12 md:mb-6">
+            <h1 class="font-bold text-center md:text-6xl app-title">
                 Currency Exchange App
             </h1>
         </div>
-        <div class="col-12 md:col-3 p-fluid p-2">
+
+        <div class="col-12 md:col-3 p-fluid p-2 currency-input">
             <p-inputNumber
-                (onInput)="onInputNumber($event)"
+                (onInput)="onAmountChange($event)"
                 formControlName="amount"
                 ngDefaultControl
                 inputId="currency-us"
@@ -18,97 +18,119 @@
                 currency="USD"
                 locale="en-US"
                 [min]="0"
+                styleClass="w-full"
             >
             </p-inputNumber>
         </div>
-        <div
-            class="col-12 grid md:col-9  align-items-center  md:pl-6"
-        >
-            <div id="lovFirst" class="col-12 p-fluid p-2  sm:col-5">
+
+        <div class="col-12 grid md:col-9 align-items-center md:pl-6">
+            <div id="lovFirst" class="col-12 p-fluid p-2 sm:col-5 currency-input">
                 <app-lov
-                    *ngIf="dataCurrencies?.length > 0"
+                    *ngIf="currencies?.length > 0"
                     #LovComponent
-                    [customOption]="dataCurrencies"
-                    label="Select currency"
+                    [customOption]="currencies"
+                    label="From Currency"
                     optLabel="lovLabel"
-                    (selected)="onSelectedCurrencyFirst($event)"
-                    [value]="formConversion.get('currencyFirst').value?.code"
+                    (selected)="onFromSelect($event)"
+                    [value]="conversionForm.get('from').value?.code"
                 >
                 </app-lov>
             </div>
-            <div
-                class="col-12 flex justify-content-center align-items-center sm:col-2"
-                style="height: fit-content"
-                id="btnSwap"
-            >
-                <p-button (onClick)="swapCurrencies()" class="">
-                    <span class="w-1rem p-2  exchange-icon"> </span>
-                </p-button>
+
+            <div class="col-12 flex justify-content-center align-items-center sm:col-2" style="height: fit-content" id="btnSwap">
+                <p-button
+                (onClick)="swap()"
+                styleClass="exchange-btn p-button-rounded p-button-text"
+                icon="pi pi-sync"
+                [style]="{ width: '3rem', height: '3rem' }"
+            >   </p-button>
             </div>
-            <div id="lovSecond" class="col-12 p-fluid p-2  sm:col-5">
+
+            <div id="lovSecond" class="col-12 p-fluid p-2 sm:col-5 currency-input">
                 <app-lov
-                    *ngIf="dataCurrencies?.length > 0"
+                    *ngIf="currencies?.length > 0"
                     #LovComponent
-                    [customOption]="dataCurrencies"
-                    label="Select currency"
+                    [customOption]="currencies"
+                    label="To Currency"
                     optLabel="lovLabel"
-                    (selected)="onSelectedCurrencySecond($event)"
-                    [value]="formConversion.get('currencySecond').value?.code"
+                    (selected)="onToSelect($event)"
+                    [value]="conversionForm.get('to').value?.code"
                 >
                 </app-lov>
             </div>
         </div>
-        <div class="col-12 flex flex-column md:mt-5 p-2 result ">
-            <div *ngIf="showResultConversion">
-                <p class="font-bold md:text-lg ">
-                    {{ resultConversionData?.beforeConversion }}
+
+        <div class="col-12 flex flex-column md:mt-5 p-2 result">
+            <div *ngIf="showResult" class="result-container">
+                <p class="font-bold md:text-lg">
+                    {{ conversionResult?.beforeConversion }}
                 </p>
-                <p class="text-3xl md:text-5xl lg:text-6xl font-bold  mb-3">
-                    {{ resultConversionData?.resultConversion }}
+                <p class="text-3xl md:text-5xl lg:text-6xl font-bold mb-3">
+                    {{ conversionResult?.resultConversion }}
                 </p>
-                <p class=" md:text-md">
-                    {{ resultConversionData?.rateCurrencyFirst }}
+                <p class="md:text-md">
+                    {{ conversionResult?.rateCurrencyFirst }}
                 </p>
-                <p class=" md:text-md">
-                    {{ resultConversionData?.rateCurrencySecond }}
+                <p class="md:text-md">
+                    {{ conversionResult?.rateCurrencySecond }}
                 </p>
             </div>
 
             <div
-                class="col-12 sm:col-3 md:col-2 p-fluid "
-                style="border-radius: 16rem; align-self: end"
-                *ngIf="showButtonConvert"
+                class="col-12 sm:col-3 md:col-2 p-fluid"
+                style="align-self: end"
+                *ngIf="showConvertButton"
                 id="btnConvert"
             >
                 <p-button
-                    (onClick)="onClickConvert()"
+                    (onClick)="convert()"
                     label="Convert"
+                    styleClass="convert-btn p-button-rounded"
                 ></p-button>
             </div>
         </div>
     </div>
 
-    <div
-        style="background-color: #fbff0e"
-        class="mx-4 px-2 py-4 border-round  mb-4"
-    >
-        <h1
-            style="color: #000000; letter-spacing: 0.05rem"
-            class="text-xl font-semibold"
-        >
-            Result in other currencies
+    <div class="mx-4 px-4 py-5 results-table">
+        <h1 class="text-xl font-semibold mb-4">
+            Results in Other Currencies
         </h1>
         <app-table
-            *ngIf="dataCurrencies?.length > 0"
+            *ngIf="currencies?.length > 0"
             #TableComponent
             [isSelectable]="false"
             [isStatus]="false"
             [columMap]="columnMap"
             [isKebab]="false"
-            [count]="dataCurrencies?.length"
-            [list]="dataCurrencies"
+            [count]="currencies?.length"
+            [list]="currencies"
             [isLazy]="false"
         ></app-table>
     </div>
-</main>
+    <footer class="footer-container">
+        <div class="waves">
+            <div class="wave" id="wave1"></div>
+            <div class="wave" id="wave2"></div>
+            <div class="wave" id="wave3"></div>
+            <div class="wave" id="wave4"></div>
+        </div>
 
+        <div class="footer-content">
+            <div class="creator-info">
+                <p class="creator-text">Created by</p>
+                <h3 class="creator-name">Fitra Adidia</h3>
+            </div>
+
+            <div class="social-icons">
+                <a href="https://github.com/Lallainte" target="_blank" class="social-link github">
+                    <i class="pi pi-github"></i>
+                </a>
+                <a href="https://instagram.com/your-instagram" target="_blank" class="social-link instagram">
+                    <i class="pi pi-instagram"></i>
+                </a>
+            </div>
+        </div>
+
+        <p class="copyright">© 2024 Currency Exchange App. All rights reserved.</p>
+    </footer>
+</main>

@@ -1,157 +1,258 @@
+import { Component, QueryList, ViewChild, ViewChildren, OnInit, AfterViewInit } from '@angular/core';
 import { Currency, ResultOfConversion } from './models/main-page.model';
-import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { CurrencyConversionService } from './services/main-page.services';
 import { LovComponent } from '@core/shared-component/lov/lov.component';
 import { TableComponent } from '@core/shared-component/table/table.component';
 import { MessageBoxService } from '@core/service/message-box.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+declare var particlesJS: any;
+
 @Component({
   selector: 'app-currency-conversion',
   templateUrl: './main-page.component.html',
-  styleUrls: ['./main-page.component.scss'],
-  animations: [],
+  styleUrls: ['./main-page.component.scss']
 })
-export class MainPageComponent {
+export class MainPageComponent implements OnInit, AfterViewInit {
   @ViewChild('TableComponent') table: TableComponent;
   @ViewChildren('LovComponent') lov: QueryList<LovComponent>;
 
-  columnMap: { label: string; key: string }[] = [
+  columnMap = [
     { label: 'Code', key: 'code' },
     { label: 'Country', key: 'country' },
     { label: 'Rate', key: 'rate' },
-    { label: 'Value', key: 'value' },
+    { label: 'Value', key: 'value' }
   ];
 
-  dataCurrencies: Currency[] = [];
-  showResultConversion: boolean = false;
-  showButtonConvert: boolean = true;
-  resultConversionData: ResultOfConversion;
-  formConversion: FormGroup;
-  currencyFirstCode: string;
-  currencySecondCode: string;
+  currencies: Currency[] = [];
+  showResult = false;
+  showConvertButton = true;
+  conversionResult: ResultOfConversion;
+  conversionForm: FormGroup;
+  fromCode: string;
+  toCode: string;
 
   constructor(
-    private currenciesService: CurrencyConversionService,
-    private messageBoxService: MessageBoxService,
-    private formBuilder: FormBuilder
+    private service: CurrencyConversionService,
+    private message: MessageBoxService,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
-    this.initFormConversion();
-    this.loadCurrenciesFromLocalStorage();
+    this.initForm();
+    this.loadStoredCurrencies();
   }
 
-  initFormConversion(): void {
-    this.formConversion = this.formBuilder.group({
-      amount: [null, Validators.required],
-      currencyFirst: [undefined, Validators.required],
-      currencySecond: [undefined, Validators.required],
+  ngAfterViewInit(): void {
+    this.initParticles();
+  }
+
+  private initParticles(): void {
+    particlesJS('particles-js', {
+      particles: {
+        number: {
+          value: 80,
+          density: {
+            enable: true,
+            value_area: 800
+          }
+        },
+        color: {
+          value: '#fbff0e'
+        },
+        shape: {
+          type: 'circle'
+        },
+        opacity: {
+          value: 0.5,
+          random: false,
+          animation: {
+            enable: true,
+            speed: 1,
+            opacity_min: 0.1,
+            sync: false
+          }
+        },
+        size: {
+          value: 3,
+          random: true,
+          animation: {
+            enable: true,
+            speed: 2,
+            size_min: 0.1,
+            sync: false
+          }
+        },
+        line_linked: {
+          enable: true,
+          distance: 150,
+          color: '#fbff0e',
+          opacity: 0.4,
+          width: 1
+        },
+        move: {
+          enable: true,
+          speed: 3,
+          direction: 'none',
+          random: false,
+          straight: false,
+          out_mode: 'out',
+          bounce: false,
+          attract: {
+            enable: false,
+            rotateX: 600,
+            rotateY: 1200
+          }
+        }
+      },
+      interactivity: {
+        detect_on: 'canvas',
+        events: {
+          onhover: {
+            enable: true,
+            mode: 'repulse'
+          },
+          onclick: {
+            enable: true,
+            mode: 'push'
+          },
+          resize: true
+        },
+        modes: {
+          grab: {
+            distance: 400,
+            line_linked: {
+              opacity: 1
+            }
+          },
+          bubble: {
+            distance: 400,
+            size: 40,
+            duration: 2,
+            opacity: 8,
+            speed: 3
+          },
+          repulse: {
+            distance: 200,
+            duration: 0.4
+          },
+          push: {
+            particles_nb: 4
+          },
+          remove: {
+            particles_nb: 2
+          }
+        }
+      },
+      retina_detect: true
     });
   }
 
-  loadCurrenciesFromLocalStorage(): void {
-    const savedCurrencies = localStorage.getItem('dataCurrencies');
-    if (savedCurrencies) {
-      this.dataCurrencies = JSON.parse(savedCurrencies);
+  initForm(): void {
+    this.conversionForm = this.fb.group({
+      amount: [null, Validators.required],
+      from: [undefined, Validators.required],
+      to: [undefined, Validators.required],
+    });
+  }
+
+  loadStoredCurrencies(): void {
+    const saved = localStorage.getItem('dataCurrencies');
+    if (saved) {
+      this.currencies = JSON.parse(saved);
     } else {
-      this.fetchCurrenciesFromApi();
+      this.fetchAllCurrencies();
     }
   }
 
-  calculateCurrencies(): void {
-    const formValue = this.formConversion.getRawValue();
-    const beforeConversion = `${formValue.amount.toLocaleString('en', {
+  calculateRates(): void {
+    const form = this.conversionForm.getRawValue();
+
+    const before = `${form.amount.toLocaleString('en', {
       minimumFractionDigits: 2,
-    })} ${formValue.currencyFirst.name} =`;
+    })} ${form.from.name} =`;
 
-    const resultConversion = `${
-      (formValue.currencySecond.value /
-        formValue.currencyFirst.value) *
-      formValue.amount
-    } ${formValue.currencySecond.name}`;
+    const result = `${(form.to.value / form.from.value) * form.amount} ${form.to.name}`;
 
-    const rateCurrencyFirst = `1.00 ${formValue.currencyFirst.code} = ${
-      formValue.currencySecond.value / formValue.currencyFirst.value
-    } ${formValue.currencySecond.code}`;
+    const fromRate = `100.00 ${form.from.code} = ${
+      form.to.value / form.from.value
+    } ${form.to.code}`;
 
-    const rateCurrencySecond = `1.00 ${formValue.currencySecond.code} = ${
-      formValue.currencyFirst.value / formValue.currencySecond.value
-    } ${formValue.currencyFirst.code}`;
+    const toRate = `100.00 ${form.to.code} = ${
+      form.from.value / form.to.value
+    } ${form.from.code}`;
 
-    this.resultConversionData = {
-      beforeConversion,
-      resultConversion,
-      rateCurrencyFirst,
-      rateCurrencySecond,
+    this.conversionResult = {
+      beforeConversion: before,
+      resultConversion: result,
+      rateCurrencyFirst: fromRate,
+      rateCurrencySecond: toRate,
     };
   }
 
-  onSelectedCurrencyFirst(event): void {
-    this.formConversion.get('currencyFirst').patchValue(event);
-    this.calculateCurrenciesIfFormValid();
+  onFromSelect(event): void {
+    this.conversionForm.get('from').patchValue(event);
+    this.calculateIfValid();
   }
 
-  onSelectedCurrencySecond(event): void {
-    this.formConversion.get('currencySecond').patchValue(event);
-    this.calculateCurrenciesIfFormValid();
+  onToSelect(event): void {
+    this.conversionForm.get('to').patchValue(event);
+    this.calculateIfValid();
   }
 
-  onInputNumber(event): void {
-    this.calculateCurrenciesIfFormValid();
+  onAmountChange(event): void {
+    this.calculateIfValid();
   }
 
-  calculateCurrenciesIfFormValid(): void {
-    if (this.formConversion.valid) {
-      this.calculateCurrencies();
+  calculateIfValid(): void {
+    if (this.conversionForm.valid) {
+      this.calculateRates();
     } else {
-      this.formConversion.markAllAsTouched();
+      this.conversionForm.markAllAsTouched();
     }
   }
 
-  onClickConvert(): void {
-    if (this.formConversion.valid) {
-      this.calculateCurrencies();
-      this.showResultConversion = true;
-      this.showButtonConvert = false;
+  convert(): void {
+    if (this.conversionForm.valid) {
+      this.calculateRates();
+      this.showResult = true;
+      this.showConvertButton = false;
     } else {
-      this.formConversion.markAllAsTouched();
-      this.messageBoxService.showInfo("Form tidak boleh kosong");
+      this.conversionForm.markAllAsTouched();
+      this.message.showInfo("Form tidak boleh kosong");
     }
   }
 
-  swapCurrencies(): void {
-    const currencyFirst = this.formConversion
-      .get('currencyFirst')
-      .getRawValue();
+  swap(): void {
+    const from = this.conversionForm.get('from').getRawValue();
 
-    this.formConversion.get('currencyFirst').patchValue(
-      this.formConversion.get('currencySecond').getRawValue()
+    this.conversionForm.get('from').patchValue(
+      this.conversionForm.get('to').getRawValue()
     );
-    this.formConversion.get('currencySecond').patchValue(currencyFirst);
+    this.conversionForm.get('to').patchValue(from);
 
-    this.calculateCurrenciesIfFormValid();
+    this.calculateIfValid();
   }
 
-  fetchCurrenciesFromApi(): void {
-    this.currenciesService.getCurrencies().subscribe({
+  fetchAllCurrencies(): void {
+    this.service.getCurrencies().subscribe({
       next: (response) => {
-        const result = this.mapCurrencies(response);
-        this.fetchExchangeRates(result);
+        const mappedData = this.mapCurrencyData(response);
+        this.fetchRates(mappedData);
       },
       error: (error) => {
-        this.messageBoxService.showError('Gagal mengambil data mata uang');
+        this.message.showError('Gagal mengambil data mata uang');
       },
     });
   }
 
-  mapCurrencies(response: any): Currency[] {
-    const result = [];
+  mapCurrencyData(response: any): Currency[] {
+    const data = [];
     response.map((currency: any) => {
       const country = currency.name.common;
       for (const key in currency.currencies) {
         const element = currency.currencies[key];
-        result.push({
+        data.push({
           lovLabel: `${key} - ${country}`,
           country,
           code: key,
@@ -159,26 +260,25 @@ export class MainPageComponent {
         });
       }
     });
-    return result;
+    return data;
   }
 
-  fetchExchangeRates(result: Currency[]): void {
-    this.currenciesService.getRate().subscribe({
+  fetchRates(data: Currency[]): void {
+    this.service.getRate().subscribe({
       next: (rateResponse) => {
-        this.updateCurrencyRates(result, rateResponse.body.rates);
+        this.updateRates(data, rateResponse.body.rates);
       },
       error: (error) => {
-        this.messageBoxService.showError('Gagal mengambil nilai tukar');
+        this.message.showError('Gagal mengambil nilai tukar');
       },
     });
   }
 
-
-  updateCurrencyRates(result: Currency[], rates: any): void {
-    result.forEach((currency, index) => {
+  updateRates(data: Currency[], rates: any): void {
+    data.forEach((currency, index) => {
       const rate = rates[currency.code];
       if (rate) {
-        result[index] = {
+        data[index] = {
           ...currency,
           rates: Math.round(rate),
           value: rate,
@@ -186,7 +286,7 @@ export class MainPageComponent {
       }
     });
 
-    this.currenciesService.setLocalStorageCurrency('dataCurrencies', result);
-    this.dataCurrencies = result;
+    this.service.setLocalStorageCurrency('dataCurrencies', data);
+    this.currencies = data;
   }
 }
