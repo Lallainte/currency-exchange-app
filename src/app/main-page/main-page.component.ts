@@ -20,7 +20,7 @@ export class MainPageComponent implements OnInit, AfterViewInit {
   columnMap = [
     { label: 'Code', key: 'code' },
     { label: 'Country', key: 'country' },
-    { label: 'Rate', key: 'rate' },
+    { label: 'Rate', key: 'rates' },
     { label: 'Value', key: 'value' }
   ];
 
