@@ -1,7 +1,7 @@
 interface Currency {
     code: string;
     country: string;
-    rates: number;
+    rate: number;
     name: string;
     symbol: string;
     value: number;

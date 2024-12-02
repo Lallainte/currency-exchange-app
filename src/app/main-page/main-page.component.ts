@@ -20,7 +20,7 @@ export class MainPageComponent implements OnInit, AfterViewInit {
   columnMap = [
     { label: 'Code', key: 'code' },
     { label: 'Country', key: 'country' },
-    { label: 'Rate', key: 'rates' },
+    { label: 'Rate', key: 'rate' },
     { label: 'Value', key: 'value' }
   ];
 
@@ -41,6 +41,12 @@ export class MainPageComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.initForm();
     this.loadStoredCurrencies();
+
+    this.conversionForm.get('amount').valueChanges.subscribe(amount => {
+      if (amount) {
+        this.updateTableValues(amount);
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -160,9 +166,22 @@ export class MainPageComponent implements OnInit, AfterViewInit {
     const saved = localStorage.getItem('dataCurrencies');
     if (saved) {
       this.currencies = JSON.parse(saved);
+      const currentAmount = this.conversionForm.get('amount').value;
+      if (currentAmount) {
+        this.updateTableValues(currentAmount);
+      }
     } else {
       this.fetchAllCurrencies();
     }
+  }
+
+  updateTableValues(amount: number): void {
+    if (!this.currencies || !amount) return;
+
+    this.currencies = this.currencies.map(currency => ({
+      ...currency,
+      value: Number((currency.rate * amount).toFixed(2))
+    }));
   }
 
   calculateRates(): void {
@@ -172,15 +191,11 @@ export class MainPageComponent implements OnInit, AfterViewInit {
       minimumFractionDigits: 2,
     })} ${form.from.name} =`;
 
-    const result = `${(form.to.value / form.from.value) * form.amount} ${form.to.name}`;
+    const result = `${((form.to.rate / form.from.rate) * form.amount).toFixed(2)} ${form.to.name}`;
 
-    const fromRate = `100.00 ${form.from.code} = ${
-      form.to.value / form.from.value
-    } ${form.to.code}`;
+    const fromRate = `100.00 ${form.from.code} = ${(form.to.rate / form.from.rate * 100).toFixed(2)} ${form.to.code}`;
 
-    const toRate = `100.00 ${form.to.code} = ${
-      form.from.value / form.to.value
-    } ${form.from.code}`;
+    const toRate = `100.00 ${form.to.code} = ${(form.from.rate / form.to.rate * 100).toFixed(2)} ${form.from.code}`;
 
     this.conversionResult = {
       beforeConversion: before,
@@ -202,6 +217,7 @@ export class MainPageComponent implements OnInit, AfterViewInit {
 
   onAmountChange(event): void {
     this.calculateIfValid();
+    this.updateTableValues(event.value);
   }
 
   calculateIfValid(): void {
@@ -245,6 +261,7 @@ export class MainPageComponent implements OnInit, AfterViewInit {
       },
     });
   }
+
   mapCurrencyData(response: any): Currency[] {
     const data = [];
     response.map((currency: any) => {
@@ -255,7 +272,8 @@ export class MainPageComponent implements OnInit, AfterViewInit {
           lovLabel: `${key} - ${country}`,
           country,
           code: key,
-          rates: this.calculateRates,
+          rate: 0,
+          value: 0,
           ...element,
         });
       }
@@ -266,7 +284,7 @@ export class MainPageComponent implements OnInit, AfterViewInit {
   fetchRates(data: Currency[]): void {
     this.service.getRate().subscribe({
       next: (rateResponse) => {
-        this.updateRates(data, rateResponse);
+        this.updateRates(data, rateResponse.body.rates);
       },
       error: (error) => {
         this.message.showError('Gagal mengambil nilai tukar');
@@ -276,18 +294,22 @@ export class MainPageComponent implements OnInit, AfterViewInit {
 
   updateRates(data: Currency[], rates: any): void {
     data.forEach((currency, index) => {
-      const rate = rates[currency.rates];
-
+      const rate = rates[currency.code];
       if (rate) {
         data[index] = {
           ...currency,
-          rates: Math.round(rate),
-          value: rate,
+          rate: Number(rate.toFixed(4)),
+          value: 0
         };
       }
     });
 
     this.service.setLocalStorageCurrency('dataCurrencies', data);
     this.currencies = data;
+
+    const currentAmount = this.conversionForm.get('amount').value;
+    if (currentAmount) {
+      this.updateTableValues(currentAmount);
+    }
   }
 }
