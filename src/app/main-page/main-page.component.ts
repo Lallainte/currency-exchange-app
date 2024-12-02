@@ -174,11 +174,11 @@ export class MainPageComponent implements OnInit, AfterViewInit {
 
     const result = `${(form.to.value / form.from.value) * form.amount} ${form.to.name}`;
 
-    const fromRate = `100.00 ${form.from.code} = ${
+    var fromRate = `100.00 ${form.from.code} = ${
       form.to.value / form.from.value
     } ${form.to.code}`;
 
-    const toRate = `100.00 ${form.to.code} = ${
+    var toRate = `100.00 ${form.to.code} = ${
       form.from.value / form.to.value
     } ${form.from.code}`;
 
@@ -245,7 +245,6 @@ export class MainPageComponent implements OnInit, AfterViewInit {
       },
     });
   }
-
   mapCurrencyData(response: any): Currency[] {
     const data = [];
     response.map((currency: any) => {
@@ -256,6 +255,7 @@ export class MainPageComponent implements OnInit, AfterViewInit {
           lovLabel: `${key} - ${country}`,
           country,
           code: key,
+          rates: this.calculateRates,
           ...element,
         });
       }
@@ -266,7 +266,7 @@ export class MainPageComponent implements OnInit, AfterViewInit {
   fetchRates(data: Currency[]): void {
     this.service.getRate().subscribe({
       next: (rateResponse) => {
-        this.updateRates(data, rateResponse.body.rates);
+        this.updateRates(data, this.updateRates(data, rateResponse));
       },
       error: (error) => {
         this.message.showError('Gagal mengambil nilai tukar');
@@ -276,7 +276,8 @@ export class MainPageComponent implements OnInit, AfterViewInit {
 
   updateRates(data: Currency[], rates: any): void {
     data.forEach((currency, index) => {
-      const rate = rates[currency.code];
+      const rate = rates[currency.rates];
+
       if (rate) {
         data[index] = {
           ...currency,
