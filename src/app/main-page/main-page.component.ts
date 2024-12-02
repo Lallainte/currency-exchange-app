@@ -174,11 +174,11 @@ export class MainPageComponent implements OnInit, AfterViewInit {
 
     const result = `${(form.to.value / form.from.value) * form.amount} ${form.to.name}`;
 
-    var fromRate = `100.00 ${form.from.code} = ${
+    const fromRate = `100.00 ${form.from.code} = ${
       form.to.value / form.from.value
     } ${form.to.code}`;
 
-    var toRate = `100.00 ${form.to.code} = ${
+    const toRate = `100.00 ${form.to.code} = ${
       form.from.value / form.to.value
     } ${form.from.code}`;
 
@@ -266,7 +266,7 @@ export class MainPageComponent implements OnInit, AfterViewInit {
   fetchRates(data: Currency[]): void {
     this.service.getRate().subscribe({
       next: (rateResponse) => {
-        this.updateRates(data, this.updateRates(data, rateResponse));
+        this.updateRates(data, rateResponse);
       },
       error: (error) => {
         this.message.showError('Gagal mengambil nilai tukar');
